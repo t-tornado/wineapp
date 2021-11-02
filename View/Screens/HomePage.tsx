@@ -1,14 +1,30 @@
-import React from 'react';
-import {StyleSheet} from 'react-native';
+import React, {useEffect} from 'react';
+import {FlatList, StyleSheet} from 'react-native';
 import {View} from 'react-native';
+import {WineObject} from '../../Config/CloudData';
+import {
+  useFetchDataFunction,
+  useWineData,
+} from '../../Interactor/HomePageInteractor';
 import {ItemCard} from '../OtherComponents/ItemCard';
 import {SortHomepage} from '../OtherComponents/SortHomepage';
 
-const Homepage: React.FC = () => {
+const Homepage: React.FC = props => {
+  const fetchData = useFetchDataFunction();
+  const data: [WineObject] = useWineData();
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   return (
     <View style={styles.container}>
       <SortHomepage />
-      <ItemCard />
+      <FlatList
+        keyExtractor={(item, index) => index.toString()}
+        data={data}
+        renderItem={({item, index}) => <ItemCard {...item} />}
+      />
     </View>
   );
 };

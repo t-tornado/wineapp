@@ -11,3 +11,5 @@ export function widthDp(widthPercent) {
   const elementHeight = parseFloat(widthPercent);
   return PixelRatio.roundToNearestPixel((width * elementHeight) / 100);
 }
+
+export const NAVBAR_HEGIHT = heightDp('9%');

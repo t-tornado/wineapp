@@ -6,16 +6,26 @@ import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import Entypo from 'react-native-vector-icons/Entypo';
 import {heightDp, widthDp} from '../../Config/Dimensions';
 import {AppTestIDs} from '../../Config/TestIDs';
+import {WineObject} from '../../Config/CloudData';
 const CARD_H = heightDp('13%');
 const CARD_W = widthDp('100%');
 const STAR_ICON_SIZE = heightDp('2 %');
 const LOCATION_ICON_S = heightDp('2 %');
 
-const ItemCard = props => {
-  const {winery, wine, ratings} = props;
+const ItemCard: React.FC<WineObject> = props => {
+  const {winery, wine, rating, location} = props;
+  const {average} = rating;
+  // const full_location
+
+  function handlePress() {
+    props.navigation.navigate('WinePage');
+  }
 
   return (
-    <TouchableOpacity testID={AppTestIDs.wineCard} style={styles.container}>
+    <TouchableOpacity
+      onPress={handlePress}
+      testID={AppTestIDs.wineCard}
+      style={styles.container}>
       <View style={styles.cover}>
         <Image
           source={require('../../wineBottle.png')}
@@ -39,7 +49,7 @@ const ItemCard = props => {
               color="#00000090"
               style={styles.icon}
             />
-            <Text>{ratings !== undefined ? ratings : '0.0'} </Text>
+            <Text>{average !== undefined ? average : '0.0'} </Text>
           </View>
           <View style={styles.locationContainer}>
             <Entypo
@@ -48,7 +58,7 @@ const ItemCard = props => {
               size={LOCATION_ICON_S}
               style={styles.icon}
             />
-            <Text style={styles.locationText}>Loc.</Text>
+            <Text style={styles.locationText}>{location}</Text>
           </View>
         </View>
       </View>

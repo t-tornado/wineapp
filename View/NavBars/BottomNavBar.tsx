@@ -9,11 +9,11 @@ import {
 
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Feather from 'react-native-vector-icons/Feather';
-import {heightDp} from '../../Config/Dimensions';
+import {heightDp, widthDp} from '../../Config/Dimensions';
+import EStyleSheet from 'react-native-extended-stylesheet';
 
-const {height, width} = Dimensions.get('window');
-const NAVBAR_HEGIHT = height * 0.07;
-const NAVBAR_W = width;
+const NAVBAR_HEGIHT = heightDp('9%');
+const NAVBAR_W = widthDp('100');
 const DROP_ICON_S = heightDp('4%');
 
 type NavbarProps = {
@@ -82,13 +82,15 @@ const BottomNavbar: React.FC<NavbarProps> = ({
   );
 };
 
-const styles = StyleSheet.create({
+const styles = EStyleSheet.create({
   container: {
     height: NAVBAR_HEGIHT,
     width: NAVBAR_W,
-    backgroundColor: '#fff',
+    backgroundColor: '#F9F3F3',
     flexDirection: 'row',
     alignItems: 'center',
+    borderTopLeftRadius: '20rem',
+    borderTopRightRadius: '20rem',
   },
   label: {
     fontSize: 13,
