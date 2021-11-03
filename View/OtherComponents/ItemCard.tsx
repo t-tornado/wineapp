@@ -15,7 +15,7 @@ const LOCATION_ICON_S = heightDp('2 %');
 const ItemCard: React.FC<WineObject> = props => {
   const {winery, wine, rating, location} = props;
   const {average} = rating;
-  // const full_location
+  const full_location = location.match(/\b(\w+)/g)?.join(' ');
 
   function handlePress() {
     props.navigation.navigate('WinePage');
@@ -58,7 +58,7 @@ const ItemCard: React.FC<WineObject> = props => {
               size={LOCATION_ICON_S}
               style={styles.icon}
             />
-            <Text style={styles.locationText}>{location}</Text>
+            <Text style={styles.locationText}>{full_location}</Text>
           </View>
         </View>
       </View>
@@ -74,6 +74,7 @@ const styles = EStyleSheet.create({
     backgroundColor: '#00000030',
     alignItems: 'center',
     paddingHorizontal: '10rem',
+    marginBottom: '20rem',
   },
 
   cover: {
@@ -126,4 +127,4 @@ const styles = EStyleSheet.create({
   },
 });
 
-export {ItemCard};
+export default React.memo(ItemCard);
