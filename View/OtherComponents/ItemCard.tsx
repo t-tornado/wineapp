@@ -6,29 +6,31 @@ import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import Entypo from 'react-native-vector-icons/Entypo';
 import {heightDp, widthDp} from '../../Config/Dimensions';
 import {AppTestIDs} from '../../Config/TestIDs';
-import {WineObject} from '../../Config/CloudData';
+import {WineCardProps, WineObject} from '../../Config/CloudData';
 const CARD_H = heightDp('13%');
 const CARD_W = widthDp('100%');
 const STAR_ICON_SIZE = heightDp('2 %');
 const LOCATION_ICON_S = heightDp('2 %');
 
-const ItemCard: React.FC<WineObject> = props => {
-  const {winery, wine, rating, location} = props;
+const ItemCard: React.FC<WineCardProps> = ({wineObject, navigationProps}) => {
+  const {winery, wine, rating, location, image} = wineObject;
   const {average} = rating;
   const full_location = location.match(/\b(\w+)/g)?.join(' ');
 
   function handlePress() {
-    props.navigation.navigate('WinePage');
+    navigationProps.navigation.navigate('WinePage', {wineObject});
   }
 
   return (
     <TouchableOpacity
       onPress={handlePress}
+      activeOpacity={0.9}
       testID={AppTestIDs.wineCard}
       style={styles.container}>
       <View style={styles.cover}>
         <Image
-          source={require('../../wineBottle.png')}
+          source={{uri: image}}
+          // source={require('../../wineBottle.png')}
           style={styles.headerImage}
         />
       </View>
@@ -94,9 +96,10 @@ const styles = EStyleSheet.create({
     flex: 3,
   },
   headerImage: {
-    height: CARD_H * 0.75,
-    width: CARD_W * 0.1,
-    resizeMode: 'cover',
+    height: CARD_H * 0.7,
+    width: CARD_W * 0.12,
+    resizeMode: 'center',
+    borderRadius: '10rem',
   },
   icon: {
     marginRight: '10rem',

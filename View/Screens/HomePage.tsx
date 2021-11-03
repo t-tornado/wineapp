@@ -28,7 +28,7 @@ const Homepage: React.FC = props => {
   }
 
   function renderItemFunction({item, index}) {
-    return <ItemCard {...item} />;
+    return <ItemCard wineObject={item} navigationProps={props} />;
   }
 
   const data: [WineObject] = useWineData();

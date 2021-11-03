@@ -1,6 +1,6 @@
 export const APIURL = 'https://api.sampleapis.com/wines/reds';
 
-type ratings = {
+export type ratings = {
   average: string;
   reviews: string;
 };
@@ -12,4 +12,9 @@ export interface WineObject {
   id: number;
   image: string;
   location: string;
+}
+
+export interface WineCardProps {
+  wineObject: WineObject;
+  navigationProps: {};
 }
