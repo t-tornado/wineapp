@@ -5,6 +5,7 @@ import {AppBottomTab} from './Router/AppBottomTab';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import {AppTestIDs} from './Config/TestIDs';
 import HomepageInteractor from './Interactor/HomePageInteractor';
+import HomeScreenStackComponent from './Router/StackNavigators/HomeScreenStack';
 
 const screenWidth = Dimensions.get('window').width;
 EStyleSheet.build({$rem: screenWidth / 380, $miniPlayerHeight: '50rem'});
@@ -15,7 +16,7 @@ const RootApp: React.FC = () => {
     <NavigationContainer>
       <HomepageInteractor>
         <View style={{flex: 1}} testID={AppTestIDs.bottomNavbar}>
-          <AppBottomTab />
+          <HomeScreenStackComponent />
         </View>
         <StatusBar backgroundColor="#fff" barStyle="dark-content" />
       </HomepageInteractor>
