@@ -12,11 +12,18 @@ const ICON_S = heightDp('2.5%');
 const artwork = require('../../../wineBottle.png');
 
 const WineCard: React.FC<WineCardProps> = props => {
-  const {wineObject} = props;
+  const {wineObject, navigationProps} = props;
   const {image, wine, winery} = wineObject;
 
+  function callNavigation() {
+    navigationProps.navigation.navigate('WinePage', {wineObject});
+  }
+
   return (
-    <TouchableOpacity activeOpacity={0.9} style={styles.container}>
+    <TouchableOpacity
+      onPress={callNavigation}
+      activeOpacity={0.9}
+      style={styles.container}>
       <View style={styles.imageDetails}>
         <Image style={styles.coverImage} source={{uri: image}} />
       </View>
@@ -27,11 +34,7 @@ const WineCard: React.FC<WineCardProps> = props => {
         <View style={styles.iconDetails}>
           <View style={styles.iconContainer}>
             <TouchableOpacity style={styles.icon}>
-              <Entypo
-                name="heart"
-                color={WineCardColors.likeIcon}
-                size={ICON_S}
-              />
+              <Entypo name="drop" color="#EEBB4D" size={ICON_S} />
             </TouchableOpacity>
           </View>
         </View>
@@ -46,16 +49,15 @@ const styles = EStyleSheet.create({
     flexDirection: 'row',
     justifyContext: 'space-between',
     alignItems: 'center',
-    // backgroundColor: 'red',
   },
   container: {
     height: HEIGHT,
     width: WIDTH,
     alignItems: 'flex-start',
-    backgroundColor: '#fff',
-    borderRadius: '15rem',
+    borderRadius: '20rem',
     padding: '10rem',
     margin: '10rem',
+    backgroundColor: '#B980F060',
   },
   coverImage: {
     height: '90%',
@@ -70,6 +72,14 @@ const styles = EStyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: '15rem',
+  },
+  iconContainer: {
+    height: '35rem',
+    width: '35rem',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: '20rem',
+    backgroundColor: '#fff',
   },
   iconDetails: {
     flex: 1,

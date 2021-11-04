@@ -4,7 +4,7 @@ import EStyleSheet from 'react-native-extended-stylesheet';
 import {heightDp, widthDp} from '../../../Config/Dimensions';
 
 const HEIGHT = heightDp('18%');
-const WIDTH = widthDp('90%');
+const WIDTH = widthDp('95%');
 
 const IntroductoryHeaderComponent: React.FC = () => {
   return (
@@ -26,6 +26,7 @@ const styles = EStyleSheet.create({
     width: WIDTH,
     justifyContent: 'space-evenly',
     alignItems: 'flex-start',
+    backgroundColor: '#fff',
   },
   introductoryText: {
     color: '#000',

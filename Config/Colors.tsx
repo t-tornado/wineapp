@@ -1,8 +1,15 @@
 export const HomeScreenColors = {
-  screenBackground: '#F6EABE',
+  backgroundColor: '#DEEDFO',
+  // screenBackground: '#F6EABE',
 };
 
 export const WineCardColors = {
-  likeIconBackground: HomeScreenColors.screenBackground,
+  likeIconBackground: HomeScreenColors.backgroundColor,
   likeIcon: 'red',
+};
+
+export const WinePageColors = {
+  locationTag: '#A2D2FF',
+  reviewTag: '#350B40',
+  ratingTag: '#FF9292',
 };

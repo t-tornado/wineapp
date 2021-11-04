@@ -9,7 +9,7 @@ const HomeScreenStackComponent = () => {
   return (
     <HomeScreenStack.Navigator>
       <HomeScreenStack.Screen
-        name="Home"
+        name="HomePage"
         component={Homepage}
         options={{
           headerShown: false,

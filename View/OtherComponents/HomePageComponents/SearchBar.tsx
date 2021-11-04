@@ -3,20 +3,29 @@ import {View, TextInput} from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import {heightDp, widthDp} from '../../../Config/Dimensions';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
+import {useState} from 'react';
 
 const HEIGHT = heightDp('10');
 const WIDTH = widthDp('90%');
 const ICON_S = heightDp('3');
 
 const SearchBoxComponent: React.FC = () => {
+  const [input, setInput] = useState<string>('');
+
+  function handleChangedText(text: string) {
+    setInput(text);
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.searchBar}>
         <EvilIcons size={ICON_S} color="#fff" name="search" />
         <TextInput
-          placeholderTextColor="#fff"
+          placeholderTextColor="#ffffff80"
           placeholder="Search Your Wine"
           style={styles.textInputBox}
+          value={input}
+          onChangeText={handleChangedText}
         />
       </View>
     </View>
@@ -45,6 +54,7 @@ const styles = EStyleSheet.create({
     height: '90%',
     width: '90%',
     paddingVertical: '5rem',
+    color: '#fff',
   },
 });
 

@@ -10,9 +10,6 @@ import {
 import EStyleSheet from 'react-native-extended-stylesheet';
 import {heightDp, NAVBAR_HEGIHT, widthDp} from '../../Config/Dimensions';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import {RatingsCard} from '../OtherComponents/RatingsCard';
-import {LocationCard} from '../OtherComponents/LocationCard';
 import {WineObject} from '../../Config/CloudData';
 import {LocationTag} from '../OtherComponents/WinePageComponents/LocationTag';
 import {ReviewTag} from '../OtherComponents/WinePageComponents/ReviewsTag';
@@ -20,12 +17,10 @@ import {RatingTag} from '../OtherComponents/WinePageComponents/RatingTag';
 import {AddToCellarButton} from '../OtherComponents/WinePageComponents/AddToCellarButton';
 
 const ICON_S = heightDp('2%');
-const CIRCLE_S = heightDp('1%');
 const HEIGHT = heightDp('100');
 const WIDTH = widthDp('100%');
-const artwork = require('../../wineBottle.png');
 
-interface WinepageRouteprops {
+interface CellarWinepageRouteprops {
   route: {
     key: string;
     params: {
@@ -35,7 +30,7 @@ interface WinepageRouteprops {
   navigation: {};
 }
 
-const WinePage: React.FC<WinepageRouteprops> = props => {
+const CellarWinePage: React.FC<CellarWinepageRouteprops> = props => {
   const {wine, winery, rating, location, image} = props.route.params.wineObject;
   const {average, reviews} = rating;
   const _location: string =
@@ -50,7 +45,7 @@ const WinePage: React.FC<WinepageRouteprops> = props => {
       <View style={styles.navbar}>
         <TouchableOpacity onPress={handlePress} style={styles.iconContainer}>
           <SimpleLineIcons name="arrow-left" size={ICON_S} color="#000" />
-          <Text style={styles.backButtonText}>Home</Text>
+          <Text style={styles.backButtonText}>Cellar</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.body}>
@@ -76,18 +71,6 @@ const WinePage: React.FC<WinepageRouteprops> = props => {
 };
 
 const styles = EStyleSheet.create({
-  // addButtonText: {
-  //   color: '#fff',
-  //   fontSize: '12rem',
-  // },
-  // addButtonContainer: {
-  //   width: '40%',
-  //   height: '40%',
-  //   borderRadius: '20rem',
-  //   alignItems: 'center',
-  //   justifyContent: 'center',
-  //   backgroundColor: '#B980F0',
-  // },
   backButtonText: {
     color: '#000',
     fontSize: '15rem',
@@ -105,7 +88,6 @@ const styles = EStyleSheet.create({
     width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
-    // backgroundColor: 'green',
   },
   circle: {
     bachgroundColor: '#000',
@@ -127,9 +109,6 @@ const styles = EStyleSheet.create({
     alignItems: 'center',
   },
   footer: {
-    // width: widthDp('80'),
-    // backgroundColor: 'tomato',
-    // flex: 1,
     height: heightDp('30'),
     marginBottom: heightDp('15'),
   },
@@ -206,21 +185,4 @@ const styles = EStyleSheet.create({
   },
 });
 
-export {WinePage};
-
-{
-  /* <View style={styles.container}>
-        <View style={styles.imageContainer}>
-          <View style={[styles.imageShadowWrapper]}>
-            <Image source={{uri: image}} style={[styles.image]} />
-          </View>
-        </View>
-        <View style={styles.navbar}>
-          <TouchableOpacity onPress={handlePress} style={styles.iconContainer}>
-            <SimpleLineIcons name="arrow-left" size={ICON_S} color="#000" />
-            <Text style={styles.backButtonText}>Home</Text>
-          </TouchableOpacity>
-        </View>
-       
-      </View> */
-}
+export {CellarWinePage};

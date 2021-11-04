@@ -1,8 +1,8 @@
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import SearchScreen from '../View/Screens/SearchScreen';
-import {BottomNavbar} from '../View/NavBars/BottomNavBar';
-import HomeScreenStackComponent from './StackNavigators/HomeScreenStack';
+import {BottomNavbar} from '../../View/NavBars/BottomNavBar';
+import HomeScreenStackComponent from '../StackNavigators/HomeScreenStack';
+import CellartStactContainer from '../StackNavigators/CellarStackComponent';
 
 const BottomTab = createBottomTabNavigator();
 
@@ -13,15 +13,15 @@ const AppBottomTab = () => {
         options={{
           headerShown: false,
         }}
-        name="MainHomePage"
+        name="Home"
         component={HomeScreenStackComponent}
       />
       <BottomTab.Screen
         options={{
           headerShown: false,
         }}
-        name="Search"
-        component={SearchScreen}
+        name="Cellar"
+        component={CellartStactContainer}
       />
     </BottomTab.Navigator>
   );

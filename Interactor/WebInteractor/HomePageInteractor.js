@@ -1,5 +1,5 @@
 import React, {createContext, useContext, useState} from 'react';
-import {APIURL} from '../Config/CloudData';
+import {APIURL} from '../../Config/CloudData';
 
 const FetchFunctionContext = createContext();
 const WineDataContext = createContext();

@@ -1,4 +1,5 @@
 import React, {useEffect} from 'react';
+import {useRef} from 'react';
 import {FlatList, RefreshControl, StyleSheet} from 'react-native';
 import {View} from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
@@ -10,7 +11,7 @@ import {
   useFetchDataFunction,
   useFetchingDataState,
   useWineData,
-} from '../../Interactor/HomePageInteractor';
+} from '../../Interactor/WebInteractor/HomePageInteractor';
 import {HeaderMenu} from '../OtherComponents/HomePageComponents/HeaderMenu';
 import {IntroductoryHeaderComponent} from '../OtherComponents/HomePageComponents/IntroductoryHeaderComponent';
 import {SearchBoxComponent} from '../OtherComponents/HomePageComponents/SearchBar';
@@ -26,6 +27,7 @@ const Homepage: React.FC = props => {
   const fetchData: Function = useFetchDataFunction();
   const fetchingData: boolean = useFetchingDataState();
   const errorFetching: boolean = useErrorFetchingData();
+  const scrollRef = useRef();
   const showFetchingComponent = fetchingData || errorFetching;
 
   function handleRefresh() {
@@ -42,21 +44,35 @@ const Homepage: React.FC = props => {
     fetchData();
   }, []);
 
+  if (scrollRef.current !== undefined) {
+    console.log(scrollRef.current._scrollRef);
+  }
+
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <HeaderMenu />
-        <IntroductoryHeaderComponent />
-      </View>
+      {/* <View style={styles.header}>
+       
+      </View> */}
       <View style={styles.body}>
         <FlatList
           stickyHeaderIndices={[0]}
           style={{minHeight: heightDp('100'), minWidth: widthDp('100')}}
           ListHeaderComponent={
             <>
-              <SearchBoxComponent />
+              <HeaderMenu />
+              <IntroductoryHeaderComponent />
             </>
           }
+          ListEmptyComponent={
+            <LoadingComponent
+              errorState={errorFetching}
+              fetchingDataState={fetchingData}
+              handlerRefresh={handleRefresh}
+            />
+          }
+          ref={r => {
+            scrollRef.current = r;
+          }}
           contentContainerStyle={{alignItems: 'center'}}
           numColumns={2}
           keyExtractor={(item, index) => index.toString()}
@@ -82,26 +98,15 @@ const styles = EStyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: HomeScreenColors.screenBackground,
+    backgroundColor: '#fff',
+    // backgroundColor: HomeScreenColors.backgroundColor,
   },
   header: {
-    paddingHorizontal: '15rem',
+    paddingHorizontal: '10rem',
+  },
+  headerCover: {
+    backgroundColor: HomeScreenColors.backgroundColor,
   },
 });
 
 export default Homepage;
-
-/**
- *   <FlatList
-          keyExtractor={(item, index) => index.toString()}
-          data={data}
-          renderItem={renderItemFunction}
-          maxToRenderPerBatch={100}
-          windowSize={20}
-          updateCellsBatchingPeriod={30}
-          initialNumToRender={100}
-          refreshControl={
-            <RefreshControl onRefresh={handleRefresh} refreshing={false} />
-          }
-        />
- */
