@@ -4,7 +4,7 @@ import EStyleSheet from 'react-native-extended-stylesheet';
 import {SplashScreenColors} from '../../../Config/Colors';
 import {heightDp} from '../../../Config/Dimensions';
 
-const EmailInputcomponent = () => {
+const EmailTextInputcomponent = () => {
   return (
     <View style={styles.inputContainer}>
       <Text style={styles.inputContainerText}>Email</Text>
@@ -50,4 +50,4 @@ const styles = EStyleSheet.create({
   },
 });
 
-export {EmailInputcomponent};
+export {EmailTextInputcomponent};

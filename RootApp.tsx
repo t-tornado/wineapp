@@ -5,9 +5,9 @@ import EStyleSheet from 'react-native-extended-stylesheet';
 import {AppTestIDs} from './Config/TestIDs';
 import MainAppInteractor from './Interactor/ComponentInteractors/MainAppInteractor.';
 import HomepageInteractor from './Interactor/WebInteractor/HomePageInteractor';
+import AuthenticatioinStackComponent from './Router/StackNavigators/AuthenticationStack';
 import HomeScreenStackComponent from './Router/StackNavigators/HomeScreenStack';
 import {AppBottomTab} from './Router/TabNavigators/AppBottomTab';
-import SignUpPage from './View/Screens/AuthenticationScreens/Signup';
 import SplashScreen from './View/Screens/AuthenticationScreens/SplashScreen';
 
 const screenWidth = Dimensions.get('window').width;
@@ -25,8 +25,7 @@ const RootApp: React.FC = () => {
           <StatusBar backgroundColor="#fff" barStyle="dark-content" />
         </HomepageInteractor>
       </MainAppInteractor> */}
-      <SignUpPage />
-      {/* <SplashScreen /> */}
+      <AuthenticatioinStackComponent />
     </NavigationContainer>
   );
 };

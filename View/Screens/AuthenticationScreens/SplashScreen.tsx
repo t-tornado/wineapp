@@ -5,18 +5,23 @@ import {heightDp, widthDp} from '../../../Config/Dimensions';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import {SplashScreenColors} from '../../../Config/Colors';
 import {AuthPagesLogoBar} from '../../OtherComponents/GeneralComponents/AuthPagesLogoBar';
+import {AuthPagesImageURL} from '../../../Config/WineAppConfig';
 
 const HEIGHT = heightDp('100');
 const WIDTH = widthDp('100');
 const icon_s = widthDp('4%');
-const imageUrl = require('../../../assets/Winesplash.jpeg');
-const logoImageURL = require('../../../logo.jpeg');
 
-const SplashScreen: React.FC = () => {
+const SplashScreen: React.FC = props => {
+  const {navigation} = props;
+
+  function onPressNextButton() {
+    navigation.navigate('Signup');
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.imageContainer}>
-        <Image source={imageUrl} style={styles.image} />
+        <Image source={AuthPagesImageURL} style={styles.image} />
       </View>
       <View style={styles.innerContainer}>
         <AuthPagesLogoBar />
@@ -28,7 +33,10 @@ const SplashScreen: React.FC = () => {
         </View>
         <View style={styles.bottomContainer}>
           <View style={styles.buttonContainer}>
-            <TouchableOpacity activeOpacity={0.8} style={styles.button}>
+            <TouchableOpacity
+              onPress={onPressNextButton}
+              activeOpacity={0.6}
+              style={styles.button}>
               <SimpleLineIcons
                 name="arrow-right"
                 size={icon_s}

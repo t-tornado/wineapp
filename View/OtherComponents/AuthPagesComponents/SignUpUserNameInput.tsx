@@ -1,22 +1,20 @@
 import React from 'react';
-import {Text, View} from 'react-native';
+import {Text, TextInput, View} from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
-import {TextInput} from 'react-native-gesture-handler';
 import {SplashScreenColors} from '../../../Config/Colors';
 import {heightDp} from '../../../Config/Dimensions';
 
-const PasswordInputContainer = () => {
+const SignUpUsernameInputComponent = () => {
   return (
     <View style={styles.inputContainer}>
-      <Text style={styles.inputContainerText}>Password</Text>
+      <Text style={styles.inputContainerText}>Username</Text>
       <View style={styles.textInputContainer}>
         <TextInput
           style={styles.textInput}
-          placeholder="password"
+          placeholder="username"
           placeholderTextColor="#ffffff90"
         />
       </View>
-      <Text style={styles.inputContainerText}>Forgot Password?</Text>
     </View>
   );
 };
@@ -35,7 +33,7 @@ const styles = EStyleSheet.create({
   },
   textInput: {
     height: '90%',
-    width: '100%',
+    width: '90%',
     justifyContent: 'center',
     alignItems: 'center',
     color: '#fff',
@@ -52,4 +50,4 @@ const styles = EStyleSheet.create({
   },
 });
 
-export {PasswordInputContainer};
+export {SignUpUsernameInputComponent};

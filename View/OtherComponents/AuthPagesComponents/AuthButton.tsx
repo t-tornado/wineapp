@@ -7,10 +7,23 @@ import {heightDp, widthDp} from '../../../Config/Dimensions';
 const HEIGHT = heightDp('6%');
 const WIDTH = widthDp('80');
 
-const SignInButton: React.FC = () => {
+interface AuthButtonProps {
+  name: string;
+  handleOnPress: Function;
+}
+
+const AuthButton: React.FC<AuthButtonProps> = props => {
+  const {name, handleOnPress} = props;
+  function callPressFunction() {
+    handleOnPress();
+  }
+
   return (
-    <TouchableOpacity activeOpacity={0.9} style={styles.container}>
-      <Text style={styles.text}>sign in</Text>
+    <TouchableOpacity
+      onPress={callPressFunction}
+      activeOpacity={0.9}
+      style={styles.container}>
+      <Text style={styles.text}>{name}</Text>
     </TouchableOpacity>
   );
 };
@@ -30,4 +43,4 @@ const styles = EStyleSheet.create({
   },
 });
 
-export {SignInButton};
+export {AuthButton};

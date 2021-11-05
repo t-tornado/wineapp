@@ -3,42 +3,53 @@ import {ImageBackground, Text, TouchableOpacity, View} from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import {SplashScreenColors} from '../../../Config/Colors';
 import {heightDp, widthDp} from '../../../Config/Dimensions';
-import {AuthPagesLogoBar} from '../../OtherComponents/GeneralComponents/AuthPagesLogoBar';
-import {EmailInputcomponent} from '../../OtherComponents/SignInComponents/EmailInputComponent';
-import {PasswordInputContainer} from '../../OtherComponents/SignInComponents/PasswordInput';
-import {SignInButton} from '../../OtherComponents/SignInComponents/SignInButton';
+import {AuthPagesImageURL} from '../../../Config/WineAppConfig';
+import {AuthButton} from '../../OtherComponents/AuthPagesComponents/AuthButton';
+import {EmailTextInputcomponent} from '../../OtherComponents/AuthPagesComponents/EmailTextInputComponent';
+import {PasswordInputComponent} from '../../OtherComponents/AuthPagesComponents/PasswordInputComponent';
+import {SignUpUsernameInputComponent} from '../../OtherComponents/AuthPagesComponents/SignUpUserNameInput';
 
 const HEIGHT = heightDp('100');
 const WIDTH = widthDp('100');
-const imageURL = require('../../../assets/Winesplash.jpeg');
 
-const SignUpPage: React.FC = () => {
+const SignUpScreen: React.FC = props => {
+  const {navigation} = props;
+
+  function onPressSignup() {
+    console.log('--info-- user has been logged in');
+  }
+
+  function onPressSignInButton() {
+    navigation.navigate('Signin');
+  }
+
   return (
     <View style={styles.container}>
-      <ImageBackground source={imageURL} style={styles.backgroundImage}>
+      <ImageBackground
+        source={AuthPagesImageURL}
+        style={styles.backgroundImage}>
         <View style={styles.overlay} />
+        <View style={styles.headerContainer}>
+          <Text style={styles.headerText}>Create an account</Text>
+          <Text style={styles.headerSubText}>
+            Fill the form below to join KWinefo
+          </Text>
+        </View>
         <View style={styles.body}>
-          <View style={styles.headerContainer}>
-            {/* <AuthPagesLogoBar /> */}
-            <View style={styles.headerTextContainer}>
-              <Text style={styles.headerText}>Sign In to </Text>
-              <Text style={styles.brandText}>KWineFo</Text>
-            </View>
-          </View>
-          <View style={styles.detailsContainer}>
-            <View style={styles.detailsContainerTop}>
-              <EmailInputcomponent />
-              <PasswordInputContainer />
-            </View>
-            <View style={styles.bodyFooter}>
-              <SignInButton />
-              <View style={styles.newUserContainer}>
-                <Text style={styles.newUserText}>Are you a new user?</Text>
-                <TouchableOpacity>
-                  <Text style={styles.signUpText}>Sign up</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
+          <EmailTextInputcomponent />
+          <SignUpUsernameInputComponent />
+          <PasswordInputComponent />
+        </View>
+        <View style={styles.signUpFooter}>
+          <AuthButton name="sign up" handleOnPress={onPressSignup} />
+          <View style={styles.footerTextContainer}>
+            <Text style={styles.footerText}>Already have an account</Text>
+            <TouchableOpacity
+              activeOpacity={0.6}
+              onPress={onPressSignInButton}
+              style={styles.footerSignInTextContainer}>
+              <Text style={styles.footerSignInText}>Sign in</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </ImageBackground>
@@ -47,71 +58,61 @@ const SignUpPage: React.FC = () => {
 };
 
 const styles = EStyleSheet.create({
-  container: {
-    height: HEIGHT,
-    width: WIDTH,
-  },
   backgroundImage: {
     height: '100%',
     width: '100%',
     resizeMode: 'cover',
-    justifyContent: 'flex-end',
   },
   body: {
-    height: '100%',
+    height: '50%',
     width: '100%',
+    alignItems: 'center',
     justifyContent: 'center',
+    paddingHorizontal: '20rem',
   },
-  bodyFooter: {
-    flex: 1,
+  container: {
+    width: WIDTH,
+    height: HEIGHT,
+  },
+  footerTextContainer: {
+    flex: 0.5,
+    flexDirection: 'row',
     alignItems: 'center',
   },
-  brandText: {
-    color: '#fff',
-    fontFamily: 'Anders',
-    fontSize: '30rem',
+  footerSignInText: {
+    color: SplashScreenColors.backgroundColor,
+    fontSize: '13rem',
   },
-  detailsContainer: {
-    flex: 1,
+  footerSignInTextContainer: {
+    flex: 0.5,
+    alignItems: 'center',
   },
-  detailsContainerTop: {
-    height: '60%',
+  footerText: {
+    color: '#ffff',
+    fontSize: '13rem',
+  },
+  signUpFooter: {
+    height: '30%',
     width: '100%',
-    paddingHorizontal: '20rem',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   headerContainer: {
-    height: '40%',
+    height: '10%',
     width: '100%',
+    justifyContent: 'center',
     paddingHorizontal: '20rem',
+  },
+  headerSubText: {
+    color: '#fff',
+    fontSize: '15rem',
+    marginTop: '15rem',
   },
   headerText: {
     color: '#fff',
-    fontSize: '17rem',
-  },
-  headerTextContainer: {
-    alignItems: 'center',
-    justifyContent: 'space-evenly',
-    flex: 1,
-  },
-  inputContainer: {
-    height: '10%',
-    width: '100%',
-    alignItems: 'flex-start',
-  },
-  inputContainerText: {
-    color: '#fff',
-    fontSize: '12rem',
-  },
-  newUserContainer: {
-    height: '40%',
-    width: '100%',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  newUserText: {
-    color: '#fff',
-    fontSize: '13rem',
+    fontFamily: 'CL',
+    // fontWeight: 'bold',
+    fontSize: '30rem',
   },
   overlay: {
     backgroundColor: '#00000090',
@@ -119,17 +120,6 @@ const styles = EStyleSheet.create({
     height: '100%',
     width: '100%',
   },
-  signUpText: {
-    fontSize: '12rem',
-    left: '30rem',
-    color: SplashScreenColors.backgroundColor,
-  },
-  textInput: {
-    width: '70%',
-    height: '70%',
-    borderColor: '#fff',
-    borderWidth: '1rem',
-  },
 });
 
-export default SignUpPage;
+export default SignUpScreen;
