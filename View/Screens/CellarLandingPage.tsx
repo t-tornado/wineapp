@@ -27,7 +27,7 @@ const CellarLandingScreen: React.FC = props => {
   }
 
   useEffect(() => {
-    fetchCellaDataFunction();
+    data.length < 1 ? fetchCellaDataFunction() : null;
   }, []);
 
   return (
@@ -46,7 +46,7 @@ const CellarLandingScreen: React.FC = props => {
         keyExtractor={(item, index) => index.toString()}
         data={data}
         renderItem={renderItemFunction}
-        maxToRenderPerBatch={100}
+        maxToRenderPerBatch={30}
         windowSize={20}
         updateCellsBatchingPeriod={60}
         initialNumToRender={100}

@@ -67,18 +67,21 @@ const BottomNavbar: React.FC<NavbarProps> = ({
               {route.name === 'Home' ? (
                 <MaterialIcons
                   name="home-filled"
-                  color={isFocused ? '#FFF' : '#00000090'}
+                  color={isFocused ? '#FFF' : '#ffffff90'}
                   size={DROP_ICON_S}
                 />
               ) : (
                 <Entypo
                   name="drop"
                   size={DROP_ICON_S}
-                  color={isFocused ? '#fff' : '#00000090'}
+                  color={isFocused ? '#fff' : '#ffffff90'}
                 />
               )}
               <Text
-                style={[styles.label, {color: isFocused ? '#fff' : '#000000'}]}>
+                style={[
+                  styles.label,
+                  {color: isFocused ? '#fff' : '#ffffff80'},
+                ]}>
                 {route.name}
               </Text>
             </TouchableOpacity>
@@ -93,7 +96,8 @@ const styles = EStyleSheet.create({
   navBar: {
     height: NAVBAR_HEGIHT,
     width: NAVBAR_W,
-    backgroundColor: '#7579E7',
+    // backgroundColor: '#7579E7',
+    backgroundColor: '#000',
     flexDirection: 'row',
     alignItems: 'center',
     borderRadius: '30rem',

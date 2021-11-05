@@ -1,12 +1,12 @@
 import React from 'react';
-import {Text, View} from 'react-native';
+import {Text, TouchableOpacity, View} from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 
 const AddToCellarButton: React.FC = () => {
   return (
-    <View style={styles.addButtonContainer}>
+    <TouchableOpacity style={styles.addButtonContainer}>
       <Text style={styles.addButtonText}>Add to cellar</Text>
-    </View>
+    </TouchableOpacity>
   );
 };
 
@@ -16,12 +16,12 @@ const styles = EStyleSheet.create({
     fontSize: '12rem',
   },
   addButtonContainer: {
-    width: '40%',
+    width: '100%',
     height: '40%',
-    borderRadius: '20rem',
+    borderRadius: '25rem',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#000',
+    backgroundColor: '#51050F',
   },
 });
 

@@ -13,8 +13,15 @@ const CellarWineCard: React.FC<WineCardProps> = props => {
   const {wineObject, navigationProps} = props;
   const {image, wine, winery} = wineObject;
 
+  function handleNavigate() {
+    navigationProps.navigation.navigate('CellarWinePage', {wineObject});
+  }
+
   return (
-    <TouchableOpacity style={styles.container}>
+    <TouchableOpacity
+      activeOpacity={0.8}
+      onPress={handleNavigate}
+      style={styles.container}>
       <View style={styles.coverImageContainer}>
         <View style={styles.imageWrapper}>
           <Image source={{uri: image}} style={styles.image} />

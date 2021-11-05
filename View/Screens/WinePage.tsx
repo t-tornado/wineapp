@@ -10,9 +10,6 @@ import {
 import EStyleSheet from 'react-native-extended-stylesheet';
 import {heightDp, NAVBAR_HEGIHT, widthDp} from '../../Config/Dimensions';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import {RatingsCard} from '../OtherComponents/RatingsCard';
-import {LocationCard} from '../OtherComponents/LocationCard';
 import {WineObject} from '../../Config/CloudData';
 import {LocationTag} from '../OtherComponents/WinePageComponents/LocationTag';
 import {ReviewTag} from '../OtherComponents/WinePageComponents/ReviewsTag';
@@ -39,14 +36,17 @@ const WinePage: React.FC<WinepageRouteprops> = props => {
   const {wine, winery, rating, location, image} = props.route.params.wineObject;
   const {average, reviews} = rating;
   const _location: string =
-    typeof location === 'string' ? location.match(/\b(\w+)/g).join(', ') : '';
+    typeof location === 'string' ? location.match(/\b(\w+)/g).join(' ') : '';
 
   function handlePress() {
     props.navigation.goBack();
   }
 
   return (
-    <ScrollView style={styles.container} stickyHeaderIndices={[0]}>
+    <ScrollView
+      showsVerticalScrollIndicator={false}
+      style={styles.container}
+      stickyHeaderIndices={[0]}>
       <View style={styles.navbar}>
         <TouchableOpacity onPress={handlePress} style={styles.iconContainer}>
           <SimpleLineIcons name="arrow-left" size={ICON_S} color="#000" />
@@ -76,18 +76,6 @@ const WinePage: React.FC<WinepageRouteprops> = props => {
 };
 
 const styles = EStyleSheet.create({
-  // addButtonText: {
-  //   color: '#fff',
-  //   fontSize: '12rem',
-  // },
-  // addButtonContainer: {
-  //   width: '40%',
-  //   height: '40%',
-  //   borderRadius: '20rem',
-  //   alignItems: 'center',
-  //   justifyContent: 'center',
-  //   backgroundColor: '#B980F0',
-  // },
   backButtonText: {
     color: '#000',
     fontSize: '15rem',
@@ -127,11 +115,8 @@ const styles = EStyleSheet.create({
     alignItems: 'center',
   },
   footer: {
-    // width: widthDp('80'),
-    // backgroundColor: 'tomato',
-    // flex: 1,
     height: heightDp('30'),
-    marginBottom: heightDp('15'),
+    marginBottom: heightDp('10'),
   },
 
   iconContainer: {

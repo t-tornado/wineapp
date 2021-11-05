@@ -41,7 +41,10 @@ const CellarWinePage: React.FC<CellarWinepageRouteprops> = props => {
   }
 
   return (
-    <ScrollView style={styles.container} stickyHeaderIndices={[0]}>
+    <ScrollView
+      showsVerticalScrollIndicator={false}
+      style={styles.container}
+      stickyHeaderIndices={[0]}>
       <View style={styles.navbar}>
         <TouchableOpacity onPress={handlePress} style={styles.iconContainer}>
           <SimpleLineIcons name="arrow-left" size={ICON_S} color="#000" />
@@ -57,14 +60,16 @@ const CellarWinePage: React.FC<CellarWinepageRouteprops> = props => {
         <LocationTag location={_location} />
         <ReviewTag reviews={'22'} />
         <RatingTag rating={'43'} />
-        <View style={styles.bodyBottomContainer}>
-          <AddToCellarButton />
-        </View>
       </View>
 
-      <View style={styles.footer}>
+      <View style={styles.textDetailsContainer}>
         <Text style={[styles.wineText]}>{wine}</Text>
         <Text style={styles.wineryText}>{winery}</Text>
+      </View>
+      <View style={styles.footer}>
+        <TouchableOpacity style={styles.deleteButton}>
+          <Text style={styles.deleteButtonText}>Remove from cellar</Text>
+        </TouchableOpacity>
       </View>
     </ScrollView>
   );
@@ -77,11 +82,12 @@ const styles = EStyleSheet.create({
     fontWeight: 'bold',
   },
   body: {
-    flex: 1,
+    height: heightDp('60%'),
     width: '100%',
     alignItems: 'flex-start',
     justifyContent: 'flex-end',
     paddingHorizontal: '20rem',
+    paddingBottom: '30rem',
   },
   bodyBottomContainer: {
     height: heightDp('15'),
@@ -99,6 +105,19 @@ const styles = EStyleSheet.create({
     paddingHorizontal: '20rem',
     backgroundColor: '#fff',
   },
+  deleteButton: {
+    backgroundColor: 'red',
+    width: '100%',
+    height: '20%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    elevation: 20,
+    borderRadius: '13rem',
+  },
+  deleteButtonText: {
+    color: '#fff',
+    fontSize: '16rem',
+  },
   details: {
     flex: 1,
   },
@@ -110,7 +129,7 @@ const styles = EStyleSheet.create({
   },
   footer: {
     height: heightDp('30'),
-    marginBottom: heightDp('15'),
+    marginBottom: heightDp('10'),
   },
 
   iconContainer: {
@@ -164,6 +183,10 @@ const styles = EStyleSheet.create({
   text: {
     color: '#000',
     fontSize: '20rem',
+  },
+  textDetailsContainer: {
+    height: '20%',
+    width: '100%',
   },
   topIconContainer: {
     height: '40%',
