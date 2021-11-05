@@ -6,7 +6,7 @@ import CellartStactContainer from '../StackNavigators/CellarStackComponent';
 
 const BottomTab = createBottomTabNavigator();
 
-const AppBottomTab = () => {
+const UserAppBottomTab = () => {
   return (
     <BottomTab.Navigator tabBar={props => <BottomNavbar {...props} />}>
       <BottomTab.Screen
@@ -27,4 +27,4 @@ const AppBottomTab = () => {
   );
 };
 
-export {AppBottomTab};
+export default UserAppBottomTab;

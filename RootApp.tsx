@@ -1,14 +1,14 @@
 import {NavigationContainer} from '@react-navigation/native';
 import React from 'react';
 import {Dimensions, StatusBar, View} from 'react-native';
+import 'react-native-gesture-handler';
 import EStyleSheet from 'react-native-extended-stylesheet';
+
 import {AppTestIDs} from './Config/TestIDs';
 import MainAppInteractor from './Interactor/ComponentInteractors/MainAppInteractor.';
 import HomepageInteractor from './Interactor/WebInteractor/HomePageInteractor';
-import AuthenticatioinStackComponent from './Router/StackNavigators/AuthenticationStack';
-import HomeScreenStackComponent from './Router/StackNavigators/HomeScreenStack';
-import {AppBottomTab} from './Router/TabNavigators/AppBottomTab';
-import SplashScreen from './View/Screens/AuthenticationScreens/SplashScreen';
+import {AuthInteractor} from './Interactor/WebInteractor/AuthInteractor';
+import MainAppNavigationContainer from './Router/MainAppNavigationContainer';
 
 const screenWidth = Dimensions.get('window').width;
 EStyleSheet.build({$rem: screenWidth / 380, $miniPlayerHeight: '50rem'});
@@ -17,15 +17,13 @@ const RootApp: React.FC = () => {
   EStyleSheet.build();
   return (
     <NavigationContainer>
-      {/* <MainAppInteractor>
+      <MainAppInteractor>
         <HomepageInteractor>
-          <View style={{flex: 1}} testID={AppTestIDs.bottomNavbar}>
-            <AppBottomTab />
-          </View>
-          <StatusBar backgroundColor="#fff" barStyle="dark-content" />
+          <AuthInteractor>
+            <MainAppNavigationContainer />
+          </AuthInteractor>
         </HomepageInteractor>
-      </MainAppInteractor> */}
-      <AuthenticatioinStackComponent />
+      </MainAppInteractor>
     </NavigationContainer>
   );
 };
