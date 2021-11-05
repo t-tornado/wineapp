@@ -13,3 +13,7 @@ export const WinePageColors = {
   reviewTag: '#350B40',
   ratingTag: '#FF9292',
 };
+
+export const SplashScreenColors = {
+  backgroundColor: '#161E54',
+};
