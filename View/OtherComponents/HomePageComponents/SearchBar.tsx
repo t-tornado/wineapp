@@ -5,8 +5,8 @@ import {heightDp, widthDp} from '../../../Config/Dimensions';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import {useState} from 'react';
 
-const HEIGHT = heightDp('10');
-const WIDTH = widthDp('90%');
+const HEIGHT = heightDp('8');
+const WIDTH = widthDp('70%');
 const ICON_S = heightDp('3');
 
 const SearchBoxComponent: React.FC = () => {
@@ -48,7 +48,7 @@ const styles = EStyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'row',
-    borderRadius: '20rem',
+    borderRadius: '12rem',
   },
   textInputBox: {
     height: '90%',

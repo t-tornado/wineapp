@@ -44,10 +44,6 @@ const Homepage: React.FC = props => {
     fetchData();
   }, []);
 
-  if (scrollRef.current !== undefined) {
-    console.log(scrollRef.current._scrollRef);
-  }
-
   return (
     <View style={styles.container}>
       {/* <View style={styles.header}>
@@ -70,9 +66,6 @@ const Homepage: React.FC = props => {
               handlerRefresh={handleRefresh}
             />
           }
-          ref={r => {
-            scrollRef.current = r;
-          }}
           contentContainerStyle={{alignItems: 'center'}}
           numColumns={2}
           keyExtractor={(item, index) => index.toString()}
