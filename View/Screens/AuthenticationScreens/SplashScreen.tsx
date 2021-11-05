@@ -4,6 +4,7 @@ import EStyleSheet from 'react-native-extended-stylesheet';
 import {heightDp, widthDp} from '../../../Config/Dimensions';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import {SplashScreenColors} from '../../../Config/Colors';
+import {AuthPagesLogoBar} from '../../OtherComponents/GeneralComponents/AuthPagesLogoBar';
 
 const HEIGHT = heightDp('100');
 const WIDTH = widthDp('100');
@@ -18,9 +19,7 @@ const SplashScreen: React.FC = () => {
         <Image source={imageUrl} style={styles.image} />
       </View>
       <View style={styles.innerContainer}>
-        <View style={styles.logoBar}>
-          <Image source={logoImageURL} style={styles.logoImage} />
-        </View>
+        <AuthPagesLogoBar />
         <View style={styles.textContainer}>
           <Text style={styles.headerText}>KWineFo </Text>
           <Text style={styles.headerSubtext}>

@@ -17,3 +17,7 @@ export const WinePageColors = {
 export const SplashScreenColors = {
   backgroundColor: '#161E54',
 };
+
+export const SignInScreenColors = {
+  signInButtonColor: '#161E54',
+};
