@@ -1,9 +1,10 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {View, TextInput} from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import {heightDp, widthDp} from '../../../Config/Dimensions';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import {useState} from 'react';
+import {useSearchKeyword} from '../../../Interactor/ComponentInteractors/MainAppInteractor.';
 
 const HEIGHT = heightDp('8');
 const WIDTH = widthDp('70%');
@@ -11,10 +12,15 @@ const ICON_S = heightDp('3');
 
 const SearchBoxComponent: React.FC = () => {
   const [input, setInput] = useState<string>('');
+  const setSearchKeyword = useSearchKeyword().setFunction;
 
   function handleChangedText(text: string) {
     setInput(text);
   }
+
+  useEffect(() => {
+    setSearchKeyword(input);
+  }, [input]);
 
   return (
     <View style={styles.container}>

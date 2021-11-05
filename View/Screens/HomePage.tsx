@@ -1,4 +1,5 @@
 import React, {useEffect} from 'react';
+import {useState} from 'react';
 import {useRef} from 'react';
 import {FlatList, RefreshControl, StyleSheet} from 'react-native';
 import {View} from 'react-native';
@@ -6,6 +7,7 @@ import EStyleSheet from 'react-native-extended-stylesheet';
 import {WineObject} from '../../Config/CloudData';
 import {HomeScreenColors} from '../../Config/Colors';
 import {heightDp, widthDp} from '../../Config/Dimensions';
+import {useSearchKeyword} from '../../Interactor/ComponentInteractors/MainAppInteractor.';
 import {
   useErrorFetchingData,
   useFetchDataFunction,
@@ -14,7 +16,6 @@ import {
 } from '../../Interactor/WebInteractor/HomePageInteractor';
 import {HeaderMenu} from '../OtherComponents/HomePageComponents/HeaderMenu';
 import {IntroductoryHeaderComponent} from '../OtherComponents/HomePageComponents/IntroductoryHeaderComponent';
-import {SearchBoxComponent} from '../OtherComponents/HomePageComponents/SearchBar';
 import WineCard from '../OtherComponents/HomePageComponents/WineCard';
 import {LoadingComponent} from '../OtherComponents/LoadingComponent';
 
@@ -27,8 +28,9 @@ const Homepage: React.FC = props => {
   const fetchData: Function = useFetchDataFunction();
   const fetchingData: boolean = useFetchingDataState();
   const errorFetching: boolean = useErrorFetchingData();
-  const scrollRef = useRef();
-  const showFetchingComponent = fetchingData || errorFetching;
+  const fetchResults: [WineObject] = useWineData();
+  const [data, setData] = useState([]);
+  const keyword: string = useSearchKeyword().value;
 
   function handleRefresh() {
     fetchData();
@@ -38,11 +40,32 @@ const Homepage: React.FC = props => {
     return <WineCard wineObject={item} navigationProps={props} />;
   }
 
-  const data: [WineObject] = useWineData();
-
   useEffect(() => {
     fetchData();
   }, []);
+
+  useEffect(() => {
+    let cleanup = true;
+
+    const __data = fetchResults.filter((item, index) => {
+      const {wine, winery, location} = item;
+      if (
+        wine.toLowerCase().includes(keyword.toLowerCase()) ||
+        winery.toLowerCase().includes(keyword.toLowerCase()) ||
+        location.toLowerCase().includes(keyword.toLowerCase())
+      )
+        return true;
+      return false;
+    });
+
+    if (keyword === '') {
+      cleanup && setData(fetchResults);
+    } else {
+      cleanup && setData(__data);
+    }
+
+    return () => (cleanup = false);
+  }, [keyword]);
 
   return (
     <View style={styles.container}>
@@ -71,7 +94,7 @@ const Homepage: React.FC = props => {
           keyExtractor={(item, index) => index.toString()}
           data={data}
           renderItem={renderItemFunction}
-          maxToRenderPerBatch={100}
+          maxToRenderPerBatch={60}
           windowSize={20}
           updateCellsBatchingPeriod={60}
           initialNumToRender={100}

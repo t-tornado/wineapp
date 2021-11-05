@@ -6,6 +6,7 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import {HomeScreenColors} from '../../../Config/Colors';
 import {SearchBoxComponent} from './SearchBar';
+import {useSearchKeyword} from '../../../Interactor/ComponentInteractors/MainAppInteractor.';
 
 const HEIGHT = heightDp('10%');
 const WIDTH = widthDp('100');
@@ -14,9 +15,11 @@ const ICON_S = heightDp('4%');
 
 const HeaderMenu: React.FC = () => {
   const [searchActive, setSetActiveState] = useState<boolean>(false);
+  const setSearchWord: Function = useSearchKeyword().setFunction;
 
   function handleCloseSearchBar() {
     setSetActiveState(false);
+    setSearchWord('');
   }
   function handleOpenSearchBar() {
     setSetActiveState(true);

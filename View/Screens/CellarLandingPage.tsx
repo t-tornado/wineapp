@@ -17,6 +17,7 @@ const CellarLandingScreen: React.FC = props => {
   const fetchingCellaData: boolean = useFetchingDataState();
   const errorFetchingCellaData: boolean = useErrorFetchingData();
   const data: [WineObject] = useWineData();
+  const _data = data.slice(0, 20);
 
   function renderItemFunction({item, index}) {
     return <CellarWineCard wineObject={item} navigationProps={props} />;
@@ -44,9 +45,9 @@ const CellarLandingScreen: React.FC = props => {
         contentContainerStyle={{alignItems: 'center'}}
         numColumns={1}
         keyExtractor={(item, index) => index.toString()}
-        data={data}
+        data={_data}
         renderItem={renderItemFunction}
-        maxToRenderPerBatch={30}
+        maxToRenderPerBatch={100}
         windowSize={20}
         updateCellsBatchingPeriod={60}
         initialNumToRender={100}
