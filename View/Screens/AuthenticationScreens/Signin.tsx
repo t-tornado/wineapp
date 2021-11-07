@@ -1,9 +1,19 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {ImageBackground, Text, TouchableOpacity, View} from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import {SplashScreenColors} from '../../../Config/Colors';
 import {heightDp, widthDp} from '../../../Config/Dimensions';
+import {
+  useResetSigninStates,
+  useSignin,
+  useSigninInvalidInput,
+  useSigninStates,
+  useSigninUserNotFound,
+  useUserEmail,
+  useUserPassword,
+} from '../../../Interactor/WebInteractor/AuthInteractor';
 import {AuthButton} from '../../OtherComponents/AuthPagesComponents/AuthButton';
+import {AuthLoadingComponent} from '../../OtherComponents/AuthPagesComponents/AuthLoadingComponent';
 import {EmailTextInputcomponent} from '../../OtherComponents/AuthPagesComponents/EmailTextInputComponent';
 import {PasswordInputComponent} from '../../OtherComponents/AuthPagesComponents/PasswordInputComponent';
 
@@ -12,15 +22,36 @@ const WIDTH = widthDp('100');
 const imageURL = require('../../../assets/Winesplash.jpeg');
 
 const SignInScreen: React.FC = props => {
+  const [openLoadingIndicator, setOpenLoadingIndicator] = useState(false);
   const {navigation} = props;
+  const resetSignipStates = useResetSigninStates();
+  const signIn = useSignin();
+  const signinStates = useSigninStates();
+  const userEmail = useUserEmail().value;
+  const userPassword = useUserPassword().value;
+  const userNotFound = useSigninUserNotFound();
+  const invalidInput = useSigninInvalidInput();
+  const {loading, sucess, failed} = signinStates;
 
   function onPressSignupButton() {
     navigation.navigate('Signup');
   }
 
   function onPressSignin() {
-    console.log('--info-- user has been logged in');
+    signIn(userEmail, userPassword);
   }
+
+  function handleCloseLoadingIndicator() {
+    setOpenLoadingIndicator(false);
+    resetSignipStates();
+  }
+
+  useEffect(() => {
+    let cleanUp = true;
+    if (loading || sucess || failed) cleanUp && setOpenLoadingIndicator(true);
+
+    return () => (cleanUp = false);
+  }, [loading, sucess, failed]);
 
   return (
     <View style={styles.container}>
@@ -52,6 +83,17 @@ const SignInScreen: React.FC = props => {
             </View>
           </View>
         </View>
+        {openLoadingIndicator ? (
+          <AuthLoadingComponent
+            type="signin"
+            loading={loading}
+            failed={failed}
+            success={sucess}
+            userNotFound={userNotFound}
+            invalidInput={invalidInput}
+            closeIndicator={handleCloseLoadingIndicator}
+          />
+        ) : null}
       </ImageBackground>
     </View>
   );
@@ -130,6 +172,18 @@ const styles = EStyleSheet.create({
     position: 'absolute',
     height: '100%',
     width: '100%',
+  },
+  signinLoadingScreen: {
+    height: '100%',
+    width: '100%',
+    position: 'absolute',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#00000090',
+  },
+  signinLoadingScreenText: {
+    color: '#fff',
+    fontSize: '15rem',
   },
   signUpText: {
     fontSize: '12rem',

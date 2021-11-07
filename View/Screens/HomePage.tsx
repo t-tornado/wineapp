@@ -59,6 +59,7 @@ const Homepage: React.FC = props => {
     });
 
     if (keyword === '') {
+      console.log('keyword is empty');
       cleanup && setData(fetchResults);
     } else {
       cleanup && setData(__data);

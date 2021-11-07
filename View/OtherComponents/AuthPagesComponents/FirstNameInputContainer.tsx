@@ -1,18 +1,35 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {Text, TextInput, View} from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import {SplashScreenColors} from '../../../Config/Colors';
 import {heightDp} from '../../../Config/Dimensions';
+import {useUserFirstName} from '../../../Interactor/WebInteractor/AuthInteractor';
 
-const SignUpUsernameInputComponent = () => {
+const SignUpFirstnameInputComponent = () => {
+  const [value, setValue] = useState('');
+  const setFirstName = useUserFirstName().setFunction;
+
+  function handleChangedText(text: string) {
+    setValue(text);
+  }
+
+  useEffect(() => {
+    let cleanup = true;
+    cleanup && setFirstName(value);
+
+    return () => (cleanup = false);
+  }, [value]);
+
   return (
     <View style={styles.inputContainer}>
-      <Text style={styles.inputContainerText}>Username</Text>
+      <Text style={styles.inputContainerText}>First Name</Text>
       <View style={styles.textInputContainer}>
         <TextInput
+          value={value}
           style={styles.textInput}
-          placeholder="username"
+          placeholder="First Name"
           placeholderTextColor="#ffffff90"
+          onChangeText={handleChangedText}
         />
       </View>
     </View>
@@ -50,4 +67,4 @@ const styles = EStyleSheet.create({
   },
 });
 
-export {SignUpUsernameInputComponent};
+export {SignUpFirstnameInputComponent};

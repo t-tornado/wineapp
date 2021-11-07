@@ -1,39 +1,37 @@
 import React, {useEffect, useState} from 'react';
-import {Text, View} from 'react-native';
+import {Text, TextInput, View} from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
-import {TextInput} from 'react-native-gesture-handler';
 import {SplashScreenColors} from '../../../Config/Colors';
 import {heightDp} from '../../../Config/Dimensions';
-import {useUserPassword} from '../../../Interactor/WebInteractor/AuthInteractor';
+import {useUserLastName} from '../../../Interactor/WebInteractor/AuthInteractor';
 
-const PasswordInputComponent = () => {
+const SignUpLastNameInputComponent = () => {
   const [value, setValue] = useState('');
-  const setUserPassword = useUserPassword().setFunction;
+  const setLastName = useUserLastName().setFunction;
 
-  function handleTextChanged(text) {
+  function handleChangedText(text: string) {
     setValue(text);
   }
 
   useEffect(() => {
     let cleanup = true;
-    cleanup && setUserPassword(value);
+    cleanup && setLastName(value);
 
     return () => (cleanup = false);
   }, [value]);
 
   return (
     <View style={styles.inputContainer}>
-      <Text style={styles.inputContainerText}>Password</Text>
+      <Text style={styles.inputContainerText}>Last Name</Text>
       <View style={styles.textInputContainer}>
         <TextInput
           value={value}
           style={styles.textInput}
-          placeholder="password"
+          placeholder="Last Name"
           placeholderTextColor="#ffffff90"
-          onChangeText={handleTextChanged}
+          onChangeText={handleChangedText}
         />
       </View>
-      <Text style={styles.inputContainerText}>Forgot Password?</Text>
     </View>
   );
 };
@@ -52,7 +50,7 @@ const styles = EStyleSheet.create({
   },
   textInput: {
     height: '90%',
-    width: '100%',
+    width: '90%',
     justifyContent: 'center',
     alignItems: 'center',
     color: '#fff',
@@ -69,4 +67,4 @@ const styles = EStyleSheet.create({
   },
 });
 
-export {PasswordInputComponent};
+export {SignUpLastNameInputComponent};

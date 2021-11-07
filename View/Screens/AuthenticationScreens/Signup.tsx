@@ -1,27 +1,58 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {ImageBackground, Text, TouchableOpacity, View} from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import {SplashScreenColors} from '../../../Config/Colors';
 import {heightDp, widthDp} from '../../../Config/Dimensions';
 import {AuthPagesImageURL} from '../../../Config/WineAppConfig';
+import {
+  useResetSignupStates,
+  useSignup,
+  useSignupStates,
+  useUserEmail,
+  useUsername,
+  useUserPassword,
+} from '../../../Interactor/WebInteractor/AuthInteractor';
 import {AuthButton} from '../../OtherComponents/AuthPagesComponents/AuthButton';
+import {AuthLoadingComponent} from '../../OtherComponents/AuthPagesComponents/AuthLoadingComponent';
 import {EmailTextInputcomponent} from '../../OtherComponents/AuthPagesComponents/EmailTextInputComponent';
+import {SignUpFirstnameInputComponent} from '../../OtherComponents/AuthPagesComponents/FirstNameInputContainer';
+import {SignUpLastNameInputComponent} from '../../OtherComponents/AuthPagesComponents/LastNameInputContainer';
 import {PasswordInputComponent} from '../../OtherComponents/AuthPagesComponents/PasswordInputComponent';
-import {SignUpUsernameInputComponent} from '../../OtherComponents/AuthPagesComponents/SignUpUserNameInput';
 
 const HEIGHT = heightDp('100');
 const WIDTH = widthDp('100');
 
 const SignUpScreen: React.FC = props => {
+  const [openLoadingIndicator, setOpenLoadingIndicator] = useState(false);
   const {navigation} = props;
+  const resetSignupStates = useResetSignupStates();
+  const signUpStates = useSignupStates();
+  const userEmail = useUserEmail().value;
+  const userPassword = useUserPassword().value;
+  const userName = useUsername().value;
+  const signUp = useSignup();
+  const {loading, sucess, failed} = signUpStates;
 
   function onPressSignup() {
-    console.log('--info-- user has been logged in');
+    signUp(userEmail, userPassword, userName);
   }
 
   function onPressSignInButton() {
     navigation.navigate('Signin');
   }
+
+  function handleCloseLoadingIndicator() {
+    setOpenLoadingIndicator(false);
+    // reset all signin loading states
+    resetSignupStates();
+  }
+
+  useEffect(() => {
+    let cleanUp = true;
+    if (loading || sucess || failed) cleanUp && setOpenLoadingIndicator(true);
+
+    return () => (cleanUp = false);
+  }, [loading, sucess, failed]);
 
   return (
     <View style={styles.container}>
@@ -36,8 +67,9 @@ const SignUpScreen: React.FC = props => {
           </Text>
         </View>
         <View style={styles.body}>
+          <SignUpFirstnameInputComponent />
+          <SignUpLastNameInputComponent />
           <EmailTextInputcomponent />
-          <SignUpUsernameInputComponent />
           <PasswordInputComponent />
         </View>
         <View style={styles.signUpFooter}>
@@ -53,6 +85,15 @@ const SignUpScreen: React.FC = props => {
           </View>
         </View>
       </ImageBackground>
+      {openLoadingIndicator ? (
+        <AuthLoadingComponent
+          closeIndicator={handleCloseLoadingIndicator}
+          failed={failed}
+          loading={loading}
+          success={sucess}
+          type="signup"
+        />
+      ) : null}
     </View>
   );
 };
@@ -64,7 +105,7 @@ const styles = EStyleSheet.create({
     resizeMode: 'cover',
   },
   body: {
-    height: '50%',
+    height: '60%',
     width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
@@ -96,6 +137,18 @@ const styles = EStyleSheet.create({
     width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  signupLoadingScreen: {
+    height: '100%',
+    width: '100%',
+    position: 'absolute',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#00000090',
+  },
+  signupLoadingScreenText: {
+    color: '#fff',
+    fontSize: '15rem',
   },
   headerContainer: {
     height: '10%',

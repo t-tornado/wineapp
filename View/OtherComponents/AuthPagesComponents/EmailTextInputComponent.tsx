@@ -1,18 +1,37 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {Text, TextInput, View} from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import {SplashScreenColors} from '../../../Config/Colors';
 import {heightDp} from '../../../Config/Dimensions';
+import {isEmail} from '../../../Config/HelperFunctions/JSHelperFunctions';
+import {useUserEmail} from '../../../Interactor/WebInteractor/AuthInteractor';
 
 const EmailTextInputcomponent = () => {
+  const [value, setValue] = useState('');
+  const setUserEmail = useUserEmail().setFunction;
+
+  function handleChangedText(text: string) {
+    setValue(text);
+  }
+
+  useEffect(() => {
+    let cleanup = true;
+    const validEmail: boolean = isEmail(value);
+    if (validEmail) cleanup && setUserEmail(value);
+
+    return () => (cleanup = false);
+  }, [value]);
+
   return (
     <View style={styles.inputContainer}>
       <Text style={styles.inputContainerText}>Email</Text>
       <View style={styles.textInputContainer}>
         <TextInput
+          value={value}
           style={styles.textInput}
           placeholder="email"
           placeholderTextColor="#ffffff90"
+          onChangeText={handleChangedText}
         />
       </View>
     </View>
