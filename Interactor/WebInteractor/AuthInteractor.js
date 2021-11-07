@@ -10,13 +10,15 @@ const UserFirstNameContext = createContext();
 const UserLastNameContext = createContext();
 const SignupFnContext = createContext();
 const SignUpStatesContext = createContext();
-const ResetSignupStatesContext = createContext();
+const SignupFieldEmptyErrorContext = createContext();
+
 const AuthStateChangedContext = createContext();
 const SigninFnContext = createContext();
 const SigninStatesContext = createContext();
 const SigninUserNotFoundStateContext = createContext();
 const SigninInvalidInputErrorContext = createContext();
-const ResetSigninStatesContext = createContext();
+
+const ResetAuthStatesContext = createContext();
 
 const AuthInteractor = props => {
   const [user, setUser] = useState(null);
@@ -26,8 +28,9 @@ const AuthInteractor = props => {
   const [userFirstName, setUserFirstName] = useState(null);
   const [userLastName, setUserLastName] = useState(null);
   // SignUp States
+  const [signupFieldEmpty, setSignupFieldEmpty] = useState(false);
   const [signupSuccess, setSignupSuccess] = useState(false);
-  const [signupFailed, setSignupFaied] = useState(false);
+  const [signupFailed, setSignupFailed] = useState(false);
   const [signupLoading, setSignupLoading] = useState(false);
   // Signin States
   const [signinSuccess, setSigninSuccess] = useState(false);
@@ -36,57 +39,67 @@ const AuthInteractor = props => {
   const [userNotFound, setUserNotFound] = useState(false);
   const [signinInvalidInputError, setSigninInvalidInputError] = useState(false);
 
+  // [auth/weak-password]
+
   function handleSignup(email, password, firstName, lastName) {
-    if ([email, password, username].includes(undefined || '')) {
-      console.log('input Fields are empty');
-      null;
+    console.log('--signing up--');
+    if (
+      [email, password, firstName, lastName].some(it => {
+        console.log([email, password, firstName, lastName]);
+      })
+    ) {
+      console.log('-- input are wrong');
+      setSignupFieldEmpty(true);
+      setSignupFailed(true);
+      setSignupLoading(false);
+      setSignupSuccess(false);
     } else {
       setSignupLoading(true);
-      setSignupFaied(false);
+      setSignupFailed(false);
       setSignupSuccess(false);
+      setSignupFieldEmpty(false);
       auth()
         .createUserWithEmailAndPassword(email, password)
         .then(() => {
-          const setNewUserDoc = () => {
-            firestore()
-              .collection('users')
-              .add({
-                email,
-                firstName,
-                lastName,
-              })
-              .then(() => {
-                setSignupSuccess(true);
-                setSignupLoading(false);
-                setSignupFaied(false);
-              })
-              .catch(e => {
-                console.log('could not create user document', e);
-                setNewUserDoc();
-              });
-          };
-          setNewUserDoc();
+          firestore()
+            .collection('users')
+            .doc(email)
+            .set({
+              email,
+              firstName,
+              lastName,
+            })
+            .catch(e => {
+              console.log('could not create user data in firebase  ', e);
+              setSignupLoading(false);
+              setSignupFailed(true);
+              setSignupSuccess(false);
+              setSignupFieldEmpty(false);
+            });
         })
         .catch(error => {
           console.log('--error-- Could not create user  ', error);
-          setSignupFaied(true);
+          setSignupFailed(true);
           setSignupLoading(false);
           setSignupSuccess(false);
+          setSignupFieldEmpty(false);
         });
     }
   }
 
   function handleSignin(email, password) {
-    if ([email, password].includes(undefined || '')) {
-      console.log('Fields are empty, show pop-up');
-      null;
+    if ([email, password].some(it => it === undefined || it === '')) {
+      setSigninLoading(false);
+      setSigninSuccess(false);
+      setSigninFailed(true);
+      setUserNotFound(false);
+      setSigninInvalidInputError(true);
     } else {
       setSigninLoading(true);
       setSigninSuccess(false);
       setSigninFailed(false);
       setUserNotFound(false);
       setSigninInvalidInputError(false);
-
       auth()
         .signInWithEmailAndPassword(email, password)
         .then(user => {
@@ -115,8 +128,6 @@ const AuthInteractor = props => {
         });
     }
   }
-  let ad = 'adf';
-
   function handleAuthStateChanged() {
     const unsubscribeFn = auth().onAuthStateChanged(user => {
       if (user) {
@@ -126,16 +137,15 @@ const AuthInteractor = props => {
     return unsubscribeFn;
   }
 
-  function resetSigninStates() {
+  function resetAuthStates() {
     setSigninFailed(false);
     setSigninSuccess(false);
     setSigninLoading(false);
-  }
-
-  function resetSignupStates() {
     setSignupLoading(false);
-    setSignupFaied(false);
+    setSignupFailed(false);
     setSignupSuccess(false);
+    setSignupFieldEmpty(false);
+    setUserNotFound(false);
   }
 
   return (
@@ -150,31 +160,31 @@ const AuthInteractor = props => {
                 <SignupFnContext.Provider value={handleSignup}>
                   <SignUpStatesContext.Provider
                     value={[signupLoading, signupSuccess, signupFailed]}>
-                    <AuthStateChangedContext.Provider
-                      value={handleAuthStateChanged}>
-                      <SigninFnContext.Provider value={handleSignin}>
-                        <SigninUserNotFoundStateContext.Provider
-                          value={userNotFound}>
-                          <SigninInvalidInputErrorContext.Provider
-                            value={signinInvalidInputError}>
-                            <SigninStatesContext.Provider
-                              value={[
-                                signinLoading,
-                                signinSuccess,
-                                signinFailed,
-                              ]}>
-                              <ResetSigninStatesContext.Provider
-                                value={resetSigninStates}>
-                                <ResetSignupStatesContext.Provider
-                                  value={resetSignupStates}>
+                    <SignupFieldEmptyErrorContext.Provider
+                      value={signupFieldEmpty}>
+                      <AuthStateChangedContext.Provider
+                        value={handleAuthStateChanged}>
+                        <SigninFnContext.Provider value={handleSignin}>
+                          <SigninUserNotFoundStateContext.Provider
+                            value={userNotFound}>
+                            <SigninInvalidInputErrorContext.Provider
+                              value={signinInvalidInputError}>
+                              <SigninStatesContext.Provider
+                                value={[
+                                  signinLoading,
+                                  signinSuccess,
+                                  signinFailed,
+                                ]}>
+                                <ResetAuthStatesContext.Provider
+                                  value={resetAuthStates}>
                                   {props.children}
-                                </ResetSignupStatesContext.Provider>
-                              </ResetSigninStatesContext.Provider>
-                            </SigninStatesContext.Provider>
-                          </SigninInvalidInputErrorContext.Provider>
-                        </SigninUserNotFoundStateContext.Provider>
-                      </SigninFnContext.Provider>
-                    </AuthStateChangedContext.Provider>
+                                </ResetAuthStatesContext.Provider>
+                              </SigninStatesContext.Provider>
+                            </SigninInvalidInputErrorContext.Provider>
+                          </SigninUserNotFoundStateContext.Provider>
+                        </SigninFnContext.Provider>
+                      </AuthStateChangedContext.Provider>
+                    </SignupFieldEmptyErrorContext.Provider>
                   </SignUpStatesContext.Provider>
                 </SignupFnContext.Provider>
               </UserPasswordContext.Provider>
@@ -212,6 +222,7 @@ const CreateAuthStatesHook = contextVar => {
   };
 };
 
+// user hooks
 export const useUser = CreateUserHook(UserContext);
 export const useUserEmail = CreateUserHook(UserEmailContext);
 export const useUserPassword = CreateUserHook(UserPasswordContext);
@@ -219,9 +230,14 @@ export const useUsername = CreateUserHook(UsernameContext);
 export const useUserFirstName = CreateUserHook(UserFirstNameContext);
 export const useUserLastName = CreateUserHook(UserLastNameContext);
 
+// sign up hooks
 export const useSignup = createRawHook(SignupFnContext);
 export const useSignupStates = CreateAuthStatesHook(SignUpStatesContext);
-export const useResetSignupStates = createRawHook(ResetSignupStatesContext);
+export const useSignupFieldEmptyError = createRawHook(
+  SignupFieldEmptyErrorContext,
+);
+
+// Sign in hooks
 export const useSignin = createRawHook(SigninFnContext);
 export const useSigninStates = CreateAuthStatesHook(SigninStatesContext);
 export const useSigninInvalidInput = createRawHook(
@@ -230,8 +246,8 @@ export const useSigninInvalidInput = createRawHook(
 export const useSigninUserNotFound = createRawHook(
   SigninUserNotFoundStateContext,
 );
-export const useResetSigninStates = createRawHook(ResetSigninStatesContext);
 
+export const useResetAuthStates = createRawHook(ResetAuthStatesContext);
 export const useAuthStateChanged = createRawHook(AuthStateChangedContext);
 
 export {AuthInteractor};

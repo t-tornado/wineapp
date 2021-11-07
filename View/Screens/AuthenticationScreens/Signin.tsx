@@ -4,7 +4,7 @@ import EStyleSheet from 'react-native-extended-stylesheet';
 import {SplashScreenColors} from '../../../Config/Colors';
 import {heightDp, widthDp} from '../../../Config/Dimensions';
 import {
-  useResetSigninStates,
+  useResetAuthStates,
   useSignin,
   useSigninInvalidInput,
   useSigninStates,
@@ -24,7 +24,7 @@ const imageURL = require('../../../assets/Winesplash.jpeg');
 const SignInScreen: React.FC = props => {
   const [openLoadingIndicator, setOpenLoadingIndicator] = useState(false);
   const {navigation} = props;
-  const resetSignipStates = useResetSigninStates();
+  const resetAuthStates = useResetAuthStates();
   const signIn = useSignin();
   const signinStates = useSigninStates();
   const userEmail = useUserEmail().value;
@@ -38,12 +38,13 @@ const SignInScreen: React.FC = props => {
   }
 
   function onPressSignin() {
+    // console.log('tosign in');
     signIn(userEmail, userPassword);
   }
 
   function handleCloseLoadingIndicator() {
     setOpenLoadingIndicator(false);
-    resetSignipStates();
+    resetAuthStates();
   }
 
   useEffect(() => {

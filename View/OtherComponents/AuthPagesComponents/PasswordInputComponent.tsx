@@ -31,6 +31,8 @@ const PasswordInputComponent = () => {
           placeholder="password"
           placeholderTextColor="#ffffff90"
           onChangeText={handleTextChanged}
+          selectTextOnFocus={true}
+          clearTextOnFocus={true}
         />
       </View>
       <Text style={styles.inputContainerText}>Forgot Password?</Text>

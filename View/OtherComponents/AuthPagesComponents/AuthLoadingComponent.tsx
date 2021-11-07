@@ -10,18 +10,28 @@ interface AuthLoadingComponentProps {
   failed: boolean;
   type: string;
   closeIndicator: Function;
-  userNotFound: boolean;
-  invalidInput: boolean;
+  userNotFound?: boolean;
+  invalidInput?: boolean;
+  signupFieldEmpty?: boolean;
 }
 
 const AuthLoadingComponent: React.FC<AuthLoadingComponentProps> = props => {
-  const {loading, success, type, closeIndicator, userNotFound, invalidInput} =
-    props;
+  const {
+    loading,
+    success,
+    type,
+    closeIndicator,
+    userNotFound,
+    invalidInput,
+    signupFieldEmpty,
+  } = props;
   let stateText = loading ? ' loading ' : success ? 'successful' : 'Failed';
   let message = userNotFound
     ? 'User not found'
     : invalidInput
     ? 'Wrong email or password'
+    : signupFieldEmpty
+    ? 'Enter all details'
     : '';
 
   function handleClose() {

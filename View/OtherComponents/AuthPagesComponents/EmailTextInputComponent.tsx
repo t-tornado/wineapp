@@ -32,6 +32,8 @@ const EmailTextInputcomponent = () => {
           placeholder="email"
           placeholderTextColor="#ffffff90"
           onChangeText={handleChangedText}
+          selectTextOnFocus={true}
+          clearTextOnFocus={true}
         />
       </View>
     </View>

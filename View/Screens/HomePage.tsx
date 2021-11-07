@@ -8,8 +8,11 @@ import {WineObject} from '../../Config/CloudData';
 import {HomeScreenColors} from '../../Config/Colors';
 import {heightDp, widthDp} from '../../Config/Dimensions';
 import {useSearchKeyword} from '../../Interactor/ComponentInteractors/MainAppInteractor.';
+import {useUser} from '../../Interactor/WebInteractor/AuthInteractor';
 import {
+  useCurrentUser,
   useErrorFetchingData,
+  useFetchCurrentUser,
   useFetchDataFunction,
   useFetchingDataState,
   useWineData,
@@ -25,6 +28,9 @@ interface RenderFlatlistFunction {
 }
 
 const Homepage: React.FC = props => {
+  const user = useUser().value;
+  const fetchCurrentUser = useFetchCurrentUser();
+  const currentUser = useCurrentUser()[0];
   const fetchData: Function = useFetchDataFunction();
   const fetchingData: boolean = useFetchingDataState();
   const errorFetching: boolean = useErrorFetchingData();
@@ -42,7 +48,10 @@ const Homepage: React.FC = props => {
 
   useEffect(() => {
     fetchData();
-  }, []);
+    fetchCurrentUser(user.email);
+  }, [user]);
+
+  // console.log(currentUser);
 
   useEffect(() => {
     let cleanup = true;
@@ -59,14 +68,13 @@ const Homepage: React.FC = props => {
     });
 
     if (keyword === '') {
-      console.log('keyword is empty');
       cleanup && setData(fetchResults);
     } else {
       cleanup && setData(__data);
     }
 
     return () => (cleanup = false);
-  }, [keyword]);
+  }, [keyword, fetchResults]);
 
   return (
     <View style={styles.container}>
@@ -80,7 +88,9 @@ const Homepage: React.FC = props => {
           ListHeaderComponent={
             <>
               <HeaderMenu />
-              <IntroductoryHeaderComponent />
+              <IntroductoryHeaderComponent
+                userFirstname={currentUser.firstName}
+              />
             </>
           }
           ListEmptyComponent={

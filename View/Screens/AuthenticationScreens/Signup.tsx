@@ -5,10 +5,13 @@ import {SplashScreenColors} from '../../../Config/Colors';
 import {heightDp, widthDp} from '../../../Config/Dimensions';
 import {AuthPagesImageURL} from '../../../Config/WineAppConfig';
 import {
-  useResetSignupStates,
+  useResetAuthStates,
   useSignup,
+  useSignupFieldEmptyError,
   useSignupStates,
   useUserEmail,
+  useUserFirstName,
+  useUserLastName,
   useUsername,
   useUserPassword,
 } from '../../../Interactor/WebInteractor/AuthInteractor';
@@ -25,16 +28,21 @@ const WIDTH = widthDp('100');
 const SignUpScreen: React.FC = props => {
   const [openLoadingIndicator, setOpenLoadingIndicator] = useState(false);
   const {navigation} = props;
-  const resetSignupStates = useResetSignupStates();
-  const signUpStates = useSignupStates();
+  // user values
+  const userName = useUsername().value;
   const userEmail = useUserEmail().value;
   const userPassword = useUserPassword().value;
-  const userName = useUsername().value;
+  const firstName = useUserFirstName().value;
+  const lastName = useUserLastName().value;
+  // sign up values
   const signUp = useSignup();
+  const signUpStates = useSignupStates();
+  const resetAuthStates = useResetAuthStates();
+  const signupFieldEmpty = useSignupFieldEmptyError();
   const {loading, sucess, failed} = signUpStates;
 
   function onPressSignup() {
-    signUp(userEmail, userPassword, userName);
+    signUp(userEmail, userPassword, firstName, lastName);
   }
 
   function onPressSignInButton() {
@@ -44,12 +52,15 @@ const SignUpScreen: React.FC = props => {
   function handleCloseLoadingIndicator() {
     setOpenLoadingIndicator(false);
     // reset all signin loading states
-    resetSignupStates();
+    resetAuthStates();
   }
 
   useEffect(() => {
     let cleanUp = true;
-    if (loading || sucess || failed) cleanUp && setOpenLoadingIndicator(true);
+    if (loading || sucess || failed) {
+      console.log('opening loading indicator');
+      cleanUp && setOpenLoadingIndicator(true);
+    }
 
     return () => (cleanUp = false);
   }, [loading, sucess, failed]);
@@ -92,6 +103,7 @@ const SignUpScreen: React.FC = props => {
           loading={loading}
           success={sucess}
           type="signup"
+          signupFieldEmpty={signupFieldEmpty}
         />
       ) : null}
     </View>

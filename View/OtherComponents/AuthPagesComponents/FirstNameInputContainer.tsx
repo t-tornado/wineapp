@@ -30,6 +30,8 @@ const SignUpFirstnameInputComponent = () => {
           placeholder="First Name"
           placeholderTextColor="#ffffff90"
           onChangeText={handleChangedText}
+          selectTextOnFocus={true}
+          clearTextOnFocus={true}
         />
       </View>
     </View>

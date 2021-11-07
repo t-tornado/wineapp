@@ -6,12 +6,18 @@ import {heightDp, widthDp} from '../../../Config/Dimensions';
 const HEIGHT = heightDp('18%');
 const WIDTH = widthDp('100%');
 
-const IntroductoryHeaderComponent: React.FC = () => {
+interface IntroComponentProps {
+  userFirstname: string;
+}
+
+const IntroductoryHeaderComponent: React.FC<IntroComponentProps> = props => {
+  const {userFirstname} = props;
+
   return (
     <View style={styles.container}>
       <Text numberOfLines={1} style={styles.welcomeText}>
         {' '}
-        Welcome to KWINEFO!
+        Welcome to KWineFo{userFirstname ? `, ${userFirstname}` : ''}!
       </Text>
       <Text numberOfLines={2} style={styles.introductoryText}>
         Browse the largest and finest selection of Wine
