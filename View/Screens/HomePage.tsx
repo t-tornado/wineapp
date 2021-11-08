@@ -89,7 +89,9 @@ const Homepage: React.FC = props => {
             <>
               <HeaderMenu />
               <IntroductoryHeaderComponent
-                userFirstname={currentUser.firstName}
+                userFirstname={
+                  currentUser !== undefined ? currentUser.firstName : ''
+                }
               />
             </>
           }

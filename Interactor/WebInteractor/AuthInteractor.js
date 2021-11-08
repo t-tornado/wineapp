@@ -45,7 +45,8 @@ const AuthInteractor = props => {
     console.log('--signing up--');
     if (
       [email, password, firstName, lastName].some(it => {
-        console.log([email, password, firstName, lastName]);
+        null;
+        // console.log([email, password, firstName, lastName]);
       })
     ) {
       console.log('-- input are wrong');

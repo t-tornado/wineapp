@@ -15,6 +15,7 @@ import CellartStactContainer from './StackNavigators/CellarStackComponent';
 import HomeScreenStackComponent from './StackNavigators/HomeScreenStack';
 
 import auth from '@react-native-firebase/auth';
+import {ProfileScreen} from '../View/Screens/UserProfile/ProfileScreen';
 const AppStack = createStackNavigator();
 const AppBottomTab = createBottomTabNavigator();
 
@@ -61,6 +62,11 @@ const MainAppNavigationContainer = () => {
             options={defaultStackScreenConfig}
             name="Cellar"
             component={CellartStactContainer}
+          />
+          <AppBottomTab.Screen
+            options={defaultStackScreenConfig}
+            name="Profile"
+            component={ProfileScreen}
           />
         </AppBottomTab.Navigator>
       )}

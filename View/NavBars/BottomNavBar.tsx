@@ -8,12 +8,13 @@ import {
 } from 'react-native';
 
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Entypo from 'react-native-vector-icons/Entypo';
 import {heightDp, widthDp} from '../../Config/Dimensions';
 import EStyleSheet from 'react-native-extended-stylesheet';
 
 const NAVBAR_HEGIHT = heightDp('7');
-const NAVBAR_W = widthDp('55');
+const NAVBAR_W = widthDp('65');
 const DROP_ICON_S = heightDp('3%');
 
 type NavbarProps = {
@@ -70,11 +71,17 @@ const BottomNavbar: React.FC<NavbarProps> = ({
                   color={isFocused ? '#FFF' : '#ffffff90'}
                   size={DROP_ICON_S}
                 />
-              ) : (
+              ) : route.name === 'Cellar' ? (
                 <Entypo
                   name="drop"
                   size={DROP_ICON_S}
                   color={isFocused ? '#fff' : '#ffffff90'}
+                />
+              ) : (
+                <MaterialCommunityIcons
+                  name="account-settings"
+                  color={isFocused ? '#fff' : '#ffffff90'}
+                  size={DROP_ICON_S}
                 />
               )}
               <Text
