@@ -51,9 +51,6 @@ const HeaderMenu: React.FC = () => {
               style={styles.iconContainer}>
               <EvilIcons size={ICON_S} color="#000" name="search" />
             </TouchableOpacity>
-            {/* <TouchableOpacity style={styles.iconContainer}>
-              <Entypo size={ICON_S} color="#FFD36B" name="drop" />
-            </TouchableOpacity> */}
           </View>
         </>
       )}
