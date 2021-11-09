@@ -14,14 +14,12 @@ import {WineObject} from '../../Config/CloudData';
 import {LocationTag} from '../OtherComponents/WinePageComponents/LocationTag';
 import {ReviewTag} from '../OtherComponents/WinePageComponents/ReviewsTag';
 import {RatingTag} from '../OtherComponents/WinePageComponents/RatingTag';
-import {AddToCellarButton} from '../OtherComponents/WinePageComponents/AddToCellarButton';
 import {
   useItemRemoved,
   useRemoveFromLikedItems,
 } from '../../Interactor/ComponentInteractors/MainAppInteractor.';
 import {useUser} from '../../Interactor/WebInteractor/AuthInteractor';
 import {useEffect} from 'react';
-import {ItemRemoved} from '../OtherComponents/Popups/ItemRemoved';
 
 const ICON_S = heightDp('2%');
 const HEIGHT = heightDp('100');
@@ -101,7 +99,6 @@ const CellarWinePage: React.FC<CellarWinepageRouteprops> = props => {
           <Text style={styles.deleteButtonText}>Remove from cellar</Text>
         </TouchableOpacity>
       </View>
-      <ItemRemoved />
     </ScrollView>
   );
 };

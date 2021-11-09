@@ -17,4 +17,5 @@ export interface WineObject {
 export interface WineCardProps {
   wineObject: WineObject;
   navigationProps: {};
+  likeState: boolean;
 }

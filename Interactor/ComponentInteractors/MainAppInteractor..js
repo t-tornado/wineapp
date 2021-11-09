@@ -1,12 +1,14 @@
-import React, {createContext, useContext, useState} from 'react';
+import React, {createContext, useContext, useEffect, useState} from 'react';
 import {firestore} from '../../Config/FirebaseApp';
 
 const SearchKeywordContext = createContext();
 const LikedItemsContext = createContext();
 const AddToLikedFnContext = createContext();
 const LikedItemsChangedContext = createContext();
+const ItemAddedToLikeContext = createContext();
 const RemoveFromLikedContext = createContext();
 const ItemRemovedContext = createContext();
+const ItemAreadyLikedContext = createContext();
 
 const MainAppInteractor = props => {
   const [searchKeyword, setSearchKeyword] = useState('');
@@ -14,6 +16,7 @@ const MainAppInteractor = props => {
   const [likedItemsChanged, setLikedItemsChanged] = useState(false);
   const [itemAlreadylikedState, setitemAlreadyLikedState] = useState(false);
   const [itemRemoved, setItemRemoved] = useState(false);
+  const [itemAddedToLike, setItemAddedTolike] = useState(false);
 
   function addToLikedItems(userEmail, wine) {
     const likedItem = firestore.FieldValue.arrayUnion(wine);
@@ -21,6 +24,7 @@ const MainAppInteractor = props => {
 
     if (likedItems.some(it => it.id === wine.id)) {
       setitemAlreadyLikedState(true);
+      setItemAddedTolike(false);
       console.log('--item already liked --');
     } else {
       docRef
@@ -34,6 +38,7 @@ const MainAppInteractor = props => {
             return its;
           });
           setLikedItemsChanged(p => !p);
+          setItemAddedTolike(true);
         })
         .catch(e =>
           console.log(
@@ -66,6 +71,10 @@ const MainAppInteractor = props => {
     }
   }
 
+  useEffect(() => {
+    let clean = true;
+  }, []);
+
   // fetch liked from firebase and set the value to the user's liked item array
 
   return (
@@ -76,7 +85,13 @@ const MainAppInteractor = props => {
             <RemoveFromLikedContext.Provider value={handleRemoveFromLikedItems}>
               <ItemRemovedContext.Provider
                 value={[itemRemoved, setItemRemoved]}>
-                {props.children}
+                <ItemAreadyLikedContext.Provider
+                  value={[itemAlreadylikedState, setitemAlreadyLikedState]}>
+                  <ItemAddedToLikeContext.Provider
+                    value={[itemAddedToLike, setItemAddedTolike]}>
+                    {props.children}
+                  </ItemAddedToLikeContext.Provider>
+                </ItemAreadyLikedContext.Provider>
               </ItemRemovedContext.Provider>
             </RemoveFromLikedContext.Provider>
           </LikedItemsChangedContext.Provider>
@@ -113,6 +128,14 @@ export const useRemoveFromLikedItems = () => {
 export const useItemRemoved = () => {
   const contextVal = useContext(ItemRemovedContext);
   return contextVal;
+};
+export const useItemAlreadyLiked = () => {
+  const val = useContext(ItemAreadyLikedContext);
+  return val;
+};
+export const useItemAddedToLike = () => {
+  const val = useContext(ItemAddedToLikeContext);
+  return val;
 };
 
 export default MainAppInteractor;

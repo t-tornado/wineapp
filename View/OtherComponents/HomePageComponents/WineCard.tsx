@@ -10,11 +10,11 @@ import {useUser} from '../../../Interactor/WebInteractor/AuthInteractor';
 
 const HEIGHT = heightDp('25%');
 const WIDTH = widthDp('43');
-const ICON_S = heightDp('2.5%');
+const ICON_S = heightDp('3%');
 const artwork = require('../../../wineBottle.png');
 
 const WineCard: React.FC<WineCardProps> = props => {
-  const {wineObject, navigationProps} = props;
+  const {wineObject, navigationProps, likeState} = props;
   const user = useUser().value;
   const addToLikedFn = useAddToLikedItems();
   const {image, wine, winery} = wineObject;
@@ -40,12 +40,20 @@ const WineCard: React.FC<WineCardProps> = props => {
           <Text style={styles.wineText}>{wine}</Text>
         </View>
         <View style={styles.iconDetails}>
-          <View style={styles.iconContainer}>
+          <View
+            style={[
+              styles.iconContainer,
+              {backgroundColor: likeState ? '#FF4C29' : '#fff'},
+            ]}>
             <TouchableOpacity
               onPress={handleAddToLiked}
               activeOpacity={0.5}
               style={styles.icon}>
-              <Entypo name="drop" color="#EEBB4D" size={ICON_S} />
+              <Entypo
+                name="heart"
+                color={likeState ? '#fff' : '#EEBB4D'}
+                size={ICON_S}
+              />
             </TouchableOpacity>
           </View>
         </View>

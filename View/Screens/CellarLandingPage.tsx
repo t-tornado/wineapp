@@ -3,6 +3,7 @@ import {useState} from 'react';
 import {FlatList, RefreshControl, StyleSheet, View} from 'react-native';
 import {WineObject} from '../../Config/CloudData';
 import {
+  useItemRemoved,
   useLikedItems,
   useLikedItemsChanged,
 } from '../../Interactor/ComponentInteractors/MainAppInteractor.';
@@ -14,12 +15,16 @@ const CellarLandingScreen: React.FC = props => {
   const [data, setData] = useState([]);
   const likedWine = useLikedItems();
   const likedItemsChanged = useLikedItemsChanged();
+  const [itemRemoved, setItemRemoved] = useItemRemoved();
 
   function renderItemFunction({item, index}) {
     return <CellarWineCard wineObject={item} navigationProps={props} />;
   }
 
-  console.log(likedWine);
+  const resetTimer = () =>
+    setTimeout(() => {
+      setItemRemoved(false);
+    }, 2000);
 
   useEffect(() => {
     let clean = true;
@@ -31,6 +36,16 @@ const CellarLandingScreen: React.FC = props => {
 
     return () => (clean = false);
   }, [likedItemsChanged]);
+
+  useEffect(() => {
+    if (itemRemoved) {
+      resetTimer();
+    }
+
+    return () => {
+      clearTimeout(resetTimer());
+    };
+  }, [itemRemoved]);
 
   return (
     <View style={styles.container}>
@@ -46,7 +61,7 @@ const CellarLandingScreen: React.FC = props => {
         updateCellsBatchingPeriod={60}
         initialNumToRender={100}
       />
-      <ItemRemoved />
+      {itemRemoved ? <ItemRemoved /> : null}
     </View>
   );
 };

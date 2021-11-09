@@ -1,13 +1,16 @@
-import React, {useEffect} from 'react';
-import {useState} from 'react';
-import {useRef} from 'react';
-import {FlatList, RefreshControl, StyleSheet} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {FlatList, RefreshControl} from 'react-native';
 import {View} from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import {WineObject} from '../../Config/CloudData';
 import {HomeScreenColors} from '../../Config/Colors';
 import {heightDp, widthDp} from '../../Config/Dimensions';
-import {useSearchKeyword} from '../../Interactor/ComponentInteractors/MainAppInteractor.';
+import {
+  useItemAddedToLike,
+  useItemAlreadyLiked,
+  useLikedItems,
+  useSearchKeyword,
+} from '../../Interactor/ComponentInteractors/MainAppInteractor.';
 import {useUser} from '../../Interactor/WebInteractor/AuthInteractor';
 import {
   useCurrentUser,
@@ -22,6 +25,7 @@ import {IntroductoryHeaderComponent} from '../OtherComponents/HomePageComponents
 import WineCard from '../OtherComponents/HomePageComponents/WineCard';
 import {LoadingComponent} from '../OtherComponents/LoadingComponent';
 import {ItemAlreadyLikedPopup} from '../OtherComponents/Popups/ItemAlreadyLiked';
+import {ItemLiked} from '../OtherComponents/Popups/ItemLiked';
 
 interface RenderFlatlistFunction {
   item: {};
@@ -38,21 +42,52 @@ const Homepage: React.FC = props => {
   const fetchResults: [WineObject] = useWineData();
   const [data, setData] = useState([]);
   const keyword: string = useSearchKeyword().value;
+  const [itemAlreadyLiked, setItemAlreadyLiked] = useItemAlreadyLiked();
+  const [itemAddedToLike, setItemAddedToLike] = useItemAddedToLike();
+  const likedItems = useLikedItems();
 
   function handleRefresh() {
     fetchData();
   }
 
   function renderItemFunction({item, index}) {
-    return <WineCard wineObject={item} navigationProps={props} />;
+    if (likedItems.some(it => it.id === item.id)) {
+      return (
+        <WineCard wineObject={item} likeState={true} navigationProps={props} />
+      );
+    } else {
+      return (
+        <WineCard wineObject={item} likeState={false} navigationProps={props} />
+      );
+    }
   }
+
+  const alreadyLikedTimer = () =>
+    setTimeout(() => {
+      setItemAlreadyLiked(false);
+    }, 3000);
+  const itemLikedTimer = () =>
+    setTimeout(() => {
+      setItemAddedToLike(false);
+    }, 2000);
 
   useEffect(() => {
     fetchData();
     fetchCurrentUser(user.email);
+    setItemAddedToLike(false);
   }, [user]);
 
-  // console.log(user);
+  useEffect(() => {
+    itemAlreadyLiked && alreadyLikedTimer();
+
+    return () => clearTimeout(alreadyLikedTimer());
+  }, [itemAlreadyLiked]);
+
+  useEffect(() => {
+    itemAddedToLike && itemLikedTimer();
+
+    return () => clearTimeout(itemLikedTimer());
+  }, [itemAddedToLike]);
 
   useEffect(() => {
     let cleanup = true;
@@ -79,9 +114,6 @@ const Homepage: React.FC = props => {
 
   return (
     <View style={styles.container}>
-      {/* <View style={styles.header}>
-       
-      </View> */}
       <View style={styles.body}>
         <FlatList
           stickyHeaderIndices={[0]}
@@ -117,7 +149,8 @@ const Homepage: React.FC = props => {
           }
         />
       </View>
-      <ItemAlreadyLikedPopup />
+      {itemAlreadyLiked ? <ItemAlreadyLikedPopup /> : null}
+      {itemAddedToLike ? <ItemLiked /> : null}
     </View>
   );
 };

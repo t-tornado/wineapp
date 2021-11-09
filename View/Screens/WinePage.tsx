@@ -1,4 +1,4 @@
-import React, {useRef} from 'react';
+import React, {useEffect, useRef} from 'react';
 import {
   Dimensions,
   Image,
@@ -16,8 +16,13 @@ import {ReviewTag} from '../OtherComponents/WinePageComponents/ReviewsTag';
 import {RatingTag} from '../OtherComponents/WinePageComponents/RatingTag';
 import {AddToCellarButton} from '../OtherComponents/WinePageComponents/AddToCellarButton';
 import {useUser} from '../../Interactor/WebInteractor/AuthInteractor';
-import {useAddToLikedItems} from '../../Interactor/ComponentInteractors/MainAppInteractor.';
+import {
+  useAddToLikedItems,
+  useItemAddedToLike,
+  useItemAlreadyLiked,
+} from '../../Interactor/ComponentInteractors/MainAppInteractor.';
 import {ItemAlreadyLikedPopup} from '../OtherComponents/Popups/ItemAlreadyLiked';
+import {ItemLiked} from '../OtherComponents/Popups/ItemLiked';
 
 const ICON_S = heightDp('2%');
 const CIRCLE_S = heightDp('1%');
@@ -36,6 +41,8 @@ interface WinepageRouteprops {
 }
 
 const WinePage: React.FC<WinepageRouteprops> = props => {
+  const [itemAlreadyLiked, setItemAlreadyLiked] = useItemAlreadyLiked();
+  const [itemAddedToLike, setItemAddedToLike] = useItemAddedToLike();
   const user = useUser().value;
   const addToLikedFn = useAddToLikedItems();
   const {wineObject} = props.route.params;
@@ -52,37 +59,66 @@ const WinePage: React.FC<WinepageRouteprops> = props => {
     addToLikedFn(user.email, wineObject);
   }
 
+  const alreadyLikedTimer = () =>
+    setTimeout(() => {
+      setItemAlreadyLiked(false);
+    }, 3000);
+
+  const itemLikedTimer = () =>
+    setTimeout(() => {
+      setItemAddedToLike(false);
+    }, 2000);
+
+  useEffect(() => {
+    setItemAddedToLike(false);
+  }, []);
+
+  useEffect(() => {
+    itemAlreadyLiked && alreadyLikedTimer();
+
+    return () => clearTimeout(alreadyLikedTimer());
+  }, [itemAlreadyLiked]);
+
+  useEffect(() => {
+    itemAddedToLike && itemLikedTimer();
+
+    return () => clearTimeout(itemLikedTimer());
+  }, [itemAddedToLike]);
+
   return (
-    <ScrollView
-      showsVerticalScrollIndicator={false}
-      style={styles.container}
-      stickyHeaderIndices={[0]}>
-      <View style={styles.navbar}>
-        <TouchableOpacity onPress={handlePress} style={styles.iconContainer}>
-          <SimpleLineIcons name="arrow-left" size={ICON_S} color="#000" />
-          <Text style={styles.backButtonText}>Home</Text>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.body}>
-        <View style={styles.imageContainer}>
-          <View style={[styles.imageShadowWrapper]}>
-            <Image source={{uri: image}} style={[styles.image]} />
+    <>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        style={styles.container}
+        stickyHeaderIndices={[0]}>
+        <View style={styles.navbar}>
+          <TouchableOpacity onPress={handlePress} style={styles.iconContainer}>
+            <SimpleLineIcons name="arrow-left" size={ICON_S} color="#000" />
+            <Text style={styles.backButtonText}>Home</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.body}>
+          <View style={styles.imageContainer}>
+            <View style={[styles.imageShadowWrapper]}>
+              <Image source={{uri: image}} style={[styles.image]} />
+            </View>
+          </View>
+          <LocationTag location={_location} />
+          <ReviewTag reviews={reviews} />
+          <RatingTag rating={average} />
+          <View style={styles.bodyBottomContainer}>
+            <AddToCellarButton onPress={handleAddTolike} />
           </View>
         </View>
-        <LocationTag location={_location} />
-        <ReviewTag reviews={reviews} />
-        <RatingTag rating={average} />
-        <View style={styles.bodyBottomContainer}>
-          <AddToCellarButton onPress={handleAddTolike} />
-        </View>
-      </View>
 
-      <View style={styles.footer}>
-        <Text style={[styles.wineText]}>{wine}</Text>
-        <Text style={styles.wineryText}>{winery}</Text>
-      </View>
-      <ItemAlreadyLikedPopup />
-    </ScrollView>
+        <View style={styles.footer}>
+          <Text style={[styles.wineText]}>{wine}</Text>
+          <Text style={styles.wineryText}>{winery}</Text>
+        </View>
+      </ScrollView>
+      {itemAlreadyLiked ? <ItemAlreadyLikedPopup /> : null}
+      {itemAddedToLike ? <ItemLiked /> : null}
+    </>
   );
 };
 
