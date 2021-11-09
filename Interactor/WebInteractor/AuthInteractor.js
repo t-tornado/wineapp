@@ -8,6 +8,10 @@ const UsernameContext = createContext();
 const UserContext = createContext();
 const UserFirstNameContext = createContext();
 const UserLastNameContext = createContext();
+const SignoutFnContext = createContext();
+const SignoutLoadingContext = createContext();
+const SignoutFailedContext = createContext();
+
 const SignupFnContext = createContext();
 const SignUpStatesContext = createContext();
 const SignupFieldEmptyErrorContext = createContext();
@@ -39,14 +43,15 @@ const AuthInteractor = props => {
   const [userNotFound, setUserNotFound] = useState(false);
   const [signinInvalidInputError, setSigninInvalidInputError] = useState(false);
 
+  const [signoutLoading, setSignoutLoading] = useState(false);
+  const [signoutFailed, setSignoutFailed] = useState(false);
   // [auth/weak-password]
 
   function handleSignup(email, password, firstName, lastName) {
     console.log('--signing up--');
     if (
       [email, password, firstName, lastName].some(it => {
-        null;
-        // console.log([email, password, firstName, lastName]);
+        console.log([email, password, firstName, lastName]);
       })
     ) {
       console.log('-- input are wrong');
@@ -129,6 +134,24 @@ const AuthInteractor = props => {
         });
     }
   }
+
+  function handleSignout() {
+    setSignoutLoading(true);
+    setSignoutFailed(false);
+    auth()
+      .signOut()
+      .then(() => {
+        setSignoutLoading(false);
+        setUser(null);
+        setSignoutFailed(false);
+      })
+      .catch(() => {
+        console.log('could not sign user out');
+        setSignoutLoading(false);
+        setSignoutFailed(true);
+      });
+  }
+
   function handleAuthStateChanged() {
     const unsubscribeFn = auth().onAuthStateChanged(user => {
       if (user) {
@@ -178,7 +201,16 @@ const AuthInteractor = props => {
                                 ]}>
                                 <ResetAuthStatesContext.Provider
                                   value={resetAuthStates}>
-                                  {props.children}
+                                  <SignoutFnContext.Provider
+                                    value={handleSignout}>
+                                    <SignoutLoadingContext.Provider
+                                      value={signoutLoading}>
+                                      <SignoutFailedContext.Provider
+                                        value={signoutFailed}>
+                                        {props.children}
+                                      </SignoutFailedContext.Provider>
+                                    </SignoutLoadingContext.Provider>
+                                  </SignoutFnContext.Provider>
                                 </ResetAuthStatesContext.Provider>
                               </SigninStatesContext.Provider>
                             </SigninInvalidInputErrorContext.Provider>
@@ -231,13 +263,13 @@ export const useUsername = CreateUserHook(UsernameContext);
 export const useUserFirstName = CreateUserHook(UserFirstNameContext);
 export const useUserLastName = CreateUserHook(UserLastNameContext);
 
-// sign up hooks
+// Auth action hooks
+
 export const useSignup = createRawHook(SignupFnContext);
 export const useSignupStates = CreateAuthStatesHook(SignUpStatesContext);
 export const useSignupFieldEmptyError = createRawHook(
   SignupFieldEmptyErrorContext,
 );
-
 // Sign in hooks
 export const useSignin = createRawHook(SigninFnContext);
 export const useSigninStates = CreateAuthStatesHook(SigninStatesContext);
@@ -247,6 +279,11 @@ export const useSigninInvalidInput = createRawHook(
 export const useSigninUserNotFound = createRawHook(
   SigninUserNotFoundStateContext,
 );
+
+//sign out
+export const useSignoutFailed = createRawHook(SignoutFailedContext);
+export const useSignOut = createRawHook(SignoutFnContext);
+export const useSignoutLoading = createRawHook(SignoutLoadingContext);
 
 export const useResetAuthStates = createRawHook(ResetAuthStatesContext);
 export const useAuthStateChanged = createRawHook(AuthStateChangedContext);

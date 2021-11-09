@@ -1,25 +1,47 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {ScrollView, StatusBar, Text, View} from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import {heightDp, widthDp} from '../../../Config/Dimensions';
 import {AuthButton} from '../../OtherComponents/AuthPagesComponents/AuthButton';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {SplashScreenColors} from '../../../Config/Colors';
-import {useEffect} from 'react';
+import {useCurrentUser} from '../../../Interactor/WebInteractor/HomePageInteractor';
 import {
-  useCurrentUser,
-  useFetchCurrentUser,
-} from '../../../Interactor/WebInteractor/HomePageInteractor';
+  useSignOut,
+  useSignoutLoading,
+} from '../../../Interactor/WebInteractor/AuthInteractor';
+import {SignoutLoadingScreen} from '../../OtherComponents/AuthPagesComponents/SignoutLoadingScreen';
 
 const HEIGHT = heightDp('100');
 const WIDTH = widthDp('100');
 const icon_s = heightDp('4');
 
 const ProfileScreen: React.FC = () => {
+  const [email, setEmail] = useState<string>('yourEmail@xxx.com');
+  const [firstName, setFirstName] = useState<string>();
+  const [lastName, setLastName] = useState<string>();
+  const [fullName, setFullName] = useState<string>();
   const currentUser = useCurrentUser()[0];
-  const {email, firstName, lastName} = currentUser;
+  const signoutLoading = useSignoutLoading();
+  const signOut = useSignOut();
 
-  function handleSignOut() {}
+  console.log('Profile Screen: Signout  Loading ', signoutLoading);
+
+  useEffect(() => {
+    let clean = true;
+    if (currentUser !== undefined) {
+      clean && setEmail(currentUser.email);
+      clean && setFirstName(currentUser.firstName);
+      clean && setLastName(currentUser.lastName);
+      clean && setFullName(`${currentUser.firstName} ${currentUser.lastName} `);
+    }
+
+    return () => (clean = false);
+  }, [currentUser]);
+
+  function handleSignOut() {
+    signOut();
+  }
 
   return (
     <View style={styles.screen}>
@@ -31,7 +53,7 @@ const ProfileScreen: React.FC = () => {
           <Icon name="account" size={icon_s} color="#fff" />
         </View>
         <View style={styles.accountHeaderTextContainer}>
-          <Text style={styles.accountHeaderText}>Anthony Amponsah</Text>
+          <Text style={styles.accountHeaderText}>{fullName}</Text>
         </View>
       </View>
       <View style={styles.userDetailsContainer}>
@@ -59,7 +81,7 @@ const ProfileScreen: React.FC = () => {
       <View style={styles.signOut}>
         <AuthButton handleOnPress={handleSignOut} name="Sign out" />
       </View>
-
+      {signoutLoading ? <SignoutLoadingScreen /> : null}
       <StatusBar backgroundColor="#fff" barStyle="dark-content" />
     </View>
   );
@@ -97,7 +119,7 @@ const styles = EStyleSheet.create({
     backgroundColor: '#fff',
   },
   screenBar: {
-    height: heightDp('10%'),
+    height: heightDp('7%'),
     width: '100%',
     justifyContent: 'center',
     alignItems: 'center',

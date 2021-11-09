@@ -51,7 +51,7 @@ const Homepage: React.FC = props => {
     fetchCurrentUser(user.email);
   }, [user]);
 
-  // console.log(currentUser);
+  // console.log(user);
 
   useEffect(() => {
     let cleanup = true;

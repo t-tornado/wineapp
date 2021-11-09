@@ -30,6 +30,7 @@ const MainAppNavigationContainer = () => {
   }, [user]);
 
   // console.log(user);
+  // console.log();
 
   return (
     <NavigationContainer independent={true}>

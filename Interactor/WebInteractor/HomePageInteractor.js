@@ -33,6 +33,7 @@ const HomepageInteractor = props => {
   }
 
   function getCurrentUser(email) {
+    console.log('getting current user details  ', email);
     firestore()
       .collection('users')
       .doc(email)
@@ -40,9 +41,8 @@ const HomepageInteractor = props => {
       .then(data => {
         data.exists && setCurrentUser(data.data());
       })
-      .catch(
-        () => null,
-        // console.log('--error-- could not get current user first name'),
+      .catch(e =>
+        console.log('--error-- could not get current user first name   ', e),
       );
   }
 
