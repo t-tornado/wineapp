@@ -1,0 +1,3 @@
+. Read liked items on opening app to load user's profile. 
+. Empty Cellar should display something rather than being empty. 
+. Celler bottom tab icon should be changed to favs, and heart icon

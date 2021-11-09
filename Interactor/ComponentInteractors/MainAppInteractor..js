@@ -9,6 +9,7 @@ const ItemAddedToLikeContext = createContext();
 const RemoveFromLikedContext = createContext();
 const ItemRemovedContext = createContext();
 const ItemAreadyLikedContext = createContext();
+const LoadLikedItemsContext = createContext();
 
 const MainAppInteractor = props => {
   const [searchKeyword, setSearchKeyword] = useState('');
@@ -33,12 +34,12 @@ const MainAppInteractor = props => {
         })
         .then(() => {
           console.log('item successfully added');
+          setLikedItemsChanged(p => !p);
+          setItemAddedTolike(true);
           setLikedItems(its => {
             its.push(wine);
             return its;
           });
-          setLikedItemsChanged(p => !p);
-          setItemAddedTolike(true);
         })
         .catch(e =>
           console.log(
@@ -60,15 +61,29 @@ const MainAppInteractor = props => {
         })
         .then(() => {
           console.log('-- Wine object removed --');
+          setItemRemoved(true);
+          setLikedItemsChanged(p => !p);
           setLikedItems(its => {
             const new_Arr = its.filter(wit => wit.id !== wine.id);
             return new_Arr;
           });
-          setLikedItemsChanged(p => !p);
-          setItemRemoved(true);
         })
         .catch(() => console.log('--ERROR: Failed to remove liked item  '));
     }
+  }
+
+  function getUserLikedItems(userEmail) {
+    firestore()
+      .collection('users')
+      .doc(userEmail)
+      .get()
+      .then(res => {
+        if (res.exists) {
+          setLikedItems(res.data().likedItems);
+          setLikedItemsChanged(p => !p);
+        }
+      })
+      .catch(e => console.log('could not get user liked items   ', e));
   }
 
   useEffect(() => {
@@ -89,7 +104,9 @@ const MainAppInteractor = props => {
                   value={[itemAlreadylikedState, setitemAlreadyLikedState]}>
                   <ItemAddedToLikeContext.Provider
                     value={[itemAddedToLike, setItemAddedTolike]}>
-                    {props.children}
+                    <LoadLikedItemsContext.Provider value={getUserLikedItems}>
+                      {props.children}
+                    </LoadLikedItemsContext.Provider>
                   </ItemAddedToLikeContext.Provider>
                 </ItemAreadyLikedContext.Provider>
               </ItemRemovedContext.Provider>
@@ -136,6 +153,10 @@ export const useItemAlreadyLiked = () => {
 export const useItemAddedToLike = () => {
   const val = useContext(ItemAddedToLikeContext);
   return val;
+};
+export const useFetchLikedItems = () => {
+  const fn = useContext(LoadLikedItemsContext);
+  return fn;
 };
 
 export default MainAppInteractor;

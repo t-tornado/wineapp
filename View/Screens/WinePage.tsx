@@ -240,20 +240,3 @@ const styles = EStyleSheet.create({
 });
 
 export {WinePage};
-
-{
-  /* <View style={styles.container}>
-        <View style={styles.imageContainer}>
-          <View style={[styles.imageShadowWrapper]}>
-            <Image source={{uri: image}} style={[styles.image]} />
-          </View>
-        </View>
-        <View style={styles.navbar}>
-          <TouchableOpacity onPress={handlePress} style={styles.iconContainer}>
-            <SimpleLineIcons name="arrow-left" size={ICON_S} color="#000" />
-            <Text style={styles.backButtonText}>Home</Text>
-          </TouchableOpacity>
-        </View>
-       
-      </View> */
-}

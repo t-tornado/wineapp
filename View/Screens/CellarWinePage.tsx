@@ -190,7 +190,8 @@ const styles = EStyleSheet.create({
   navbar: {
     height: heightDp('7%'),
     width: '100%',
-    paddingVertical: '10rem',
+    paddingVertical: '7rem',
+    paddingLeft: '10rem',
     justifyContent: 'center',
     backgroundColor: '#fff',
   },

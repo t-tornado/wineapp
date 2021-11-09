@@ -1,12 +1,13 @@
 import React, {useEffect} from 'react';
 import {useState} from 'react';
-import {FlatList, RefreshControl, StyleSheet, View} from 'react-native';
-import {WineObject} from '../../Config/CloudData';
+import {FlatList, StyleSheet, View} from 'react-native';
+import {heightDp} from '../../Config/Dimensions';
 import {
   useItemRemoved,
   useLikedItems,
   useLikedItemsChanged,
 } from '../../Interactor/ComponentInteractors/MainAppInteractor.';
+import {CellarPageEmpty} from '../OtherComponents/CellarComponents/CellarPageEmpty';
 import {CellarWineCard} from '../OtherComponents/CellarComponents/CellarWineCard';
 import {CellarPageNavbar} from '../OtherComponents/CellarComponents/Navbar';
 import {ItemRemoved} from '../OtherComponents/Popups/ItemRemoved';
@@ -51,7 +52,11 @@ const CellarLandingScreen: React.FC = props => {
     <View style={styles.container}>
       <CellarPageNavbar numItems={data.length} />
       <FlatList
-        contentContainerStyle={{alignItems: 'center'}}
+        contentContainerStyle={{
+          alignItems: 'center',
+          paddingBottom: heightDp('15'),
+        }}
+        ListEmptyComponent={CellarPageEmpty}
         numColumns={1}
         keyExtractor={(item, index) => index.toString()}
         data={data}
@@ -61,7 +66,7 @@ const CellarLandingScreen: React.FC = props => {
         updateCellsBatchingPeriod={60}
         initialNumToRender={100}
       />
-      {itemRemoved ? <ItemRemoved /> : null}
+      <ItemRemoved setVisible={setItemRemoved} visible={itemRemoved} />
     </View>
   );
 };

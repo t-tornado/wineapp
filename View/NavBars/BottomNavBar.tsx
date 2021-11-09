@@ -68,19 +68,19 @@ const BottomNavbar: React.FC<NavbarProps> = ({
               {route.name === 'Home' ? (
                 <MaterialIcons
                   name="home-filled"
-                  color={isFocused ? '#FFF' : '#ffffff90'}
+                  color={isFocused ? '#FFF' : '#ffffff80'}
                   size={DROP_ICON_S}
                 />
               ) : route.name === 'Cellar' ? (
                 <Entypo
-                  name="drop"
+                  name="heart"
                   size={DROP_ICON_S}
-                  color={isFocused ? '#fff' : '#ffffff90'}
+                  color={isFocused ? 'red' : '#ffffff80'}
                 />
               ) : (
                 <MaterialCommunityIcons
                   name="account-settings"
-                  color={isFocused ? '#fff' : '#ffffff90'}
+                  color={isFocused ? '#fff' : '#ffffff80'}
                   size={DROP_ICON_S}
                 />
               )}

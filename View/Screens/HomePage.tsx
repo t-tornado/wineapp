@@ -6,6 +6,7 @@ import {WineObject} from '../../Config/CloudData';
 import {HomeScreenColors} from '../../Config/Colors';
 import {heightDp, widthDp} from '../../Config/Dimensions';
 import {
+  useFetchLikedItems,
   useItemAddedToLike,
   useItemAlreadyLiked,
   useLikedItems,
@@ -45,6 +46,7 @@ const Homepage: React.FC = props => {
   const [itemAlreadyLiked, setItemAlreadyLiked] = useItemAlreadyLiked();
   const [itemAddedToLike, setItemAddedToLike] = useItemAddedToLike();
   const likedItems = useLikedItems();
+  const fetchLikedItems = useFetchLikedItems();
 
   function handleRefresh() {
     fetchData();
@@ -62,32 +64,12 @@ const Homepage: React.FC = props => {
     }
   }
 
-  const alreadyLikedTimer = () =>
-    setTimeout(() => {
-      setItemAlreadyLiked(false);
-    }, 3000);
-  const itemLikedTimer = () =>
-    setTimeout(() => {
-      setItemAddedToLike(false);
-    }, 2000);
-
   useEffect(() => {
     fetchData();
+    fetchLikedItems(user.email);
     fetchCurrentUser(user.email);
     setItemAddedToLike(false);
   }, [user]);
-
-  useEffect(() => {
-    itemAlreadyLiked && alreadyLikedTimer();
-
-    return () => clearTimeout(alreadyLikedTimer());
-  }, [itemAlreadyLiked]);
-
-  useEffect(() => {
-    itemAddedToLike && itemLikedTimer();
-
-    return () => clearTimeout(itemLikedTimer());
-  }, [itemAddedToLike]);
 
   useEffect(() => {
     let cleanup = true;
@@ -149,8 +131,11 @@ const Homepage: React.FC = props => {
           }
         />
       </View>
-      {itemAlreadyLiked ? <ItemAlreadyLikedPopup /> : null}
-      {itemAddedToLike ? <ItemLiked /> : null}
+      <ItemAlreadyLikedPopup
+        setVisible={setItemAlreadyLiked}
+        visible={itemAlreadyLiked}
+      />
+      <ItemLiked setVisible={setItemAddedToLike} visible={itemAddedToLike} />
     </View>
   );
 };
