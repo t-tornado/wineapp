@@ -1,8 +1,10 @@
 import React from 'react';
 import {useEffect} from 'react';
 import {Text, TouchableOpacity, View} from 'react-native';
+import Spinner from 'react-native-spinkit';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import {SplashScreenColors} from '../../../Config/Colors';
+import {heightDp} from '../../../Config/Dimensions';
 
 interface AuthLoadingComponentProps {
   loading: boolean;
@@ -14,6 +16,8 @@ interface AuthLoadingComponentProps {
   invalidInput?: boolean;
   signupFieldEmpty?: boolean;
 }
+
+const SPINNER_S = heightDp('6');
 
 const AuthLoadingComponent: React.FC<AuthLoadingComponentProps> = props => {
   const {
@@ -40,6 +44,14 @@ const AuthLoadingComponent: React.FC<AuthLoadingComponentProps> = props => {
 
   return (
     <View style={styles.screen}>
+      <View style={styles.loaderContainer}>
+        <Spinner
+          color="#fff"
+          size={SPINNER_S}
+          isVisible={true}
+          type="ChasingDots"
+        />
+      </View>
       <View style={styles.popupContainer}>
         <View style={{flexDirection: 'row'}}>
           <Text style={styles.stateText}>{type} </Text>
@@ -73,23 +85,29 @@ const styles = EStyleSheet.create({
     fontSize: '13rem',
     fontWeight: 'bold',
   },
+  loaderContainer: {
+    height: '40%',
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   messageContainer: {
     padding: '15rem',
     alignItems: 'center',
     justifyContent: 'center',
   },
   popupContainer: {
-    height: '30%',
-    width: '70%',
+    height: '25%',
+    width: '60%',
     justifyContent: 'space-around',
     alignItems: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: '#f2f4f9',
     borderRadius: '30rem',
   },
   screen: {
     height: '100%',
     width: '100%',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     alignItems: 'center',
     position: 'absolute',
   },
