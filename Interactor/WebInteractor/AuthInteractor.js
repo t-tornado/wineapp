@@ -136,8 +136,6 @@ const AuthInteractor = props => {
           setSigninSuccess(false);
           setSigninLoading(false);
           setSigninFailed(false);
-          setUserNotFound(false);
-          setSigninInvalidInputError(false);
         });
     }
   }

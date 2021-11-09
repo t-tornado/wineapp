@@ -2,6 +2,7 @@ import React from 'react';
 import {useEffect} from 'react';
 import {FlatList, RefreshControl, StyleSheet, View} from 'react-native';
 import {WineObject} from '../../Config/CloudData';
+import {useLikedItems} from '../../Interactor/ComponentInteractors/MainAppInteractor.';
 import {
   useErrorFetchingData,
   useFetchDataFunction,
@@ -16,8 +17,7 @@ const CellarLandingScreen: React.FC = props => {
   const fetchCellaDataFunction: Function = useFetchDataFunction();
   const fetchingCellaData: boolean = useFetchingDataState();
   const errorFetchingCellaData: boolean = useErrorFetchingData();
-  const data: [WineObject] = useWineData();
-  const _data = data.slice(0, 20);
+  const likedWine = useLikedItems();
 
   function renderItemFunction({item, index}) {
     return <CellarWineCard wineObject={item} navigationProps={props} />;
@@ -28,7 +28,7 @@ const CellarLandingScreen: React.FC = props => {
   }
 
   useEffect(() => {
-    data.length < 1 ? fetchCellaDataFunction() : null;
+    likedWine.length < 1 ? fetchCellaDataFunction() : null;
   }, []);
 
   return (
@@ -45,7 +45,7 @@ const CellarLandingScreen: React.FC = props => {
         contentContainerStyle={{alignItems: 'center'}}
         numColumns={1}
         keyExtractor={(item, index) => index.toString()}
-        data={_data}
+        data={likedWine}
         renderItem={renderItemFunction}
         maxToRenderPerBatch={100}
         windowSize={20}
