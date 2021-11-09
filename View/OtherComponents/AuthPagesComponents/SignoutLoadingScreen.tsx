@@ -1,8 +1,9 @@
 import React from 'react';
 import {useEffect} from 'react';
-import {StatusBar, Text, TouchableOpacity, View} from 'react-native';
+import Spinner from 'react-native-spinkit';
+import {Text, TouchableOpacity, View} from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
-import {heightDp, widthDp} from '../../../Config/Dimensions';
+import {heightDp, SPINNER_S, widthDp} from '../../../Config/Dimensions';
 
 const HEIGHT = heightDp('100');
 const WIDTH = widthDp('100');
@@ -18,7 +19,9 @@ const SignoutLoadingScreen: React.FC<CompProps> = props => {
   return (
     <View style={styles.screen}>
       <View style={styles.overlay} />
-      <View style={styles.loaderContainer}></View>
+      <View style={styles.loaderContainer}>
+        <Spinner type="ChasingDots" size={SPINNER_S} color="#fff" />
+      </View>
       {!actionFailed ? (
         <View style={styles.textContainer}>
           <Text style={styles.text}>Signing out . . . </Text>
@@ -31,11 +34,6 @@ const SignoutLoadingScreen: React.FC<CompProps> = props => {
           </TouchableOpacity>
         </View>
       )}
-      <StatusBar
-        translucent
-        barStyle="light-content"
-        backgroundColor="transparent"
-      />
     </View>
   );
 };

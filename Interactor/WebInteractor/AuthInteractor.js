@@ -131,6 +131,13 @@ const AuthInteractor = props => {
           setSigninLoading(false);
           // depending on the error, show a popup that either shows a wrong credentials or
           // account registered
+        })
+        .finally(() => {
+          setSigninSuccess(false);
+          setSigninLoading(false);
+          setSigninFailed(false);
+          setUserNotFound(false);
+          setSigninInvalidInputError(false);
         });
     }
   }

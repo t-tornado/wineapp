@@ -13,3 +13,4 @@ export function widthDp(widthPercent) {
 }
 
 export const NAVBAR_HEGIHT = heightDp('9%');
+export const SPINNER_S = heightDp('6');

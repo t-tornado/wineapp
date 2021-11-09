@@ -25,8 +25,6 @@ const ProfileScreen: React.FC = () => {
   const signoutLoading = useSignoutLoading();
   const signOut = useSignOut();
 
-  console.log('Profile Screen: Signout  Loading ', signoutLoading);
-
   useEffect(() => {
     let clean = true;
     if (currentUser !== undefined) {
