@@ -33,7 +33,6 @@ const HomepageInteractor = props => {
   }
 
   function getCurrentUser(email) {
-    console.log('getting current user details  ', email);
     firestore()
       .collection('users')
       .doc(email)

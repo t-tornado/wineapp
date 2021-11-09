@@ -1,59 +1,49 @@
-import React from 'react';
-import {useEffect} from 'react';
+import React, {useEffect} from 'react';
+import {useState} from 'react';
 import {FlatList, RefreshControl, StyleSheet, View} from 'react-native';
 import {WineObject} from '../../Config/CloudData';
-import {useLikedItems} from '../../Interactor/ComponentInteractors/MainAppInteractor.';
 import {
-  useErrorFetchingData,
-  useFetchDataFunction,
-  useFetchingDataState,
-  useWineData,
-} from '../../Interactor/WebInteractor/HomePageInteractor';
+  useLikedItems,
+  useLikedItemsChanged,
+} from '../../Interactor/ComponentInteractors/MainAppInteractor.';
 import {CellarWineCard} from '../OtherComponents/CellarComponents/CellarWineCard';
 import {CellarPageNavbar} from '../OtherComponents/CellarComponents/Navbar';
-import {LoadingComponent} from '../OtherComponents/LoadingComponent';
 
 const CellarLandingScreen: React.FC = props => {
-  const fetchCellaDataFunction: Function = useFetchDataFunction();
-  const fetchingCellaData: boolean = useFetchingDataState();
-  const errorFetchingCellaData: boolean = useErrorFetchingData();
+  const [data, setData] = useState([]);
   const likedWine = useLikedItems();
+  const likedItemsChanged = useLikedItemsChanged();
 
   function renderItemFunction({item, index}) {
     return <CellarWineCard wineObject={item} navigationProps={props} />;
   }
 
-  function handleRefreshPage() {
-    fetchCellaDataFunction();
-  }
+  console.log(likedWine);
 
   useEffect(() => {
-    likedWine.length < 1 ? fetchCellaDataFunction() : null;
-  }, []);
+    let clean = true;
+    if (likedWine.length > 0) {
+      setData(likedWine);
+    } else {
+      setData([]);
+    }
+
+    return () => (clean = false);
+  }, [likedItemsChanged]);
 
   return (
     <View style={styles.container}>
-      <CellarPageNavbar />
+      <CellarPageNavbar numItems={data.length} />
       <FlatList
-        ListEmptyComponent={
-          <LoadingComponent
-            errorState={errorFetchingCellaData}
-            fetchingDataState={fetchingCellaData}
-            handlerRefresh={handleRefreshPage}
-          />
-        }
         contentContainerStyle={{alignItems: 'center'}}
         numColumns={1}
         keyExtractor={(item, index) => index.toString()}
-        data={likedWine}
+        data={data}
         renderItem={renderItemFunction}
         maxToRenderPerBatch={100}
         windowSize={20}
         updateCellsBatchingPeriod={60}
         initialNumToRender={100}
-        refreshControl={
-          <RefreshControl refreshing={false} onRefresh={handleRefreshPage} />
-        }
       />
     </View>
   );

@@ -5,6 +5,8 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import {WineCardProps} from '../../../Config/CloudData';
 import {WineCardColors} from '../../../Config/Colors';
 import {heightDp, widthDp} from '../../../Config/Dimensions';
+import {useAddToLikedItems} from '../../../Interactor/ComponentInteractors/MainAppInteractor.';
+import {useUser} from '../../../Interactor/WebInteractor/AuthInteractor';
 
 const HEIGHT = heightDp('25%');
 const WIDTH = widthDp('43');
@@ -13,10 +15,16 @@ const artwork = require('../../../wineBottle.png');
 
 const WineCard: React.FC<WineCardProps> = props => {
   const {wineObject, navigationProps} = props;
+  const user = useUser().value;
+  const addToLikedFn = useAddToLikedItems();
   const {image, wine, winery} = wineObject;
 
   function callNavigation() {
     navigationProps.navigation.navigate('WinePage', {wineObject});
+  }
+
+  function handleAddToLiked() {
+    addToLikedFn(user.email, wineObject);
   }
 
   return (
@@ -33,7 +41,10 @@ const WineCard: React.FC<WineCardProps> = props => {
         </View>
         <View style={styles.iconDetails}>
           <View style={styles.iconContainer}>
-            <TouchableOpacity style={styles.icon}>
+            <TouchableOpacity
+              onPress={handleAddToLiked}
+              activeOpacity={0.5}
+              style={styles.icon}>
               <Entypo name="drop" color="#EEBB4D" size={ICON_S} />
             </TouchableOpacity>
           </View>

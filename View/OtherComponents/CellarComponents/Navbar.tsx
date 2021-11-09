@@ -8,13 +8,21 @@ const icon_s = heightDp('5%');
 const HEIGHT = heightDp('8');
 const WIDTH = widthDp('100');
 
-const CellarPageNavbar: React.FC = () => {
+interface NavbarProps {
+  numItems: number;
+}
+
+const CellarPageNavbar: React.FC<NavbarProps> = props => {
+  const {numItems} = props;
+
   return (
     <View style={styles.container}>
       <MaterialCommunityIcons name="glass-wine" color="#630000" size={icon_s} />
       <View style={styles.hederTextContainer}>
         <Text style={styles.text}> Your Cellar</Text>
-        <Text>2 Products</Text>
+        <Text style={styles.productsText}>
+          {numItems !== undefined ? numItems : ''} Products
+        </Text>
       </View>
     </View>
   );
@@ -41,6 +49,10 @@ const styles = EStyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+  },
+  productsText: {
+    fontSize: '13rem',
+    color: '#000',
   },
   text: {
     color: '#000',

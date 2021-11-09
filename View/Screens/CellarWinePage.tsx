@@ -15,6 +15,12 @@ import {LocationTag} from '../OtherComponents/WinePageComponents/LocationTag';
 import {ReviewTag} from '../OtherComponents/WinePageComponents/ReviewsTag';
 import {RatingTag} from '../OtherComponents/WinePageComponents/RatingTag';
 import {AddToCellarButton} from '../OtherComponents/WinePageComponents/AddToCellarButton';
+import {
+  useItemRemoved,
+  useRemoveFromLikedItems,
+} from '../../Interactor/ComponentInteractors/MainAppInteractor.';
+import {useUser} from '../../Interactor/WebInteractor/AuthInteractor';
+import {useEffect} from 'react';
 
 const ICON_S = heightDp('2%');
 const HEIGHT = heightDp('100');
@@ -31,14 +37,32 @@ interface CellarWinepageRouteprops {
 }
 
 const CellarWinePage: React.FC<CellarWinepageRouteprops> = props => {
-  const {wine, winery, rating, location, image} = props.route.params.wineObject;
+  const removeFromLiked = useRemoveFromLikedItems();
+  const [wineItemRemoved, setWineItemRemoved] = useItemRemoved();
+  const userEmail = useUser().value.email;
+  const {wineObject} = props.route.params;
+  const {wine, winery, rating, location, image} = wineObject;
   const {average, reviews} = rating;
   const _location: string =
     typeof location === 'string' ? location.match(/\b(\w+)/g).join(', ') : '';
 
-  function handlePress() {
+  function handleToBackButton() {
     props.navigation.goBack();
   }
+
+  function handleRemoveAction() {
+    removeFromLiked(userEmail, wineObject);
+  }
+
+  console.log(wineItemRemoved);
+
+  useEffect(() => {
+    setWineItemRemoved(false);
+  }, []);
+
+  useEffect(() => {
+    wineItemRemoved && handleToBackButton();
+  }, [wineItemRemoved]);
 
   return (
     <ScrollView
@@ -46,7 +70,9 @@ const CellarWinePage: React.FC<CellarWinepageRouteprops> = props => {
       style={styles.container}
       stickyHeaderIndices={[0]}>
       <View style={styles.navbar}>
-        <TouchableOpacity onPress={handlePress} style={styles.iconContainer}>
+        <TouchableOpacity
+          onPress={handleToBackButton}
+          style={styles.iconContainer}>
           <SimpleLineIcons name="arrow-left" size={ICON_S} color="#000" />
           <Text style={styles.backButtonText}>Cellar</Text>
         </TouchableOpacity>
@@ -58,8 +84,8 @@ const CellarWinePage: React.FC<CellarWinepageRouteprops> = props => {
           </View>
         </View>
         <LocationTag location={_location} />
-        <ReviewTag reviews={'22'} />
-        <RatingTag rating={'43'} />
+        <ReviewTag reviews={reviews} />
+        <RatingTag rating={average} />
       </View>
 
       <View style={styles.textDetailsContainer}>
@@ -67,7 +93,10 @@ const CellarWinePage: React.FC<CellarWinepageRouteprops> = props => {
         <Text style={styles.wineryText}>{winery}</Text>
       </View>
       <View style={styles.footer}>
-        <TouchableOpacity style={styles.deleteButton}>
+        <TouchableOpacity
+          activeOpacity={0.5}
+          onPress={handleRemoveAction}
+          style={styles.deleteButton}>
           <Text style={styles.deleteButtonText}>Remove from cellar</Text>
         </TouchableOpacity>
       </View>
