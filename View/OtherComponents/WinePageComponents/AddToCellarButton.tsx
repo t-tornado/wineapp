@@ -2,9 +2,21 @@ import React from 'react';
 import {Text, TouchableOpacity, View} from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 
-const AddToCellarButton: React.FC = () => {
+interface buttonProps {
+  onPress: Function;
+}
+
+const AddToCellarButton: React.FC<buttonProps> = props => {
+  const {onPress} = props;
+  function handleOnPress() {
+    onPress();
+  }
+
   return (
-    <TouchableOpacity style={styles.addButtonContainer}>
+    <TouchableOpacity
+      onPress={handleOnPress}
+      activeOpacity={0.85}
+      style={styles.addButtonContainer}>
       <Text style={styles.addButtonText}>Add to cellar</Text>
     </TouchableOpacity>
   );

@@ -15,6 +15,8 @@ import {LocationTag} from '../OtherComponents/WinePageComponents/LocationTag';
 import {ReviewTag} from '../OtherComponents/WinePageComponents/ReviewsTag';
 import {RatingTag} from '../OtherComponents/WinePageComponents/RatingTag';
 import {AddToCellarButton} from '../OtherComponents/WinePageComponents/AddToCellarButton';
+import {useUser} from '../../Interactor/WebInteractor/AuthInteractor';
+import {useAddToLikedItems} from '../../Interactor/ComponentInteractors/MainAppInteractor.';
 
 const ICON_S = heightDp('2%');
 const CIRCLE_S = heightDp('1%');
@@ -33,13 +35,20 @@ interface WinepageRouteprops {
 }
 
 const WinePage: React.FC<WinepageRouteprops> = props => {
-  const {wine, winery, rating, location, image} = props.route.params.wineObject;
+  const user = useUser().value;
+  const addToLikedFn = useAddToLikedItems();
+  const {wineObject} = props.route.params;
+  const {wine, winery, rating, location, image} = wineObject;
   const {average, reviews} = rating;
   const _location: string =
     typeof location === 'string' ? location.match(/\b(\w+)/g).join(' ') : '';
 
   function handlePress() {
     props.navigation.goBack();
+  }
+
+  function handleAddTolike() {
+    addToLikedFn(user.email, wineObject);
   }
 
   return (
@@ -60,10 +69,10 @@ const WinePage: React.FC<WinepageRouteprops> = props => {
           </View>
         </View>
         <LocationTag location={_location} />
-        <ReviewTag reviews={'22'} />
-        <RatingTag rating={'43'} />
+        <ReviewTag reviews={reviews} />
+        <RatingTag rating={average} />
         <View style={styles.bodyBottomContainer}>
-          <AddToCellarButton />
+          <AddToCellarButton onPress={handleAddTolike} />
         </View>
       </View>
 
