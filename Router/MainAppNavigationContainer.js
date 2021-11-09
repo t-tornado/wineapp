@@ -29,9 +29,6 @@ const MainAppNavigationContainer = () => {
     return handleAuthChanged();
   }, [user]);
 
-  // console.log(user);
-  // console.log();
-
   return (
     <NavigationContainer independent={true}>
       {user === null ? (

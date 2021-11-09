@@ -17,6 +17,7 @@ import {RatingTag} from '../OtherComponents/WinePageComponents/RatingTag';
 import {AddToCellarButton} from '../OtherComponents/WinePageComponents/AddToCellarButton';
 import {useUser} from '../../Interactor/WebInteractor/AuthInteractor';
 import {useAddToLikedItems} from '../../Interactor/ComponentInteractors/MainAppInteractor.';
+import {ItemAlreadyLikedPopup} from '../OtherComponents/Popups/ItemAlreadyLiked';
 
 const ICON_S = heightDp('2%');
 const CIRCLE_S = heightDp('1%');
@@ -80,6 +81,7 @@ const WinePage: React.FC<WinepageRouteprops> = props => {
         <Text style={[styles.wineText]}>{wine}</Text>
         <Text style={styles.wineryText}>{winery}</Text>
       </View>
+      <ItemAlreadyLikedPopup />
     </ScrollView>
   );
 };
@@ -95,7 +97,7 @@ const styles = EStyleSheet.create({
     width: '100%',
     alignItems: 'flex-start',
     justifyContent: 'flex-end',
-    paddingHorizontal: '20rem',
+    paddingHorizontal: '30rem',
   },
   bodyBottomContainer: {
     height: heightDp('15'),
@@ -111,7 +113,7 @@ const styles = EStyleSheet.create({
   container: {
     width: WIDTH,
     flex: 1,
-    paddingHorizontal: '20rem',
+    // paddingHorizontal: '20rem',
     backgroundColor: '#fff',
   },
   details: {
@@ -126,6 +128,7 @@ const styles = EStyleSheet.create({
   footer: {
     height: heightDp('30'),
     marginBottom: heightDp('10'),
+    paddingHorizontal: '10rem',
   },
 
   iconContainer: {

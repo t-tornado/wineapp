@@ -8,6 +8,7 @@ import {
 } from '../../Interactor/ComponentInteractors/MainAppInteractor.';
 import {CellarWineCard} from '../OtherComponents/CellarComponents/CellarWineCard';
 import {CellarPageNavbar} from '../OtherComponents/CellarComponents/Navbar';
+import {ItemRemoved} from '../OtherComponents/Popups/ItemRemoved';
 
 const CellarLandingScreen: React.FC = props => {
   const [data, setData] = useState([]);
@@ -45,6 +46,7 @@ const CellarLandingScreen: React.FC = props => {
         updateCellsBatchingPeriod={60}
         initialNumToRender={100}
       />
+      <ItemRemoved />
     </View>
   );
 };

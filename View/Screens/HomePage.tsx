@@ -21,6 +21,7 @@ import {HeaderMenu} from '../OtherComponents/HomePageComponents/HeaderMenu';
 import {IntroductoryHeaderComponent} from '../OtherComponents/HomePageComponents/IntroductoryHeaderComponent';
 import WineCard from '../OtherComponents/HomePageComponents/WineCard';
 import {LoadingComponent} from '../OtherComponents/LoadingComponent';
+import {ItemAlreadyLikedPopup} from '../OtherComponents/Popups/ItemAlreadyLiked';
 
 interface RenderFlatlistFunction {
   item: {};
@@ -116,6 +117,7 @@ const Homepage: React.FC = props => {
           }
         />
       </View>
+      <ItemAlreadyLikedPopup />
     </View>
   );
 };

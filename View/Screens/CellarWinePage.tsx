@@ -21,6 +21,7 @@ import {
 } from '../../Interactor/ComponentInteractors/MainAppInteractor.';
 import {useUser} from '../../Interactor/WebInteractor/AuthInteractor';
 import {useEffect} from 'react';
+import {ItemRemoved} from '../OtherComponents/Popups/ItemRemoved';
 
 const ICON_S = heightDp('2%');
 const HEIGHT = heightDp('100');
@@ -100,6 +101,7 @@ const CellarWinePage: React.FC<CellarWinepageRouteprops> = props => {
           <Text style={styles.deleteButtonText}>Remove from cellar</Text>
         </TouchableOpacity>
       </View>
+      <ItemRemoved />
     </ScrollView>
   );
 };
@@ -115,7 +117,7 @@ const styles = EStyleSheet.create({
     width: '100%',
     alignItems: 'flex-start',
     justifyContent: 'flex-end',
-    paddingHorizontal: '20rem',
+    paddingHorizontal: '40rem',
     paddingBottom: '30rem',
   },
   bodyBottomContainer: {
@@ -131,7 +133,6 @@ const styles = EStyleSheet.create({
   container: {
     width: WIDTH,
     flex: 1,
-    paddingHorizontal: '20rem',
     backgroundColor: '#fff',
   },
   deleteButton: {
@@ -157,6 +158,7 @@ const styles = EStyleSheet.create({
     alignItems: 'center',
   },
   footer: {
+    paddingHorizontal: '20rem',
     height: heightDp('30'),
     marginBottom: heightDp('10'),
   },
@@ -216,6 +218,7 @@ const styles = EStyleSheet.create({
   textDetailsContainer: {
     height: '20%',
     width: '100%',
+    paddingHorizontal: '20rem',
   },
   topIconContainer: {
     height: '40%',

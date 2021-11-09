@@ -3,7 +3,7 @@ import {Text, View} from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import {POPUP_H, POPUP_TRANSLATE_Y, POPUP_W} from '../../../Config/Dimensions';
 
-const ItemAlreadyLikedPopup = () => {
+const ItemRemoved = () => {
   return (
     <View
       style={[
@@ -11,7 +11,7 @@ const ItemAlreadyLikedPopup = () => {
         {transform: [{translateY: POPUP_TRANSLATE_Y}]},
       ]}>
       <View style={styles.popup}>
-        <Text style={styles.text}>Wine already liked</Text>
+        <Text style={styles.text}>Wine removed from favorites</Text>
       </View>
     </View>
   );
@@ -24,6 +24,7 @@ const styles = EStyleSheet.create({
     position: 'absolute',
     justifyContent: 'center',
     alignItems: 'center',
+    zIndex: 10,
   },
   popup: {
     backgroundColor: '#141E61',
@@ -39,4 +40,4 @@ const styles = EStyleSheet.create({
   },
 });
 
-export {ItemAlreadyLikedPopup};
+export {ItemRemoved};

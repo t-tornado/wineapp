@@ -16,3 +16,4 @@ export const NAVBAR_HEGIHT = heightDp('9%');
 export const SPINNER_S = heightDp('6');
 export const POPUP_H = heightDp('8');
 export const POPUP_W = widthDp('100');
+export const POPUP_TRANSLATE_Y = heightDp('6');
