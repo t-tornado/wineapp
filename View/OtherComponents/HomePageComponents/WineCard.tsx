@@ -15,7 +15,6 @@ import {useUser} from '../../../Interactor/WebInteractor/AuthInteractor';
 const HEIGHT = heightDp('25%');
 const WIDTH = widthDp('43');
 const ICON_S = heightDp('3%');
-const artwork = require('../../../wineBottle.png');
 
 const WineCard: React.FC<WineCardProps> = props => {
   const {wineObject, navigationProps, likeState} = props;
@@ -151,15 +150,3 @@ const styles = EStyleSheet.create({
 });
 
 export default React.memo(WineCard);
-
-/**
- *  <View style={styles.iconContainer}>
-          <TouchableOpacity style={styles.icon}>
-            <Entypo
-              name="heart"
-              color={WineCardColors.likeIcon}
-              size={ICON_S}
-            />
-          </TouchableOpacity>
-        </View>
- */
