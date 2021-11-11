@@ -58,7 +58,6 @@ const SignUpScreen: React.FC = props => {
   useEffect(() => {
     let cleanUp = true;
     if (loading || sucess || failed) {
-      console.log('opening loading indicator');
       cleanUp && setOpenLoadingIndicator(true);
     }
 

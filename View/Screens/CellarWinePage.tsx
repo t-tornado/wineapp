@@ -16,10 +16,12 @@ import {ReviewTag} from '../OtherComponents/WinePageComponents/ReviewsTag';
 import {RatingTag} from '../OtherComponents/WinePageComponents/RatingTag';
 import {
   useItemRemoved,
+  useLoadingRemoveState,
   useRemoveFromLikedItems,
 } from '../../Interactor/ComponentInteractors/MainAppInteractor.';
 import {useUser} from '../../Interactor/WebInteractor/AuthInteractor';
 import {useEffect} from 'react';
+import {RemovingItemLoadingScreen} from '../OtherComponents/CellarComponents/RemovingItemLoadingScreen';
 
 const ICON_S = heightDp('2%');
 const HEIGHT = heightDp('100');
@@ -39,6 +41,7 @@ const CellarWinePage: React.FC<CellarWinepageRouteprops> = props => {
   const removeFromLiked = useRemoveFromLikedItems();
   const [wineItemRemoved, setWineItemRemoved] = useItemRemoved();
   const userEmail = useUser().value.email;
+  const loadingRemove = useLoadingRemoveState();
   const {wineObject} = props.route.params;
   const {wine, winery, rating, location, image} = wineObject;
   const {average, reviews} = rating;
@@ -53,8 +56,6 @@ const CellarWinePage: React.FC<CellarWinepageRouteprops> = props => {
     removeFromLiked(userEmail, wineObject);
   }
 
-  console.log(wineItemRemoved);
-
   useEffect(() => {
     setWineItemRemoved(false);
   }, []);
@@ -64,42 +65,45 @@ const CellarWinePage: React.FC<CellarWinepageRouteprops> = props => {
   }, [wineItemRemoved]);
 
   return (
-    <ScrollView
-      showsVerticalScrollIndicator={false}
-      style={styles.container}
-      stickyHeaderIndices={[0]}>
-      <View style={styles.navbar}>
-        <TouchableOpacity
-          onPress={handleToBackButton}
-          style={styles.iconContainer}>
-          <SimpleLineIcons name="arrow-left" size={ICON_S} color="#000" />
-          <Text style={styles.backButtonText}>Cellar</Text>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.body}>
-        <View style={styles.imageContainer}>
-          <View style={[styles.imageShadowWrapper]}>
-            <Image source={{uri: image}} style={[styles.image]} />
-          </View>
+    <>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        style={styles.container}
+        stickyHeaderIndices={[0]}>
+        <View style={styles.navbar}>
+          <TouchableOpacity
+            onPress={handleToBackButton}
+            style={styles.iconContainer}>
+            <SimpleLineIcons name="arrow-left" size={ICON_S} color="#000" />
+            <Text style={styles.backButtonText}>Cellar</Text>
+          </TouchableOpacity>
         </View>
-        <LocationTag location={_location} />
-        <ReviewTag reviews={reviews} />
-        <RatingTag rating={average} />
-      </View>
+        <View style={styles.body}>
+          <View style={styles.imageContainer}>
+            <View style={[styles.imageShadowWrapper]}>
+              <Image source={{uri: image}} style={[styles.image]} />
+            </View>
+          </View>
+          <LocationTag location={_location} />
+          <ReviewTag reviews={reviews} />
+          <RatingTag rating={average} />
+        </View>
 
-      <View style={styles.textDetailsContainer}>
-        <Text style={[styles.wineText]}>{wine}</Text>
-        <Text style={styles.wineryText}>{winery}</Text>
-      </View>
-      <View style={styles.footer}>
-        <TouchableOpacity
-          activeOpacity={0.5}
-          onPress={handleRemoveAction}
-          style={styles.deleteButton}>
-          <Text style={styles.deleteButtonText}>Remove from cellar</Text>
-        </TouchableOpacity>
-      </View>
-    </ScrollView>
+        <View style={styles.textDetailsContainer}>
+          <Text style={[styles.wineText]}>{wine}</Text>
+          <Text style={styles.wineryText}>{winery}</Text>
+        </View>
+        <View style={styles.footer}>
+          <TouchableOpacity
+            activeOpacity={0.5}
+            onPress={handleRemoveAction}
+            style={styles.deleteButton}>
+            <Text style={styles.deleteButtonText}>Remove from cellar</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+      {loadingRemove ? <RemovingItemLoadingScreen isVisible={true} /> : null}
+    </>
   );
 };
 

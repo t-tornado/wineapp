@@ -41,8 +41,6 @@ const ItemAlreadyLikedPopup: React.FC<PopupProps> = props => {
       setVisible(false);
     }, 3000);
 
-  console.log(visible);
-
   useEffect(() => {
     if (visible) {
       showAnimation.start();

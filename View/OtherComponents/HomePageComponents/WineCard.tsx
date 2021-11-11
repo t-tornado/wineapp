@@ -1,11 +1,15 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {Image, Text, TouchableOpacity, View} from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import Entypo from 'react-native-vector-icons/Entypo';
 import {WineCardProps} from '../../../Config/CloudData';
 import {WineCardColors} from '../../../Config/Colors';
 import {heightDp, widthDp} from '../../../Config/Dimensions';
-import {useAddToLikedItems} from '../../../Interactor/ComponentInteractors/MainAppInteractor.';
+import {
+  useAddToLikedItems,
+  useLikedItems,
+  useLikedItemsChanged,
+} from '../../../Interactor/ComponentInteractors/MainAppInteractor.';
 import {useUser} from '../../../Interactor/WebInteractor/AuthInteractor';
 
 const HEIGHT = heightDp('25%');
@@ -15,17 +19,39 @@ const artwork = require('../../../wineBottle.png');
 
 const WineCard: React.FC<WineCardProps> = props => {
   const {wineObject, navigationProps, likeState} = props;
+  const [liked, setLiked] = useState(likeState);
+  const [likeItem, setLikeItem] = useState(false);
   const user = useUser().value;
   const addToLikedFn = useAddToLikedItems();
-  const {image, wine, winery} = wineObject;
+  const likedItems = useLikedItems();
+  const likedItemsChanged = useLikedItemsChanged();
+  const {image, wine, winery, id} = wineObject;
 
   function callNavigation() {
-    navigationProps.navigation.navigate('WinePage', {wineObject});
+    navigationProps.navigation.navigate('WinePage', {
+      wineObject,
+      likeState: liked,
+    });
   }
 
   function handleAddToLiked() {
-    addToLikedFn(user.email, wineObject);
+    setLiked(true);
+    setLikeItem(true);
   }
+
+  useEffect(() => {
+    let clean = true;
+    setLikeItem(false);
+    if (likedItems.some(it => it.id === id)) {
+      setLiked(true);
+    } else {
+      setLiked(false);
+    }
+  }, [likedItemsChanged]);
+
+  useEffect(() => {
+    likeItem && addToLikedFn(user.email, wineObject);
+  }, [likeItem]);
 
   return (
     <TouchableOpacity
@@ -43,7 +69,7 @@ const WineCard: React.FC<WineCardProps> = props => {
           <View
             style={[
               styles.iconContainer,
-              {backgroundColor: likeState ? '#FF4C29' : '#fff'},
+              {backgroundColor: liked ? '#FF4C29' : '#fff'},
             ]}>
             <TouchableOpacity
               onPress={handleAddToLiked}
@@ -51,7 +77,7 @@ const WineCard: React.FC<WineCardProps> = props => {
               style={styles.icon}>
               <Entypo
                 name="heart"
-                color={likeState ? '#fff' : '#EEBB4D'}
+                color={liked ? '#fff' : '#EEBB4D'}
                 size={ICON_S}
               />
             </TouchableOpacity>

@@ -40,9 +40,7 @@ const HomepageInteractor = props => {
       .then(data => {
         data.exists && setCurrentUser(data.data());
       })
-      .catch(e =>
-        console.log('--error-- could not get current user first name   ', e),
-      );
+      .catch(null);
   }
 
   return (

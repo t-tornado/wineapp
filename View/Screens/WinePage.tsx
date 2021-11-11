@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   Dimensions,
   Image,
@@ -20,6 +20,7 @@ import {
   useAddToLikedItems,
   useItemAddedToLike,
   useItemAlreadyLiked,
+  useLikedItems,
 } from '../../Interactor/ComponentInteractors/MainAppInteractor.';
 import {ItemAlreadyLikedPopup} from '../OtherComponents/Popups/ItemAlreadyLiked';
 import {ItemLiked} from '../OtherComponents/Popups/ItemLiked';
@@ -35,6 +36,7 @@ interface WinepageRouteprops {
     key: string;
     params: {
       wineObject: WineObject;
+      likeState: boolean;
     };
   };
   navigation: {};
@@ -45,7 +47,7 @@ const WinePage: React.FC<WinepageRouteprops> = props => {
   const [itemAddedToLike, setItemAddedToLike] = useItemAddedToLike();
   const user = useUser().value;
   const addToLikedFn = useAddToLikedItems();
-  const {wineObject} = props.route.params;
+  const {wineObject, likeState} = props.route.params;
   const {wine, winery, rating, location, image} = wineObject;
   const {average, reviews} = rating;
   const _location: string =
@@ -107,7 +109,10 @@ const WinePage: React.FC<WinepageRouteprops> = props => {
           <ReviewTag reviews={reviews} />
           <RatingTag rating={average} />
           <View style={styles.bodyBottomContainer}>
-            <AddToCellarButton onPress={handleAddTolike} />
+            <AddToCellarButton
+              onPress={handleAddTolike}
+              likedState={likeState}
+            />
           </View>
         </View>
 
@@ -116,8 +121,11 @@ const WinePage: React.FC<WinepageRouteprops> = props => {
           <Text style={styles.wineryText}>{winery}</Text>
         </View>
       </ScrollView>
-      {itemAlreadyLiked ? <ItemAlreadyLikedPopup /> : null}
-      {itemAddedToLike ? <ItemLiked /> : null}
+      <ItemAlreadyLikedPopup
+        setVisible={setItemAlreadyLiked}
+        visible={itemAlreadyLiked}
+      />
+      <ItemLiked setVisible={setItemAddedToLike} visible={itemAddedToLike} />
     </>
   );
 };

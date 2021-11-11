@@ -10,6 +10,7 @@ const RemoveFromLikedContext = createContext();
 const ItemRemovedContext = createContext();
 const ItemAreadyLikedContext = createContext();
 const LoadLikedItemsContext = createContext();
+const LoadingRemoveStateContext = createContext();
 
 const MainAppInteractor = props => {
   const [searchKeyword, setSearchKeyword] = useState('');
@@ -18,6 +19,7 @@ const MainAppInteractor = props => {
   const [itemAlreadylikedState, setitemAlreadyLikedState] = useState(false);
   const [itemRemoved, setItemRemoved] = useState(false);
   const [itemAddedToLike, setItemAddedTolike] = useState(false);
+  const [loadingRemoveState, setLoadingRemoveState] = useState(false);
 
   function addToLikedItems(userEmail, wine) {
     const likedItem = firestore.FieldValue.arrayUnion(wine);
@@ -26,14 +28,12 @@ const MainAppInteractor = props => {
     if (likedItems.some(it => it.id === wine.id)) {
       setitemAlreadyLikedState(true);
       setItemAddedTolike(false);
-      console.log('--item already liked --');
     } else {
       docRef
         .update({
           likedItems: likedItem,
         })
         .then(() => {
-          console.log('item successfully added');
           setLikedItemsChanged(p => !p);
           setItemAddedTolike(true);
           setLikedItems(its => {
@@ -41,16 +41,12 @@ const MainAppInteractor = props => {
             return its;
           });
         })
-        .catch(e =>
-          console.log(
-            '--ERROR__ MainAppInteractor: Could not add liked item  ',
-            e,
-          ),
-        );
+        .catch(() => null);
     }
   }
 
   function handleRemoveFromLikedItems(userEmail, wine) {
+    setLoadingRemoveState(true);
     setItemRemoved(false);
     if (likedItems.length > 0) {
       const docRef = firestore().collection('users').doc(userEmail);
@@ -60,7 +56,6 @@ const MainAppInteractor = props => {
           likedItems: updateLikedItems,
         })
         .then(() => {
-          console.log('-- Wine object removed --');
           setItemRemoved(true);
           setLikedItemsChanged(p => !p);
           setLikedItems(its => {
@@ -68,7 +63,8 @@ const MainAppInteractor = props => {
             return new_Arr;
           });
         })
-        .catch(() => console.log('--ERROR: Failed to remove liked item  '));
+        .catch(() => null)
+        .finally(() => setLoadingRemoveState(false));
     }
   }
 
@@ -83,7 +79,7 @@ const MainAppInteractor = props => {
           setLikedItemsChanged(p => !p);
         }
       })
-      .catch(e => console.log('could not get user liked items   ', e));
+      .catch(null);
   }
 
   useEffect(() => {
@@ -105,7 +101,10 @@ const MainAppInteractor = props => {
                   <ItemAddedToLikeContext.Provider
                     value={[itemAddedToLike, setItemAddedTolike]}>
                     <LoadLikedItemsContext.Provider value={getUserLikedItems}>
-                      {props.children}
+                      <LoadingRemoveStateContext.Provider
+                        value={loadingRemoveState}>
+                        {props.children}
+                      </LoadingRemoveStateContext.Provider>
                     </LoadLikedItemsContext.Provider>
                   </ItemAddedToLikeContext.Provider>
                 </ItemAreadyLikedContext.Provider>
@@ -145,6 +144,10 @@ export const useRemoveFromLikedItems = () => {
 export const useItemRemoved = () => {
   const contextVal = useContext(ItemRemovedContext);
   return contextVal;
+};
+export const useLoadingRemoveState = () => {
+  const state = useContext(LoadingRemoveStateContext);
+  return state;
 };
 export const useItemAlreadyLiked = () => {
   const val = useContext(ItemAreadyLikedContext);

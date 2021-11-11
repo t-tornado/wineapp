@@ -10,6 +10,7 @@ import {
   useItemAddedToLike,
   useItemAlreadyLiked,
   useLikedItems,
+  useLikedItemsChanged,
   useSearchKeyword,
 } from '../../Interactor/ComponentInteractors/MainAppInteractor.';
 import {useUser} from '../../Interactor/WebInteractor/AuthInteractor';
@@ -65,11 +66,11 @@ const Homepage: React.FC = props => {
   }
 
   useEffect(() => {
-    fetchData();
     fetchLikedItems(user.email);
+    fetchData();
     fetchCurrentUser(user.email);
     setItemAddedToLike(false);
-  }, [user]);
+  }, []);
 
   useEffect(() => {
     let cleanup = true;
@@ -148,7 +149,6 @@ const styles = EStyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    // backgroundColor: HomeScreenColors.backgroundColor,
   },
   header: {
     paddingHorizontal: '10rem',

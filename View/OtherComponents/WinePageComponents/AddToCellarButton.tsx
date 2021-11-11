@@ -4,12 +4,13 @@ import EStyleSheet from 'react-native-extended-stylesheet';
 
 interface buttonProps {
   onPress: Function;
+  likedState: boolean;
 }
 
 const AddToCellarButton: React.FC<buttonProps> = props => {
-  const {onPress} = props;
+  const {onPress, likedState} = props;
   function handleOnPress() {
-    onPress();
+    !likedState && onPress();
   }
 
   return (
@@ -17,7 +18,9 @@ const AddToCellarButton: React.FC<buttonProps> = props => {
       onPress={handleOnPress}
       activeOpacity={0.85}
       style={styles.addButtonContainer}>
-      <Text style={styles.addButtonText}>Add to cellar</Text>
+      <Text style={styles.addButtonText}>
+        {!likedState ? 'Add to cellar' : 'Added to Cellar'}
+      </Text>
     </TouchableOpacity>
   );
 };

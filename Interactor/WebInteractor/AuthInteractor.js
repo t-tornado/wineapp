@@ -48,13 +48,11 @@ const AuthInteractor = props => {
   // [auth/weak-password]
 
   function handleSignup(email, password, firstName, lastName) {
-    console.log('--signing up--');
     if (
-      [email, password, firstName, lastName].some(it => {
-        console.log([email, password, firstName, lastName]);
-      })
+      [email, password, firstName, lastName].some(
+        it => it === undefined || it === '',
+      )
     ) {
-      console.log('-- input are wrong');
       setSignupFieldEmpty(true);
       setSignupFailed(true);
       setSignupLoading(false);
@@ -76,7 +74,6 @@ const AuthInteractor = props => {
               lastName,
             })
             .catch(e => {
-              console.log('could not create user data in firebase  ', e);
               setSignupLoading(false);
               setSignupFailed(true);
               setSignupSuccess(false);
@@ -84,7 +81,6 @@ const AuthInteractor = props => {
             });
         })
         .catch(error => {
-          console.log('--error-- Could not create user  ', error);
           setSignupFailed(true);
           setSignupLoading(false);
           setSignupSuccess(false);
@@ -117,7 +113,6 @@ const AuthInteractor = props => {
           setSigninInvalidInputError(false);
         })
         .catch(error => {
-          console.log(error.message);
           if (error.message.startsWith('[auth/wrong-password]')) {
             setSigninInvalidInputError(true);
             setUserNotFound(false);
@@ -151,7 +146,6 @@ const AuthInteractor = props => {
         setSignoutFailed(false);
       })
       .catch(() => {
-        console.log('could not sign user out');
         setSignoutLoading(false);
         setSignoutFailed(true);
       });

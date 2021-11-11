@@ -30,8 +30,6 @@ const ItemRemoved: React.FC<PopupProps> = props => {
     toValue: SNAP_TOP,
   });
 
-  console.log('visible  ', visible);
-
   const itemRemovedTimer = () =>
     setTimeout(() => {
       setVisible(false);
