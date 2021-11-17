@@ -14,7 +14,7 @@ const artwork = require('../../../logo.jpeg');
 const ICON_S = heightDp('4%');
 
 const HeaderMenu: React.FC = () => {
-  const [searchActive, setSetActiveState] = useState<boolean>(false);
+  const [searchActive, setSetActiveState] = useState(false);
   const setSearchWord: Function = useSearchKeyword().setFunction;
 
   function handleCloseSearchBar() {
