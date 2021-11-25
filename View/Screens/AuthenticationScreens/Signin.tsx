@@ -3,6 +3,7 @@ import {ImageBackground, Text, TouchableOpacity, View} from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import {SplashScreenColors} from '../../../Config/Colors';
 import {heightDp, widthDp} from '../../../Config/Dimensions';
+import {SigninScreenProps} from '../../../Config/KWinefoDataTypes';
 import {
   useResetAuthStates,
   useSignin,
@@ -21,7 +22,7 @@ const HEIGHT = heightDp('100');
 const WIDTH = widthDp('100');
 const imageURL = require('../../../assets/Winesplash.jpeg');
 
-const SignInScreen: React.FC = props => {
+const SignInScreen: React.FC<SigninScreenProps> = props => {
   const [openLoadingIndicator, setOpenLoadingIndicator] = useState(false);
   const {navigation} = props;
   const resetAuthStates = useResetAuthStates();

@@ -1,7 +1,10 @@
 import React, {useEffect} from 'react';
 import {useState} from 'react';
-import {FlatList, ListRenderItem, StyleSheet, View} from 'react-native';
-import {WineObject} from '../../Config/KWinefoDataTypes';
+import {FlatList, StyleSheet, View} from 'react-native';
+import {
+  CellarLandingPageScreenProp,
+  WineObject,
+} from '../../Config/KWinefoDataTypes';
 import {heightDp} from '../../Config/Dimensions';
 import {
   useItemRemoved,
@@ -13,20 +16,15 @@ import {CellarWineCard} from '../OtherComponents/CellarComponents/CellarWineCard
 import {CellarPageNavbar} from '../OtherComponents/CellarComponents/Navbar';
 import {ItemRemoved} from '../OtherComponents/Popups/ItemRemoved';
 
-type renderItem = {
-  item: Object;
-  index: number;
-};
-
-const CellarLandingScreen: React.FC = props => {
+const CellarLandingScreen: React.FC<CellarLandingPageScreenProp> = props => {
   const [data, setData] = useState<WineObject[] | []>();
   const likedWine = useLikedItems() as [];
   const likedItemsChanged = useLikedItemsChanged();
   const [itemRemoved, setItemRemoved] = useItemRemoved();
   const [numItems, setNumItems] = useState<number>();
 
-  function renderItemFunction({item, index}) {
-    return <CellarWineCard wineObject={item} navigationProps={props} />;
+  function renderItemFunction({item}: {item: WineObject}) {
+    return <CellarWineCard WineObject={item} navigation={props} />;
   }
 
   const resetTimer = () =>

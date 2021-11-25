@@ -2,7 +2,6 @@ import React from 'react';
 import {Text, View} from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import Entypo from 'react-native-vector-icons/Entypo';
-import {WinePageColors} from '../../../Config/Colors';
 import {heightDp, widthDp} from '../../../Config/Dimensions';
 
 const icon_s = heightDp('3%');

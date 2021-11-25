@@ -16,8 +16,15 @@ import HomeScreenStackComponent from './StackNavigators/HomeScreenStack';
 
 import auth from '@react-native-firebase/auth';
 import {ProfileScreen} from '../View/Screens/UserProfile/ProfileScreen';
-const AppStack = createStackNavigator();
-const AppBottomTab = createBottomTabNavigator();
+import {
+  AuthScreenNavigatorStackParamList,
+  MainAppNavigationStckParamsList,
+} from '../Config/KWinefoDataTypes';
+
+const AppAuthenticationStack =
+  createStackNavigator<AuthScreenNavigatorStackParamList>();
+const AppBottomTab =
+  createBottomTabNavigator<MainAppNavigationStckParamsList>();
 
 const MainAppNavigationContainer = () => {
   const user = useUser().value;
@@ -25,32 +32,33 @@ const MainAppNavigationContainer = () => {
 
   useEffect(() => {
     let clean = true;
-    // auth().signOut().catch(null);
     return handleAuthChanged();
   }, [user]);
 
   return (
     <NavigationContainer independent={true}>
       {user === null ? (
-        <AppStack.Navigator>
-          <AppStack.Screen
+        <AppAuthenticationStack.Navigator initialRouteName="SplashScreen">
+          <AppAuthenticationStack.Screen
             options={defaultStackScreenConfig}
             name="SplashScreen"
             component={SplashScreen}
           />
-          <AppStack.Screen
+          <AppAuthenticationStack.Screen
             options={defaultStackScreenConfig}
             name="Signup"
             component={SignUpScreen}
           />
-          <AppStack.Screen
+          <AppAuthenticationStack.Screen
             options={defaultStackScreenConfig}
             name="Signin"
             component={SignInScreen}
           />
-        </AppStack.Navigator>
+        </AppAuthenticationStack.Navigator>
       ) : (
-        <AppBottomTab.Navigator tabBar={props => <BottomNavbar {...props} />}>
+        <AppBottomTab.Navigator
+          initialRouteName="Home"
+          tabBar={props => <BottomNavbar {...props} />}>
           <AppBottomTab.Screen
             options={defaultStackScreenConfig}
             name="Home"

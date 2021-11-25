@@ -7,7 +7,6 @@ import {
   POPUP_TRANSLATE_Y,
   POPUP_W,
 } from '../../../Config/Dimensions';
-import {useItemAlreadyLiked} from '../../../Interactor/ComponentInteractors/MainAppInteractor.';
 
 const {Value, spring} = Animated;
 const SNAP_BOTTOM = heightDp('7');

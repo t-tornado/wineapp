@@ -8,9 +8,9 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
-import {heightDp, NAVBAR_HEGIHT, widthDp} from '../../Config/Dimensions';
+import {heightDp, widthDp} from '../../Config/Dimensions';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
-import {WineObject} from '../../Config/KWinefoDataTypes';
+import {WineObject, WinePageScreenProps} from '../../Config/KWinefoDataTypes';
 import {LocationTag} from '../OtherComponents/WinePageComponents/LocationTag';
 import {ReviewTag} from '../OtherComponents/WinePageComponents/ReviewsTag';
 import {RatingTag} from '../OtherComponents/WinePageComponents/RatingTag';
@@ -26,22 +26,9 @@ import {ItemAlreadyLikedPopup} from '../OtherComponents/Popups/ItemAlreadyLiked'
 import {ItemLiked} from '../OtherComponents/Popups/ItemLiked';
 
 const ICON_S = heightDp('2%');
-const CIRCLE_S = heightDp('1%');
-const HEIGHT = heightDp('100');
 const WIDTH = widthDp('100%');
 
-interface WinepageRouteprops {
-  route: {
-    key: string;
-    params: {
-      wineObject: WineObject;
-      likeState: boolean;
-    };
-  };
-  navigation: {};
-}
-
-const WinePage: React.FC<WinepageRouteprops> = props => {
+const WinePage: React.FC<WinePageScreenProps> = props => {
   const [itemAlreadyLiked, setItemAlreadyLiked] = useItemAlreadyLiked();
   const [itemAddedToLike, setItemAddedToLike] = useItemAddedToLike();
   const user = useUser().value;
@@ -49,8 +36,10 @@ const WinePage: React.FC<WinepageRouteprops> = props => {
   const {wineObject, likeState} = props.route.params;
   const {wine, winery, rating, location, image} = wineObject;
   const {average, reviews} = rating;
-  const _location: string =
-    typeof location === 'string' ? location.match(/\b(\w+)/g).join(' ') : '';
+  const _location: string = (loc => {
+    const split_location = loc.match(/\b(\w+)/g);
+    return split_location!.join(' ');
+  })(location);
 
   function handlePress() {
     props.navigation.goBack();

@@ -1,7 +1,10 @@
 import React from 'react';
 import {Image, Text, TouchableOpacity, View} from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
-import {WineCardProps} from '../../../Config/KWinefoDataTypes';
+import {
+  CellarLandingPageScreenProp,
+  WineObject,
+} from '../../../Config/KWinefoDataTypes';
 import {heightDp, widthDp} from '../../../Config/Dimensions';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 
@@ -9,12 +12,17 @@ const HEIGHT = heightDp('25');
 const WIDTH = widthDp('100%');
 const icon_s = heightDp('3%');
 
-const CellarWineCard: React.FC<WineCardProps> = props => {
-  const {wineObject, navigationProps} = props;
-  const {image, wine, winery} = wineObject;
+interface CellarWineCardProps {
+  WineObject: WineObject;
+  navigation: CellarLandingPageScreenProp;
+}
+
+const CellarWineCard: React.FC<CellarWineCardProps> = props => {
+  const {WineObject, navigation} = props;
+  const {image, wine, winery} = WineObject;
 
   function handleNavigate() {
-    navigationProps.navigation.navigate('CellarWinePage', {wineObject});
+    navigation.navigation.navigate('CellarWinePage', {WineObject});
   }
 
   return (

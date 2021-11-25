@@ -3,7 +3,10 @@ import {Image, Text, View, ScrollView, TouchableOpacity} from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import {heightDp, NAVBAR_HEGIHT, widthDp} from '../../Config/Dimensions';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
-import {WineObject} from '../../Config/KWinefoDataTypes';
+import {
+  CellarWinePageScreenProps,
+  WineObject,
+} from '../../Config/KWinefoDataTypes';
 import {LocationTag} from '../OtherComponents/WinePageComponents/LocationTag';
 import {ReviewTag} from '../OtherComponents/WinePageComponents/ReviewsTag';
 import {RatingTag} from '../OtherComponents/WinePageComponents/RatingTag';
@@ -17,29 +20,20 @@ import {useEffect} from 'react';
 import {RemovingItemLoadingScreen} from '../OtherComponents/CellarComponents/RemovingItemLoadingScreen';
 
 const ICON_S = heightDp('2%');
-const HEIGHT = heightDp('100');
 const WIDTH = widthDp('100%');
 
-interface CellarWinepageRouteprops {
-  route: {
-    key: string;
-    params: {
-      wineObject: WineObject;
-    };
-  };
-  navigation: {};
-}
-
-const CellarWinePage: React.FC<CellarWinepageRouteprops> = props => {
+const CellarWinePage: React.FC<CellarWinePageScreenProps> = props => {
   const removeFromLiked = useRemoveFromLikedItems();
   const [wineItemRemoved, setWineItemRemoved] = useItemRemoved();
   const userEmail = useUser().value.email;
   const loadingRemove = useLoadingRemoveState();
-  const {wineObject} = props.route.params;
+  const wineObject = props.route.params?.WineObject as WineObject;
   const {wine, winery, rating, location, image} = wineObject;
   const {average, reviews} = rating;
-  const _location: string =
-    typeof location === 'string' ? location.match(/\b(\w+)/g).join(', ') : '';
+  const _location: string = (loc => {
+    const split_location = loc.match(/\b(\w+)/g);
+    return split_location!.join(' ');
+  })(location);
 
   function handleToBackButton() {
     props.navigation.goBack();

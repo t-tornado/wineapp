@@ -3,6 +3,7 @@ import {ImageBackground, Text, TouchableOpacity, View} from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import {SplashScreenColors} from '../../../Config/Colors';
 import {heightDp, widthDp} from '../../../Config/Dimensions';
+import {SignupScreenProps} from '../../../Config/KWinefoDataTypes';
 import {AuthPagesImageURL} from '../../../Config/WineAppConfig';
 import {
   useResetAuthStates,
@@ -12,7 +13,6 @@ import {
   useUserEmail,
   useUserFirstName,
   useUserLastName,
-  useUsername,
   useUserPassword,
 } from '../../../Interactor/WebInteractor/AuthInteractor';
 import {AuthButton} from '../../OtherComponents/AuthPagesComponents/AuthButton';
@@ -25,11 +25,10 @@ import {PasswordInputComponent} from '../../OtherComponents/AuthPagesComponents/
 const HEIGHT = heightDp('100');
 const WIDTH = widthDp('100');
 
-const SignUpScreen: React.FC = props => {
+const SignUpScreen: React.FC<SignupScreenProps> = props => {
   const [openLoadingIndicator, setOpenLoadingIndicator] = useState(false);
   const {navigation} = props;
   // user values
-  const userName = useUsername().value;
   const userEmail = useUserEmail().value;
   const userPassword = useUserPassword().value;
   const firstName = useUserFirstName().value;

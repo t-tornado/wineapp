@@ -2,12 +2,13 @@ import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import Homepage from '../../View/Screens/HomePage';
 import {WinePage} from '../../View/Screens/WinePage';
+import {HomeButtonStackParamList} from '../../Config/KWinefoDataTypes';
 
-const HomeScreenStack = createStackNavigator();
+const HomeScreenStack = createStackNavigator<HomeButtonStackParamList>();
 
 const HomeScreenStackComponent = () => {
   return (
-    <HomeScreenStack.Navigator>
+    <HomeScreenStack.Navigator initialRouteName="HomePage">
       <HomeScreenStack.Screen
         name="HomePage"
         component={Homepage}

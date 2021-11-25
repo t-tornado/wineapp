@@ -1,19 +1,27 @@
 import React, {createContext, useContext, useState} from 'react';
 import {firestore} from '../../Config/FirebaseApp';
+import {KWineFoUser, WineObject} from '../../Config/KWinefoDataTypes';
 import {API_URL} from '../../Config/WineAppConfig';
 
-const FetchFunctionContext = createContext();
-const WineDataContext = createContext();
-const FetchingDataContext = createContext();
-const ErrorFetchingDataContext = createContext();
-const CurrentUserContext = createContext();
-const FetchCurrentUserFnContext = createContext();
+type ReturnContextFunction<type> = () => type;
 
-const HomepageInteractor = props => {
+const FetchFunctionContext = createContext<Function>(() => null);
+const WineDataContext = createContext<WineObject[]>([]);
+const FetchingDataContext = createContext<boolean>(false);
+const ErrorFetchingDataContext = createContext<boolean>(false);
+const CurrentUserContext = createContext<[KWineFoUser, Function]>([
+  {} as KWineFoUser,
+  () => null,
+]);
+const FetchCurrentUserFnContext = createContext<Function>(() => null);
+
+const HomepageInteractor: React.FC = props => {
   const [fetchingData, setFetchingData] = useState(false);
   const [errorFetchingData, setErrorFetchingData] = useState(false);
-  const [wineData, setWineData] = useState([]);
-  const [currentUser, setCurrentUser] = useState();
+  const [wineData, setWineData] = useState<WineObject[]>([]);
+  const [currentUser, setCurrentUser] = useState<KWineFoUser>(
+    {} as KWineFoUser,
+  );
 
   function fetchData() {
     setErrorFetchingData(false);
@@ -32,13 +40,13 @@ const HomepageInteractor = props => {
       });
   }
 
-  function getCurrentUser(email) {
+  function getCurrentUser(email: string) {
     firestore()
       .collection('users')
       .doc(email)
       .get()
       .then(data => {
-        data.exists && setCurrentUser(data.data());
+        data.exists && setCurrentUser(data.data() as KWineFoUser);
       })
       .catch(null);
   }
@@ -60,20 +68,29 @@ const HomepageInteractor = props => {
   );
 };
 
-const CreateRawContext = context => {
+function CreateHookFromContext<Type>(
+  contextValue: React.Context<Type>,
+): ReturnContextFunction<Type> {
   return () => {
-    const value = useContext(context);
+    const value = useContext(contextValue) as Type;
     return value;
   };
-};
+}
 
-export const useFetchDataFunction = CreateRawContext(FetchFunctionContext);
-export const useFetchingDataState = CreateRawContext(FetchingDataContext);
-export const useErrorFetchingData = CreateRawContext(ErrorFetchingDataContext);
-export const useWineData = CreateRawContext(WineDataContext);
+export const useFetchDataFunction =
+  CreateHookFromContext<Function>(FetchFunctionContext);
+export const useFetchingDataState =
+  CreateHookFromContext<boolean>(FetchingDataContext);
+export const useErrorFetchingData = CreateHookFromContext<boolean>(
+  ErrorFetchingDataContext,
+);
+export const useWineData = CreateHookFromContext<WineObject[]>(WineDataContext);
 
 // User hooks
-export const useFetchCurrentUser = CreateRawContext(FetchCurrentUserFnContext);
-export const useCurrentUser = CreateRawContext(CurrentUserContext);
+export const useFetchCurrentUser = CreateHookFromContext<Function>(
+  FetchCurrentUserFnContext,
+);
+export const useCurrentUser =
+  CreateHookFromContext<[KWineFoUser, Function]>(CurrentUserContext);
 
 export default HomepageInteractor;

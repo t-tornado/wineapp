@@ -10,7 +10,6 @@ import {
   useItemAddedToLike,
   useItemAlreadyLiked,
   useLikedItems,
-  useLikedItemsChanged,
   useSearchKeyword,
 } from '../../Interactor/ComponentInteractors/MainAppInteractor.';
 import {useUser} from '../../Interactor/WebInteractor/AuthInteractor';
@@ -29,11 +28,6 @@ import {LoadingComponent} from '../OtherComponents/LoadingComponent';
 import {ItemAlreadyLikedPopup} from '../OtherComponents/Popups/ItemAlreadyLiked';
 import {ItemLiked} from '../OtherComponents/Popups/ItemLiked';
 
-interface RenderFlatlistFunction {
-  item: {};
-  index: number;
-}
-
 const Homepage: React.FC = props => {
   const user = useUser().value;
   const fetchCurrentUser = useFetchCurrentUser();
@@ -41,19 +35,19 @@ const Homepage: React.FC = props => {
   const fetchData: Function = useFetchDataFunction();
   const fetchingData: boolean = useFetchingDataState();
   const errorFetching: boolean = useErrorFetchingData();
-  const fetchResults: [WineObject] = useWineData();
-  const [data, setData] = useState([]);
+  const fetchResults: WineObject[] = useWineData();
+  const [data, setData] = useState<WineObject[] | []>([]);
   const keyword: string = useSearchKeyword().value;
   const [itemAlreadyLiked, setItemAlreadyLiked] = useItemAlreadyLiked();
   const [itemAddedToLike, setItemAddedToLike] = useItemAddedToLike();
-  const likedItems = useLikedItems();
+  const likedItems = useLikedItems() as WineObject[];
   const fetchLikedItems = useFetchLikedItems();
 
   function handleRefresh() {
     fetchData();
   }
 
-  function renderItemFunction({item, index}) {
+  function renderItemFunction({item}: {item: WineObject}) {
     if (likedItems.some(it => it.id === item.id)) {
       return (
         <WineCard wineObject={item} likeState={true} navigationProps={props} />
@@ -74,7 +68,6 @@ const Homepage: React.FC = props => {
 
   useEffect(() => {
     let cleanup = true;
-
     const __data = fetchResults.filter((item, index) => {
       const {wine, winery, location} = item;
       if (

@@ -4,7 +4,6 @@ import EStyleSheet from 'react-native-extended-stylesheet';
 import {heightDp, widthDp} from '../../../Config/Dimensions';
 import Entypo from 'react-native-vector-icons/Entypo';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
-import {HomeScreenColors} from '../../../Config/Colors';
 import {SearchBoxComponent} from './SearchBar';
 import {useSearchKeyword} from '../../../Interactor/ComponentInteractors/MainAppInteractor.';
 import {logoURL} from '../../../Config/WineAppConfig';

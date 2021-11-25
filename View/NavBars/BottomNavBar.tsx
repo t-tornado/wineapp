@@ -1,29 +1,18 @@
 import React from 'react';
-import {
-  Dimensions,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {Text, TouchableOpacity, View} from 'react-native';
 
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Entypo from 'react-native-vector-icons/Entypo';
 import {heightDp, widthDp} from '../../Config/Dimensions';
 import EStyleSheet from 'react-native-extended-stylesheet';
+import {BottomTabBarProps} from '@react-navigation/bottom-tabs';
 
 const NAVBAR_HEGIHT = heightDp('7');
 const NAVBAR_W = widthDp('65');
 const DROP_ICON_S = heightDp('3%');
 
-type NavbarProps = {
-  state: Object;
-  descriptors: Object;
-  navigation: Object;
-};
-
-const BottomNavbar: React.FC<NavbarProps> = ({
+const BottomNavbar: React.FC<BottomTabBarProps> = ({
   state,
   descriptors,
   navigation,
@@ -34,7 +23,7 @@ const BottomNavbar: React.FC<NavbarProps> = ({
   return (
     <View style={styles.container}>
       <View style={[styles.navBar, {transform: [{translateY}]}]}>
-        {routes.map((route: Object, index: number) => {
+        {routes.map((route, index: number) => {
           const {options} = descriptors[route.key];
           const label =
             options.tabBarLabel !== undefined
@@ -50,7 +39,7 @@ const BottomNavbar: React.FC<NavbarProps> = ({
               canPreventDefault: true,
             });
             if (!isFocused && !event.defaultPrevented) {
-              navigation.navigate({name: route.name, merge: true});
+              navigation.navigate(route.name, {name: route.name, merge: true});
             }
           };
 

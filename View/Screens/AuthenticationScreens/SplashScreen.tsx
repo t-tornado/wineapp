@@ -6,12 +6,19 @@ import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import {SplashScreenColors} from '../../../Config/Colors';
 import {AuthPagesLogoBar} from '../../OtherComponents/GeneralComponents/AuthPagesLogoBar';
 import {AuthPagesImageURL} from '../../../Config/WineAppConfig';
+import {StackScreenProps} from '@react-navigation/stack';
+import {AuthScreenNavigatorStackParamList} from '../../../Config/KWinefoDataTypes';
 
 const HEIGHT = heightDp('100');
 const WIDTH = widthDp('100');
 const icon_s = widthDp('4%');
 
-const SplashScreen: React.FC = props => {
+type SplachScreenProps = StackScreenProps<
+  AuthScreenNavigatorStackParamList,
+  'SplashScreen'
+>;
+
+const SplashScreen: React.FC<SplachScreenProps> = props => {
   const {navigation} = props;
 
   function onPressNextButton() {
