@@ -1,6 +1,6 @@
 import React, {createContext, useContext, useState} from 'react';
-import {APIURL} from '../../Config/CloudData';
 import {firestore} from '../../Config/FirebaseApp';
+import {API_URL} from '../../Config/WineAppConfig';
 
 const FetchFunctionContext = createContext();
 const WineDataContext = createContext();
@@ -19,7 +19,7 @@ const HomepageInteractor = props => {
     setErrorFetchingData(false);
     setFetchingData(true);
     setWineData([]);
-    fetch(APIURL)
+    fetch(API_URL)
       .then(res => res.json())
       .then(data => {
         setWineData(data);

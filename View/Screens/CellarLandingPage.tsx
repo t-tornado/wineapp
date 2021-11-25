@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import {useState} from 'react';
 import {FlatList, ListRenderItem, StyleSheet, View} from 'react-native';
-import {WineObject} from '../../Config/CloudData';
+import {WineObject} from '../../Config/KWinefoDataTypes';
 import {heightDp} from '../../Config/Dimensions';
 import {
   useItemRemoved,
@@ -19,12 +19,13 @@ type renderItem = {
 };
 
 const CellarLandingScreen: React.FC = props => {
-  const [data, setData] = useState();
-  const likedWine = useLikedItems();
+  const [data, setData] = useState<WineObject[] | []>();
+  const likedWine = useLikedItems() as [];
   const likedItemsChanged = useLikedItemsChanged();
   const [itemRemoved, setItemRemoved] = useItemRemoved();
+  const [numItems, setNumItems] = useState<number>();
 
-  function renderItemFunction({item, index}): React.ReactElement {
+  function renderItemFunction({item, index}) {
     return <CellarWineCard wineObject={item} navigationProps={props} />;
   }
 
@@ -37,8 +38,10 @@ const CellarLandingScreen: React.FC = props => {
     let clean = true;
     if (likedWine.length > 0) {
       setData(likedWine);
+      setNumItems(likedWine.length);
     } else {
       setData([]);
+      setNumItems(0);
     }
 
     return () => (clean = false);
@@ -56,7 +59,7 @@ const CellarLandingScreen: React.FC = props => {
 
   return (
     <View style={styles.container}>
-      <CellarPageNavbar numItems={data.length} />
+      <CellarPageNavbar numItems={numItems as number} />
       <FlatList
         contentContainerStyle={{
           alignItems: 'center',

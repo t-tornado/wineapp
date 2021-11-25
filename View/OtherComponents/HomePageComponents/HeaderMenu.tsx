@@ -7,10 +7,10 @@ import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import {HomeScreenColors} from '../../../Config/Colors';
 import {SearchBoxComponent} from './SearchBar';
 import {useSearchKeyword} from '../../../Interactor/ComponentInteractors/MainAppInteractor.';
+import {logoURL} from '../../../Config/WineAppConfig';
 
 const HEIGHT = heightDp('10%');
 const WIDTH = widthDp('100');
-const artwork = require('../../../logo.jpeg');
 const ICON_S = heightDp('4%');
 
 const HeaderMenu: React.FC = () => {
@@ -43,7 +43,7 @@ const HeaderMenu: React.FC = () => {
         </View>
       ) : (
         <>
-          <Image source={artwork} style={styles.logo} />
+          <Image source={logoURL} style={styles.logo} />
           <View style={styles.actionButtonContainer}>
             <TouchableOpacity
               activeOpacity={0.7}

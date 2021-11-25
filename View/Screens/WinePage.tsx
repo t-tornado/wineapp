@@ -10,7 +10,7 @@ import {
 import EStyleSheet from 'react-native-extended-stylesheet';
 import {heightDp, NAVBAR_HEGIHT, widthDp} from '../../Config/Dimensions';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
-import {WineObject} from '../../Config/CloudData';
+import {WineObject} from '../../Config/KWinefoDataTypes';
 import {LocationTag} from '../OtherComponents/WinePageComponents/LocationTag';
 import {ReviewTag} from '../OtherComponents/WinePageComponents/ReviewsTag';
 import {RatingTag} from '../OtherComponents/WinePageComponents/RatingTag';
@@ -29,7 +29,6 @@ const ICON_S = heightDp('2%');
 const CIRCLE_S = heightDp('1%');
 const HEIGHT = heightDp('100');
 const WIDTH = widthDp('100%');
-const artwork = require('../../wineBottle.png');
 
 interface WinepageRouteprops {
   route: {

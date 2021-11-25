@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {Image, Text, TouchableOpacity, View} from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import Entypo from 'react-native-vector-icons/Entypo';
-import {WineCardProps} from '../../../Config/CloudData';
+import {WineCardProps} from '../../../Config/KWinefoDataTypes';
 import {WineCardColors} from '../../../Config/Colors';
 import {heightDp, widthDp} from '../../../Config/Dimensions';
 import {

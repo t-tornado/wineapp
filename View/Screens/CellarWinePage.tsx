@@ -1,16 +1,9 @@
-import React, {useRef} from 'react';
-import {
-  Dimensions,
-  Image,
-  Text,
-  View,
-  ScrollView,
-  TouchableOpacity,
-} from 'react-native';
+import React from 'react';
+import {Image, Text, View, ScrollView, TouchableOpacity} from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import {heightDp, NAVBAR_HEGIHT, widthDp} from '../../Config/Dimensions';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
-import {WineObject} from '../../Config/CloudData';
+import {WineObject} from '../../Config/KWinefoDataTypes';
 import {LocationTag} from '../OtherComponents/WinePageComponents/LocationTag';
 import {ReviewTag} from '../OtherComponents/WinePageComponents/ReviewsTag';
 import {RatingTag} from '../OtherComponents/WinePageComponents/RatingTag';

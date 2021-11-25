@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {FlatList, RefreshControl} from 'react-native';
 import {View} from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
-import {WineObject} from '../../Config/CloudData';
+import {WineObject} from '../../Config/KWinefoDataTypes';
 import {HomeScreenColors} from '../../Config/Colors';
 import {heightDp, widthDp} from '../../Config/Dimensions';
 import {

@@ -1,5 +1,3 @@
-export const APIURL = 'https://api.sampleapis.com/wines/reds';
-
 export type ratings = {
   average: string;
   reviews: string;

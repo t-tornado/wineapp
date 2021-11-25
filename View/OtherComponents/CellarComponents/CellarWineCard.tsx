@@ -1,7 +1,7 @@
 import React from 'react';
 import {Image, Text, TouchableOpacity, View} from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
-import {WineCardProps} from '../../../Config/CloudData';
+import {WineCardProps} from '../../../Config/KWinefoDataTypes';
 import {heightDp, widthDp} from '../../../Config/Dimensions';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 
