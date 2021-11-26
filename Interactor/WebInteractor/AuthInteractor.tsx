@@ -1,31 +1,48 @@
 import React, {createContext, useContext, useState} from 'react';
-import auth from '@react-native-firebase/auth';
+import auth, {FirebaseAuthTypes} from '@react-native-firebase/auth';
 import {firestore} from '../../Config/FirebaseApp';
 
-const UserEmailContext = createContext();
-const UserPasswordContext = createContext();
-const UsernameContext = createContext();
-const UserContext = createContext();
-const UserFirstNameContext = createContext();
-const UserLastNameContext = createContext();
-const SignoutFnContext = createContext();
-const SignoutLoadingContext = createContext();
-const SignoutFailedContext = createContext();
+type Tuple = [
+  string | FirebaseAuthTypes.User | FirebaseAuthTypes.UserCredential | null,
+  Function,
+];
+type useStateHookValues = {
+  value: Tuple[0];
+  setFunction: Tuple[1];
+};
 
-const SignupFnContext = createContext();
-const SignUpStatesContext = createContext();
-const SignupFieldEmptyErrorContext = createContext();
+const UserEmailContext = createContext<Tuple>([null, () => null]);
+const UserPasswordContext = createContext<Tuple>([null, () => null]);
+const UsernameContext = createContext<Tuple>([null, () => null]);
+const UserContext = createContext<Tuple>([null, () => null]);
+const UserFirstNameContext = createContext<Tuple>([null, () => null]);
+const UserLastNameContext = createContext<Tuple>([null, () => null]);
+const SignoutFnContext = createContext<Function>(() => null);
+const SignoutLoadingContext = createContext<boolean>(false);
+const SignoutFailedContext = createContext<boolean>(false);
 
-const AuthStateChangedContext = createContext();
-const SigninFnContext = createContext();
-const SigninStatesContext = createContext();
-const SigninUserNotFoundStateContext = createContext();
-const SigninInvalidInputErrorContext = createContext();
+const SignupFnContext = createContext<Function>(() => null);
+const SignUpStatesContext = createContext<[boolean, boolean, boolean]>([
+  false,
+  false,
+  false,
+]);
+const SignupFieldEmptyErrorContext = createContext<boolean>(false);
 
-const ResetAuthStatesContext = createContext();
+const AuthStateChangedContext = createContext<Function>(() => null);
+const SigninFnContext = createContext<Function>(() => null);
+const SigninStatesContext = createContext<[boolean, boolean, boolean]>([
+  false,
+  false,
+  false,
+]);
+const SigninUserNotFoundStateContext = createContext<boolean>(false);
+const SigninInvalidInputErrorContext = createContext<boolean>(false);
 
-const AuthInteractor = props => {
-  const [user, setUser] = useState(null);
+const ResetAuthStatesContext = createContext<Function>(() => null);
+
+const AuthInteractor: React.FC = props => {
+  const [user, setUser] = useState<Tuple[0]>(null);
   const [userEmail, setUserEmail] = useState(null);
   const [userPassword, setUserPassword] = useState(null);
   const [username, setUsername] = useState(null);
@@ -47,7 +64,12 @@ const AuthInteractor = props => {
   const [signoutFailed, setSignoutFailed] = useState(false);
   // [auth/weak-password]
 
-  function handleSignup(email, password, firstName, lastName) {
+  function handleSignup(
+    email: string,
+    password: string,
+    firstName: string,
+    lastName: string,
+  ) {
     if (
       [email, password, firstName, lastName].some(
         it => it === undefined || it === '',
@@ -89,7 +111,7 @@ const AuthInteractor = props => {
     }
   }
 
-  function handleSignin(email, password) {
+  function handleSignin(email: string, password: string) {
     if ([email, password].some(it => it === undefined || it === '')) {
       setSigninLoading(false);
       setSigninSuccess(false);
@@ -170,7 +192,6 @@ const AuthInteractor = props => {
     setSignupFieldEmpty(false);
     setUserNotFound(false);
   }
-
   return (
     <UserContext.Provider value={[user, setUser]}>
       <UserEmailContext.Provider value={[userEmail, setUserEmail]}>
@@ -228,22 +249,43 @@ const AuthInteractor = props => {
   );
 };
 
-const createRawHook = contextVar => {
+// const createRawHook = contextVar => {
+//   return () => {
+//     const contextVal = useContext(contextVar);
+//     return contextVal;
+//   };
+// };
+function createRawHook<T>(contextVal: React.Context<T>): () => T {
   return () => {
-    const contextVal = useContext(contextVar);
-    return contextVal;
+    const value = useContext(contextVal);
+    return value;
   };
-};
-const CreateUserHook = contextVar => {
+}
+// const CreateUserHook = (contextVar: React.Context<[]>) => {
+//   return () => {
+//     const contextVal = useContext(contextVar);
+//     return {
+//       value: contextVar !== null ? contextVal[0] : null,
+//       setFunction: contextVar !== null ? contextVal[1] : null,
+//     };
+//   };
+// };
+
+function CreateUserHook(
+  contextValue: React.Context<Tuple>,
+): () => useStateHookValues {
   return () => {
-    const contextVal = useContext(contextVar);
+    const value = useContext(contextValue);
     return {
-      value: contextVar !== null ? contextVal[0] : null,
-      setFunction: contextVar !== null ? contextVal[1] : null,
+      value: value[0],
+      setFunction: value[1],
     };
   };
-};
-const CreateAuthStatesHook = contextVar => {
+}
+
+const CreateAuthStatesHook = (
+  contextVar: React.Context<[boolean, boolean, boolean]>,
+) => {
   return () => {
     const states = useContext(contextVar);
     return {
