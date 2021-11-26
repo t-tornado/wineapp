@@ -1,25 +1,48 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {Text, TouchableOpacity, View} from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
+import {
+  useLikedItems,
+  useRecentlyLikedWine,
+} from '../../../Interactor/ComponentInteractors/MainAppInteractor';
 
 interface buttonProps {
   onPress: Function;
-  likedState: boolean;
+  wineId: number;
 }
 
 const AddToCellarButton: React.FC<buttonProps> = props => {
-  const {onPress, likedState} = props;
+  const [liked, setLiked] = useState(false);
+  const likedWines = useLikedItems();
+  const recentlyLikedWine = useRecentlyLikedWine();
+  const {onPress, wineId} = props;
   function handleOnPress() {
-    !likedState && onPress();
+    !liked && onPress();
   }
+
+  useEffect(() => {
+    let clean = true;
+    if (
+      recentlyLikedWine === wineId ||
+      likedWines.some(item => item.id === wineId)
+    ) {
+      clean && setLiked(true);
+    } else {
+      clean && setLiked(false);
+    }
+
+    return () => {
+      clean = false;
+    };
+  }, [recentlyLikedWine]);
 
   return (
     <TouchableOpacity
       onPress={handleOnPress}
-      activeOpacity={0.85}
+      activeOpacity={!liked ? 0.85 : 1}
       style={styles.addButtonContainer}>
       <Text style={styles.addButtonText}>
-        {!likedState ? 'Add to cellar' : 'Added to Cellar'}
+        {!liked ? 'Add to cellar' : 'Added to Cellar'}
       </Text>
     </TouchableOpacity>
   );

@@ -10,7 +10,7 @@ import {
 import EStyleSheet from 'react-native-extended-stylesheet';
 import {heightDp, widthDp} from '../../Config/Dimensions';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
-import {WineObject, WinePageScreenProps} from '../../Config/KWinefoDataTypes';
+import {WinePageScreenProps} from '../../Config/KWinefoDataTypes';
 import {LocationTag} from '../OtherComponents/WinePageComponents/LocationTag';
 import {ReviewTag} from '../OtherComponents/WinePageComponents/ReviewsTag';
 import {RatingTag} from '../OtherComponents/WinePageComponents/RatingTag';
@@ -18,23 +18,28 @@ import {AddToCellarButton} from '../OtherComponents/WinePageComponents/AddToCell
 import {useUser} from '../../Interactor/WebInteractor/AuthInteractor';
 import {
   useAddToLikedItems,
-  useItemAddedToLike,
   useItemAlreadyLiked,
   useLikedItems,
-} from '../../Interactor/ComponentInteractors/MainAppInteractor.';
+  useLikeSuccessPopup,
+  useRecentlyLikedWine,
+} from '../../Interactor/ComponentInteractors/MainAppInteractor';
 import {ItemAlreadyLikedPopup} from '../OtherComponents/Popups/ItemAlreadyLiked';
 import {ItemLiked} from '../OtherComponents/Popups/ItemLiked';
+import {FirebaseAuthTypes} from '@react-native-firebase/auth';
 
 const ICON_S = heightDp('2%');
 const WIDTH = widthDp('100%');
 
 const WinePage: React.FC<WinePageScreenProps> = props => {
+  const showLikeSuccessPopup = useLikeSuccessPopup();
+  const [wineLiked, setWineLiked] = useState<boolean>(false);
+  const recentlyLikedWine = useRecentlyLikedWine();
+  const likedWines = useLikedItems();
   const [itemAlreadyLiked, setItemAlreadyLiked] = useItemAlreadyLiked();
-  const [itemAddedToLike, setItemAddedToLike] = useItemAddedToLike();
-  const user = useUser().value;
+  const user = useUser().value as FirebaseAuthTypes.User;
   const addToLikedFn = useAddToLikedItems();
-  const {wineObject, likeState} = props.route.params;
-  const {wine, winery, rating, location, image} = wineObject;
+  const {wineObject} = props.route.params;
+  const {wine, winery, rating, location, image, id} = wineObject;
   const {average, reviews} = rating;
   const _location: string = (loc => {
     const split_location = loc.match(/\b(\w+)/g);
@@ -49,31 +54,18 @@ const WinePage: React.FC<WinePageScreenProps> = props => {
     addToLikedFn(user.email, wineObject);
   }
 
-  const alreadyLikedTimer = () =>
-    setTimeout(() => {
-      setItemAlreadyLiked(false);
-    }, 3000);
-
-  const itemLikedTimer = () =>
-    setTimeout(() => {
-      setItemAddedToLike(false);
-    }, 2000);
-
   useEffect(() => {
-    setItemAddedToLike(false);
-  }, []);
+    let clean = true;
+    if (recentlyLikedWine === id || likedWines.some(item => item.id === id)) {
+      clean && setWineLiked(true);
+    } else {
+      clean && setWineLiked(false);
+    }
 
-  useEffect(() => {
-    itemAlreadyLiked && alreadyLikedTimer();
-
-    return () => clearTimeout(alreadyLikedTimer());
-  }, [itemAlreadyLiked]);
-
-  useEffect(() => {
-    itemAddedToLike && itemLikedTimer();
-
-    return () => clearTimeout(itemLikedTimer());
-  }, [itemAddedToLike]);
+    return () => {
+      clean = false;
+    };
+  }, [recentlyLikedWine]);
 
   return (
     <>
@@ -97,10 +89,7 @@ const WinePage: React.FC<WinePageScreenProps> = props => {
           <ReviewTag reviews={reviews} />
           <RatingTag rating={average} />
           <View style={styles.bodyBottomContainer}>
-            <AddToCellarButton
-              onPress={handleAddTolike}
-              likedState={likeState}
-            />
+            <AddToCellarButton onPress={handleAddTolike} wineId={id} />
           </View>
         </View>
 
@@ -113,7 +102,10 @@ const WinePage: React.FC<WinePageScreenProps> = props => {
         setVisible={setItemAlreadyLiked}
         visible={itemAlreadyLiked}
       />
-      <ItemLiked setVisible={setItemAddedToLike} visible={itemAddedToLike} />
+      <ItemLiked
+        setVisible={showLikeSuccessPopup.setFunction}
+        visible={showLikeSuccessPopup.value}
+      />
     </>
   );
 };

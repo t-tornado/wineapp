@@ -14,7 +14,7 @@ import {
   useItemRemoved,
   useLoadingRemoveState,
   useRemoveFromLikedItems,
-} from '../../Interactor/ComponentInteractors/MainAppInteractor.';
+} from '../../Interactor/ComponentInteractors/MainAppInteractor';
 import {useUser} from '../../Interactor/WebInteractor/AuthInteractor';
 import {useEffect} from 'react';
 import {RemovingItemLoadingScreen} from '../OtherComponents/CellarComponents/RemovingItemLoadingScreen';

@@ -5,7 +5,7 @@ import 'react-native-gesture-handler';
 import EStyleSheet from 'react-native-extended-stylesheet';
 
 import {AppTestIDs} from './Config/TestIDs';
-import MainAppInteractor from './Interactor/ComponentInteractors/MainAppInteractor.';
+import MainAppInteractor from './Interactor/ComponentInteractors/MainAppInteractor';
 import HomepageInteractor from './Interactor/WebInteractor/HomePageInteractor';
 import {AuthInteractor} from './Interactor/WebInteractor/AuthInteractor';
 import MainAppNavigationContainer from './Router/MainAppNavigationContainer';

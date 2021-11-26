@@ -8,8 +8,8 @@ import {heightDp, widthDp} from '../../../Config/Dimensions';
 import {
   useAddToLikedItems,
   useLikedItems,
-  useLikedItemsChanged,
-} from '../../../Interactor/ComponentInteractors/MainAppInteractor.';
+  useRecentlyLikedWine,
+} from '../../../Interactor/ComponentInteractors/MainAppInteractor';
 import {useUser} from '../../../Interactor/WebInteractor/AuthInteractor';
 
 const HEIGHT = heightDp('25%');
@@ -17,13 +17,14 @@ const WIDTH = widthDp('43');
 const ICON_S = heightDp('3%');
 
 const WineCard: React.FC<WineCardProps> = props => {
+  const likedWines = useLikedItems();
   const {wineObject, navigationProps, likeState} = props;
   const [liked, setLiked] = useState(likeState);
   const [likeItem, setLikeItem] = useState(false);
   const user = useUser().value;
   const addToLikedFn = useAddToLikedItems();
   const likedItems = useLikedItems();
-  const likedItemsChanged = useLikedItemsChanged();
+  const recentlyLikedWineId = useRecentlyLikedWine();
   const {image, wine, winery, id} = wineObject;
 
   function callNavigation() {
@@ -41,17 +42,35 @@ const WineCard: React.FC<WineCardProps> = props => {
   useEffect(() => {
     let clean = true;
     setLikeItem(false);
-    if (likedItems.some(it => it.id === id)) {
-      setLiked(true);
+    if (recentlyLikedWineId === id || likedItems.some(wine => wine.id === id)) {
+      clean && setLiked(true);
     } else {
-      setLiked(false);
+      clean && setLiked(false);
     }
-  }, [likedItemsChanged]);
+    return () => {
+      clean = false;
+    };
+  }, [recentlyLikedWineId]);
 
   useEffect(() => {
-    likeItem && addToLikedFn(user.email, wineObject);
-  }, [likeItem]);
+    (async function () {
+      if (liked) {
+        await addToLikedFn(user.email, wineObject);
+      }
+    })();
+  }, [liked]);
 
+  useEffect(() => {
+    if (likedWines.some(wine => wine.id === id)) {
+      setLikeItem(true);
+      setLiked(true);
+    } else {
+      setLikeItem(false);
+      setLiked(false);
+    }
+  }, [likedWines]);
+
+  // console.log(likeItem);
   return (
     <TouchableOpacity
       onPress={callNavigation}

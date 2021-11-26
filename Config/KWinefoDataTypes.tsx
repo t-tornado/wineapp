@@ -81,3 +81,9 @@ export type WinePageScreenProps = StackScreenProps<
   HomeButtonStackParamList,
   'WinePage'
 >;
+export type BooleanTuple = [boolean, Function];
+export type StringTuple = [string, Function];
+export type ValueSetFuncReturnObject<t> = {
+  value: t;
+  setFunction: Function;
+};

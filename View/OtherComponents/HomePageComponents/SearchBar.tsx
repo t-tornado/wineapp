@@ -4,7 +4,7 @@ import EStyleSheet from 'react-native-extended-stylesheet';
 import {heightDp, widthDp} from '../../../Config/Dimensions';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import {useState} from 'react';
-import {useSearchKeyword} from '../../../Interactor/ComponentInteractors/MainAppInteractor.';
+import {useSearchKeyword} from '../../../Interactor/ComponentInteractors/MainAppInteractor';
 
 const HEIGHT = heightDp('8');
 const WIDTH = widthDp('70%');

@@ -10,7 +10,7 @@ import {
   useItemRemoved,
   useLikedItems,
   useLikedItemsChanged,
-} from '../../Interactor/ComponentInteractors/MainAppInteractor.';
+} from '../../Interactor/ComponentInteractors/MainAppInteractor';
 import {CellarPageEmpty} from '../OtherComponents/CellarComponents/CellarPageEmpty';
 import {CellarWineCard} from '../OtherComponents/CellarComponents/CellarWineCard';
 import {CellarPageNavbar} from '../OtherComponents/CellarComponents/Navbar';

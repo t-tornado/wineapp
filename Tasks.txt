@@ -6,4 +6,4 @@
 1. Fix signing in and out loading indicator into an overlayed screen.
 2. After signing in or out failing, stop loading indicator and show a popup alert of
 response.
-3. Fix after signing up, app crashes
+3. ***Fix after signing up, app crashes

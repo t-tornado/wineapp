@@ -7,11 +7,12 @@ import {HomeScreenColors} from '../../Config/Colors';
 import {heightDp, widthDp} from '../../Config/Dimensions';
 import {
   useFetchLikedItems,
-  useItemAddedToLike,
   useItemAlreadyLiked,
   useLikedItems,
+  useLikeSuccessPopup,
+  useLikeWineFailedState,
   useSearchKeyword,
-} from '../../Interactor/ComponentInteractors/MainAppInteractor.';
+} from '../../Interactor/ComponentInteractors/MainAppInteractor';
 import {useUser} from '../../Interactor/WebInteractor/AuthInteractor';
 import {
   useCurrentUser,
@@ -28,6 +29,7 @@ import {LoadingComponent} from '../OtherComponents/LoadingComponent';
 import {ItemAlreadyLikedPopup} from '../OtherComponents/Popups/ItemAlreadyLiked';
 import {ItemLiked} from '../OtherComponents/Popups/ItemLiked';
 import {FirebaseAuthTypes} from '@react-native-firebase/auth';
+import {LikeFailedPopup} from '../OtherComponents/Popups/LikeFailedPopup';
 
 const Homepage: React.FC = props => {
   const user = useUser().value as FirebaseAuthTypes.User;
@@ -40,9 +42,10 @@ const Homepage: React.FC = props => {
   const [data, setData] = useState<WineObject[] | []>([]);
   const keyword: string = useSearchKeyword().value;
   const [itemAlreadyLiked, setItemAlreadyLiked] = useItemAlreadyLiked();
-  const [itemAddedToLike, setItemAddedToLike] = useItemAddedToLike();
   const likedItems = useLikedItems() as WineObject[];
   const fetchLikedItems = useFetchLikedItems();
+  const showLikeSuccessPopupState = useLikeSuccessPopup();
+  const likeFailed = useLikeWineFailedState();
 
   function handleRefresh() {
     fetchData();
@@ -60,11 +63,17 @@ const Homepage: React.FC = props => {
     }
   }
 
+  function initAllStates() {
+    showLikeSuccessPopupState.setFunction(false);
+    setItemAlreadyLiked(false);
+    likeFailed.setFunction(false);
+  }
+
   useEffect(() => {
     fetchLikedItems(user.email);
     fetchData();
     fetchCurrentUser(user.email);
-    setItemAddedToLike(false);
+    initAllStates();
   }, [user]);
 
   useEffect(() => {
@@ -90,6 +99,11 @@ const Homepage: React.FC = props => {
       cleanup = false;
     };
   }, [keyword, fetchResults]);
+
+  console.log(
+    'Wine added to fav popup state  ',
+    showLikeSuccessPopupState.value,
+  );
 
   return (
     <View style={styles.container}>
@@ -132,7 +146,14 @@ const Homepage: React.FC = props => {
         setVisible={setItemAlreadyLiked}
         visible={itemAlreadyLiked}
       />
-      <ItemLiked setVisible={setItemAddedToLike} visible={itemAddedToLike} />
+      <ItemLiked
+        setVisible={showLikeSuccessPopupState.setFunction}
+        visible={showLikeSuccessPopupState.value}
+      />
+      <LikeFailedPopup
+        setVisible={likeFailed.setFunction}
+        visible={likeFailed.value}
+      />
     </View>
   );
 };

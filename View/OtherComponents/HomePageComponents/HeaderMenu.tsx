@@ -5,7 +5,7 @@ import {heightDp, widthDp} from '../../../Config/Dimensions';
 import Entypo from 'react-native-vector-icons/Entypo';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import {SearchBoxComponent} from './SearchBar';
-import {useSearchKeyword} from '../../../Interactor/ComponentInteractors/MainAppInteractor.';
+import {useSearchKeyword} from '../../../Interactor/ComponentInteractors/MainAppInteractor';
 import {logoURL} from '../../../Config/WineAppConfig';
 
 const HEIGHT = heightDp('10%');
