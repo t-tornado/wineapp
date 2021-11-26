@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {Text, TouchableOpacity, View} from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import {
-  useLikedItems,
+  useLikedWines,
   useRecentlyLikedWine,
 } from '../../../Interactor/ComponentInteractors/MainAppInteractor';
 
@@ -13,7 +13,7 @@ interface buttonProps {
 
 const AddToCellarButton: React.FC<buttonProps> = props => {
   const [liked, setLiked] = useState(false);
-  const likedWines = useLikedItems();
+  const likedWines = useLikedWines();
   const recentlyLikedWine = useRecentlyLikedWine();
   const {onPress, wineId} = props;
   function handleOnPress() {

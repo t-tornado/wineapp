@@ -7,7 +7,7 @@ import {WineCardColors} from '../../../Config/Colors';
 import {heightDp, widthDp} from '../../../Config/Dimensions';
 import {
   useAddToLikedItems,
-  useLikedItems,
+  useLikedWines,
   useRecentlyLikedWine,
 } from '../../../Interactor/ComponentInteractors/MainAppInteractor';
 import {useUser} from '../../../Interactor/WebInteractor/AuthInteractor';
@@ -17,13 +17,12 @@ const WIDTH = widthDp('43');
 const ICON_S = heightDp('3%');
 
 const WineCard: React.FC<WineCardProps> = props => {
-  const likedWines = useLikedItems();
+  const likedWines = useLikedWines();
   const {wineObject, navigationProps, likeState} = props;
   const [liked, setLiked] = useState(likeState);
   const [likeItem, setLikeItem] = useState(false);
   const user = useUser().value;
   const addToLikedFn = useAddToLikedItems();
-  const likedItems = useLikedItems();
   const recentlyLikedWineId = useRecentlyLikedWine();
   const {image, wine, winery, id} = wineObject;
 
@@ -42,7 +41,7 @@ const WineCard: React.FC<WineCardProps> = props => {
   useEffect(() => {
     let clean = true;
     setLikeItem(false);
-    if (recentlyLikedWineId === id || likedItems.some(wine => wine.id === id)) {
+    if (recentlyLikedWineId === id || likedWines.some(wine => wine.id === id)) {
       clean && setLiked(true);
     } else {
       clean && setLiked(false);
@@ -54,8 +53,10 @@ const WineCard: React.FC<WineCardProps> = props => {
 
   useEffect(() => {
     (async function () {
-      if (liked) {
+      if (liked && likedWines.every(item => item.id !== id)) {
         await addToLikedFn(user.email, wineObject);
+      } else {
+        console.log('item already liked');
       }
     })();
   }, [liked]);

@@ -8,7 +8,7 @@ import {
 import {heightDp} from '../../Config/Dimensions';
 import {
   useItemRemoved,
-  useLikedItems,
+  useLikedWines,
   useLikedItemsChanged,
 } from '../../Interactor/ComponentInteractors/MainAppInteractor';
 import {CellarPageEmpty} from '../OtherComponents/CellarComponents/CellarPageEmpty';
@@ -18,7 +18,7 @@ import {ItemRemoved} from '../OtherComponents/Popups/ItemRemoved';
 
 const CellarLandingScreen: React.FC<CellarLandingPageScreenProp> = props => {
   const [data, setData] = useState<WineObject[] | []>();
-  const likedWine = useLikedItems() as [];
+  const likedWines = useLikedWines() as [];
   const likedItemsChanged = useLikedItemsChanged();
   const [itemRemoved, setItemRemoved] = useItemRemoved();
   const [numItems, setNumItems] = useState<number>();
@@ -34,9 +34,9 @@ const CellarLandingScreen: React.FC<CellarLandingPageScreenProp> = props => {
 
   useEffect(() => {
     let clean = true;
-    if (likedWine.length > 0) {
-      setData(likedWine);
-      setNumItems(likedWine.length);
+    if (likedWines.length > 0) {
+      setData(likedWines);
+      setNumItems(likedWines.length);
     } else {
       setData([]);
       setNumItems(0);
@@ -45,7 +45,7 @@ const CellarLandingScreen: React.FC<CellarLandingPageScreenProp> = props => {
     return () => {
       clean = false;
     };
-  }, [likedItemsChanged, likedWine]);
+  }, [likedItemsChanged, likedWines]);
 
   useEffect(() => {
     if (itemRemoved) {

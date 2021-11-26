@@ -19,7 +19,7 @@ import {useUser} from '../../Interactor/WebInteractor/AuthInteractor';
 import {
   useAddToLikedItems,
   useItemAlreadyLiked,
-  useLikedItems,
+  useLikedWines,
   useLikeSuccessPopup,
   useRecentlyLikedWine,
 } from '../../Interactor/ComponentInteractors/MainAppInteractor';
@@ -34,7 +34,7 @@ const WinePage: React.FC<WinePageScreenProps> = props => {
   const showLikeSuccessPopup = useLikeSuccessPopup();
   const [wineLiked, setWineLiked] = useState<boolean>(false);
   const recentlyLikedWine = useRecentlyLikedWine();
-  const likedWines = useLikedItems();
+  const likedWines = useLikedWines();
   const [itemAlreadyLiked, setItemAlreadyLiked] = useItemAlreadyLiked();
   const user = useUser().value as FirebaseAuthTypes.User;
   const addToLikedFn = useAddToLikedItems();
@@ -55,16 +55,15 @@ const WinePage: React.FC<WinePageScreenProps> = props => {
   }
 
   useEffect(() => {
-    let clean = true;
-    if (recentlyLikedWine === id || likedWines.some(item => item.id === id)) {
-      clean && setWineLiked(true);
-    } else {
-      clean && setWineLiked(false);
-    }
-
-    return () => {
-      clean = false;
-    };
+    // let clean = true;
+    // if (recentlyLikedWine === id || likedWines.some(item => item.id === id)) {
+    //   clean && setWineLiked(true);
+    // } else {
+    //   clean && setWineLiked(false);
+    // }
+    // return () => {
+    //   clean = false;
+    // };
   }, [recentlyLikedWine]);
 
   return (

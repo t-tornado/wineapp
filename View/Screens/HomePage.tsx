@@ -8,7 +8,7 @@ import {heightDp, widthDp} from '../../Config/Dimensions';
 import {
   useFetchLikedItems,
   useItemAlreadyLiked,
-  useLikedItems,
+  useLikedWines,
   useLikeSuccessPopup,
   useLikeWineFailedState,
   useLoadUserLikedItems,
@@ -43,8 +43,8 @@ const Homepage: React.FC = props => {
   const [data, setData] = useState<WineObject[] | []>([]);
   const keyword: string = useSearchKeyword().value;
   const [itemAlreadyLiked, setItemAlreadyLiked] = useItemAlreadyLiked();
-  const likedItems = useLikedItems() as WineObject[];
-  const fetchLikedItems = useFetchLikedItems();
+  const likedWines = useLikedWines() as WineObject[];
+  const fetchLikedWines = useFetchLikedItems();
   const showLikeSuccessPopupState = useLikeSuccessPopup();
   const likeFailed = useLikeWineFailedState();
   const loadUserLikedItems = useLoadUserLikedItems();
@@ -54,7 +54,7 @@ const Homepage: React.FC = props => {
   }
 
   function renderItemFunction({item}: {item: WineObject}) {
-    if (likedItems.some(it => it.id === item.id)) {
+    if (likedWines.some(it => it.id === item.id)) {
       return (
         <WineCard wineObject={item} likeState={true} navigationProps={props} />
       );
@@ -65,14 +65,8 @@ const Homepage: React.FC = props => {
     }
   }
 
-  function initAllStates() {
-    showLikeSuccessPopupState.setFunction(false);
-    setItemAlreadyLiked(false);
-    likeFailed.setFunction(false);
-  }
-
   useEffect(() => {
-    fetchLikedItems(user.email);
+    fetchLikedWines(user.email);
     fetchData();
     fetchCurrentUser(user.email);
     loadUserLikedItems();
