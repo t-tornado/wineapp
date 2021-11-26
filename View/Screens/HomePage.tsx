@@ -11,6 +11,7 @@ import {
   useLikedItems,
   useLikeSuccessPopup,
   useLikeWineFailedState,
+  useLoadUserLikedItems,
   useSearchKeyword,
 } from '../../Interactor/ComponentInteractors/MainAppInteractor';
 import {useUser} from '../../Interactor/WebInteractor/AuthInteractor';
@@ -46,6 +47,7 @@ const Homepage: React.FC = props => {
   const fetchLikedItems = useFetchLikedItems();
   const showLikeSuccessPopupState = useLikeSuccessPopup();
   const likeFailed = useLikeWineFailedState();
+  const loadUserLikedItems = useLoadUserLikedItems();
 
   function handleRefresh() {
     fetchData();
@@ -73,7 +75,7 @@ const Homepage: React.FC = props => {
     fetchLikedItems(user.email);
     fetchData();
     fetchCurrentUser(user.email);
-    initAllStates();
+    loadUserLikedItems();
   }, [user]);
 
   useEffect(() => {
