@@ -42,8 +42,10 @@ const CellarLandingScreen: React.FC<CellarLandingPageScreenProp> = props => {
       setNumItems(0);
     }
 
-    return () => (clean = false);
-  }, [likedItemsChanged]);
+    return () => {
+      clean = false;
+    };
+  }, [likedItemsChanged, likedWine]);
 
   useEffect(() => {
     if (itemRemoved) {

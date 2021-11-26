@@ -27,10 +27,11 @@ import WineCard from '../OtherComponents/HomePageComponents/WineCard';
 import {LoadingComponent} from '../OtherComponents/LoadingComponent';
 import {ItemAlreadyLikedPopup} from '../OtherComponents/Popups/ItemAlreadyLiked';
 import {ItemLiked} from '../OtherComponents/Popups/ItemLiked';
+import {FirebaseAuthTypes} from '@react-native-firebase/auth';
 
 const Homepage: React.FC = props => {
-  const user = useUser().value;
-  const fetchCurrentUser = useFetchCurrentUser();
+  const user = useUser().value as FirebaseAuthTypes.User;
+  const fetchCurrentUser: Function = useFetchCurrentUser();
   const currentUser = useCurrentUser()[0];
   const fetchData: Function = useFetchDataFunction();
   const fetchingData: boolean = useFetchingDataState();
@@ -64,7 +65,7 @@ const Homepage: React.FC = props => {
     fetchData();
     fetchCurrentUser(user.email);
     setItemAddedToLike(false);
-  }, []);
+  }, [user]);
 
   useEffect(() => {
     let cleanup = true;
@@ -85,7 +86,9 @@ const Homepage: React.FC = props => {
       cleanup && setData(__data);
     }
 
-    return () => (cleanup = false);
+    return () => {
+      cleanup = false;
+    };
   }, [keyword, fetchResults]);
 
   return (

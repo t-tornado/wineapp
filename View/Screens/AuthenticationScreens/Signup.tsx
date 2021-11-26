@@ -60,7 +60,9 @@ const SignUpScreen: React.FC<SignupScreenProps> = props => {
       cleanUp && setOpenLoadingIndicator(true);
     }
 
-    return () => (cleanUp = false);
+    return () => {
+      cleanUp = false;
+    };
   }, [loading, sucess, failed]);
 
   return (
@@ -79,7 +81,7 @@ const SignUpScreen: React.FC<SignupScreenProps> = props => {
           <SignUpFirstnameInputComponent />
           <SignUpLastNameInputComponent />
           <EmailTextInputcomponent />
-          <PasswordInputComponent />
+          <PasswordInputComponent type="Signup" />
         </View>
         <View style={styles.signUpFooter}>
           <AuthButton name="sign up" handleOnPress={onPressSignup} />

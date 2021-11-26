@@ -1,16 +1,20 @@
 import React, {useEffect, useState} from 'react';
-import {Text, View} from 'react-native';
+import {Text, TouchableOpacity, View} from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import {TextInput} from 'react-native-gesture-handler';
 import {SplashScreenColors} from '../../../Config/Colors';
 import {heightDp} from '../../../Config/Dimensions';
 import {useUserPassword} from '../../../Interactor/WebInteractor/AuthInteractor';
 
-const PasswordInputComponent = () => {
+type PasswordInputProps = {
+  type: 'Signin' | 'Signup';
+};
+
+const PasswordInputComponent: React.FC<PasswordInputProps> = ({type}) => {
   const [value, setValue] = useState('');
   const setUserPassword = useUserPassword().setFunction;
 
-  function handleTextChanged(text) {
+  function handleTextChanged(text: string) {
     setValue(text);
   }
 
@@ -18,7 +22,9 @@ const PasswordInputComponent = () => {
     let cleanup = true;
     cleanup && setUserPassword(value);
 
-    return () => (cleanup = false);
+    return () => {
+      cleanup = false;
+    };
   }, [value]);
 
   return (
@@ -35,7 +41,6 @@ const PasswordInputComponent = () => {
           clearTextOnFocus={true}
         />
       </View>
-      <Text style={styles.inputContainerText}>Forgot Password?</Text>
     </View>
   );
 };

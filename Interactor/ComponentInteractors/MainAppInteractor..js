@@ -75,8 +75,11 @@ const MainAppInteractor = props => {
       .get()
       .then(res => {
         if (res.exists) {
-          setLikedItems(res.data().likedItems);
-          setLikedItemsChanged(p => !p);
+          const user = res.data();
+          if (user !== null && user.likedItem !== undefined) {
+            setLikedItems(user.likedItem);
+            setLikedItemsChanged(p => !p);
+          }
         }
       })
       .catch(null);

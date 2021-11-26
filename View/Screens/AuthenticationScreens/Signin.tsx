@@ -69,7 +69,7 @@ const SignInScreen: React.FC<SigninScreenProps> = props => {
           <View style={styles.detailsContainer}>
             <View style={styles.detailsContainerTop}>
               <EmailTextInputcomponent />
-              <PasswordInputComponent />
+              <PasswordInputComponent type="Signin" />
             </View>
             <View style={styles.bodyFooter}>
               <AuthButton name="sign in" handleOnPress={onPressSignin} />
