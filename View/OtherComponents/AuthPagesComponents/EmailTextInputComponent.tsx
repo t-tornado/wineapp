@@ -18,8 +18,13 @@ const EmailTextInputcomponent = () => {
     let cleanup = true;
     const validEmail: boolean = isEmail(value);
     if (validEmail) cleanup && setUserEmail(value);
+    else {
+      setUserEmail('');
+    }
 
-    return () => (cleanup = false);
+    return () => {
+      cleanup = false;
+    };
   }, [value]);
 
   return (

@@ -51,7 +51,9 @@ const SignInScreen: React.FC<SigninScreenProps> = props => {
     let cleanUp = true;
     if (loading || sucess || failed) cleanUp && setOpenLoadingIndicator(true);
 
-    return () => (cleanUp = false);
+    return () => {
+      cleanUp = false;
+    };
   }, [loading, sucess, failed]);
 
   return (
@@ -86,7 +88,7 @@ const SignInScreen: React.FC<SigninScreenProps> = props => {
         </View>
         {openLoadingIndicator ? (
           <AuthLoadingComponent
-            type="signin"
+            type="Signin"
             loading={loading}
             failed={failed}
             success={sucess}

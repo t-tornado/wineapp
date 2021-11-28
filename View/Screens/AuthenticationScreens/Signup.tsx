@@ -102,7 +102,7 @@ const SignUpScreen: React.FC<SignupScreenProps> = props => {
           failed={failed}
           loading={loading}
           success={sucess}
-          type="signup"
+          type="Signup"
           signupFieldEmpty={signupFieldEmpty}
         />
       ) : null}

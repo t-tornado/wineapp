@@ -1,5 +1,7 @@
 import {StackScreenProps} from '@react-navigation/stack';
 
+export type AuthScreenTypes = 'Signin' | 'Signup';
+
 export interface LikedWineObject {
   id: string;
   image: string;
