@@ -17,7 +17,9 @@ const SignUpLastNameInputComponent = () => {
     let cleanup = true;
     cleanup && setLastName(value);
 
-    return () => (cleanup = false);
+    return () => {
+      cleanup = false;
+    };
   }, [value]);
 
   return (
