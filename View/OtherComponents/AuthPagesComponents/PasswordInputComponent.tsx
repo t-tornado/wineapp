@@ -11,9 +11,9 @@ type PasswordInputProps = {
   type: 'Signin' | 'Signup';
 };
 
-const PasswordInputComponent: React.FC<PasswordInputProps> = ({type}) => {
+const PasswordInputComponent: React.FC<PasswordInputProps> = () => {
   const [value, setValue] = useState('');
-  const [visible, setVisible] = useState<boolean>(false);
+  const [visible, setVisible] = useState<boolean>(true);
   const setUserPassword = useUserPassword().setFunction;
 
   function handleTextChanged(text: string) {
