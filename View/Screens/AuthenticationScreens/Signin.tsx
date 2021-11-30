@@ -39,13 +39,17 @@ const SignInScreen: React.FC<SigninScreenProps> = props => {
   }
 
   function onPressSignin() {
-    // signIn(userEmail, userPassword);
-    console.log(userPassword);
+    signIn(userEmail, userPassword);
+    // console.log(userPassword);
   }
 
   function handleCloseLoadingIndicator() {
     setOpenLoadingIndicator(false);
     resetAuthStates();
+  }
+
+  function onPressForgotPassword() {
+    navigation.navigate('ForgotPassword');
   }
 
   useEffect(() => {
@@ -72,7 +76,12 @@ const SignInScreen: React.FC<SigninScreenProps> = props => {
           <View style={styles.detailsContainer}>
             <View style={styles.detailsContainerTop}>
               <EmailTextInputcomponent />
-              <PasswordInputComponent type="Signin" />
+              <PasswordInputComponent />
+              <TouchableOpacity
+                onPressOut={onPressForgotPassword}
+                activeOpacity={0.6}>
+                <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
+              </TouchableOpacity>
             </View>
             <View style={styles.bodyFooter}>
               <AuthButton name="sign in" handleOnPress={onPressSignin} />
@@ -89,6 +98,7 @@ const SignInScreen: React.FC<SigninScreenProps> = props => {
         </View>
         {openLoadingIndicator ? (
           <AuthLoadingComponent
+            loadingText="Signing In"
             type="Signin"
             loading={loading}
             failed={failed}
@@ -135,6 +145,10 @@ const styles = EStyleSheet.create({
     height: '60%',
     width: '100%',
     paddingHorizontal: '20rem',
+  },
+  forgotPasswordText: {
+    color: SplashScreenColors.backgroundColor,
+    fontWeight: 'bold',
   },
   headerContainer: {
     height: '40%',
@@ -193,6 +207,7 @@ const styles = EStyleSheet.create({
     fontSize: '12rem',
     left: '30rem',
     color: SplashScreenColors.backgroundColor,
+    fontWeight: 'bold',
   },
   textInput: {
     width: '70%',

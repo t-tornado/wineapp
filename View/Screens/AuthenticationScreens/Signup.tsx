@@ -11,15 +11,15 @@ import {
   useSignupFieldEmptyError,
   useSignupStates,
   useUserEmail,
-  useUserFirstName,
-  useUserLastName,
+  useUserFullName,
+  useUsername,
   useUserPassword,
 } from '../../../Interactor/WebInteractor/AuthInteractor';
 import {AuthButton} from '../../OtherComponents/AuthPagesComponents/AuthButton';
 import {AuthLoadingComponent} from '../../OtherComponents/AuthPagesComponents/AuthLoadingComponent';
 import {EmailTextInputcomponent} from '../../OtherComponents/AuthPagesComponents/EmailTextInputComponent';
-import {SignUpFirstnameInputComponent} from '../../OtherComponents/AuthPagesComponents/FirstNameInputContainer';
-import {SignUpLastNameInputComponent} from '../../OtherComponents/AuthPagesComponents/LastNameInputContainer';
+import {FullNameField} from '../../OtherComponents/AuthPagesComponents/FullNameField';
+import {UsernameField} from '../../OtherComponents/AuthPagesComponents/UsernameField';
 import {PasswordInputComponent} from '../../OtherComponents/AuthPagesComponents/PasswordInputComponent';
 
 const HEIGHT = heightDp('100');
@@ -31,8 +31,9 @@ const SignUpScreen: React.FC<SignupScreenProps> = props => {
   // user values
   const userEmail = useUserEmail().value;
   const userPassword = useUserPassword().value;
-  const firstName = useUserFirstName().value;
-  const lastName = useUserLastName().value;
+  const username = useUsername().value;
+  const userFullName = useUserFullName().value;
+  // const fullName = us
   // sign up values
   const signUp = useSignup();
   const signUpStates = useSignupStates();
@@ -41,7 +42,14 @@ const SignUpScreen: React.FC<SignupScreenProps> = props => {
   const {loading, sucess, failed} = signUpStates;
 
   function onPressSignup() {
-    signUp(userEmail, userPassword, firstName, lastName);
+    if (
+      typeof userEmail === 'string' &&
+      typeof userPassword === 'string' &&
+      typeof userFullName === 'string' &&
+      typeof username === 'string'
+    ) {
+      signUp(userEmail, userPassword, userFullName, username);
+    }
   }
 
   function onPressSignInButton() {
@@ -78,10 +86,10 @@ const SignUpScreen: React.FC<SignupScreenProps> = props => {
           </Text>
         </View>
         <View style={styles.body}>
-          <SignUpFirstnameInputComponent />
-          <SignUpLastNameInputComponent />
+          <FullNameField />
+          <UsernameField />
           <EmailTextInputcomponent />
-          <PasswordInputComponent type="Signup" />
+          <PasswordInputComponent />
         </View>
         <View style={styles.signUpFooter}>
           <AuthButton name="sign up" handleOnPress={onPressSignup} />
@@ -98,6 +106,7 @@ const SignUpScreen: React.FC<SignupScreenProps> = props => {
       </ImageBackground>
       {openLoadingIndicator ? (
         <AuthLoadingComponent
+          loadingText="Signing up"
           closeIndicator={handleCloseLoadingIndicator}
           failed={failed}
           loading={loading}

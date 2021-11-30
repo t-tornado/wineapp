@@ -1,28 +1,21 @@
 import React, {useEffect, useState} from 'react';
-import {Text, TouchableOpacity, View} from 'react-native';
+import {Text, TextInput, View} from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
-import {TextInput} from 'react-native-gesture-handler';
 import {SplashScreenColors} from '../../../Config/Colors';
 import {heightDp} from '../../../Config/Dimensions';
-import {useUserPassword} from '../../../Interactor/WebInteractor/AuthInteractor';
+import {useUsername} from '../../../Interactor/WebInteractor/AuthInteractor';
 
-const PasswordInputComponent: React.FC = () => {
+const UsernameField = () => {
   const [value, setValue] = useState('');
-  const [visible, setVisible] = useState<boolean>(true);
-  const setUserPassword = useUserPassword().setFunction;
+  const setUsername = useUsername().setFunction;
 
-  function handleTextChanged(text: string) {
+  function handleChangedText(text: string) {
     setValue(text);
-  }
-
-  function handleVisibleState() {
-    setVisible(p => !p);
   }
 
   useEffect(() => {
     let cleanup = true;
-    cleanup && setUserPassword(value);
-    // cleanup && setDisplayPassword(HidePasswordChars(value));
+    cleanup && setUsername(value);
 
     return () => {
       cleanup = false;
@@ -31,24 +24,17 @@ const PasswordInputComponent: React.FC = () => {
 
   return (
     <View style={styles.inputContainer}>
-      <Text style={styles.inputContainerText}>Password</Text>
+      <Text style={styles.inputContainerText}>Username</Text>
       <View style={styles.textInputContainer}>
         <TextInput
           value={value}
           style={styles.textInput}
-          placeholder="password"
+          placeholder="Username"
           placeholderTextColor="#ffffff90"
-          onChangeText={handleTextChanged}
+          onChangeText={handleChangedText}
           selectTextOnFocus={true}
           clearTextOnFocus={true}
-          secureTextEntry={visible}
         />
-        <TouchableOpacity
-          onPress={handleVisibleState}
-          activeOpacity={0.8}
-          style={styles.showStateContainer}>
-          <Text style={styles.showText}>{visible ? 'Show' : 'Hide'}</Text>
-        </TouchableOpacity>
       </View>
     </View>
   );
@@ -66,16 +52,9 @@ const styles = EStyleSheet.create({
     fontSize: '12rem',
     marginBottom: '10rem',
   },
-  showText: {
-    color: '#ffffff90',
-    fontSize: '12rem',
-  },
-  showStateContainer: {
-    alignSelf: 'center',
-  },
   textInput: {
     height: '90%',
-    width: '85%',
+    width: '90%',
     justifyContent: 'center',
     alignItems: 'center',
     color: '#fff',
@@ -89,8 +68,7 @@ const styles = EStyleSheet.create({
     borderWidth: '2rem',
     justifyContent: 'center',
     borderRadius: '10rem',
-    flexDirection: 'row',
   },
 });
 
-export {PasswordInputComponent};
+export {UsernameField};

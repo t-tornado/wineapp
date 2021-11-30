@@ -55,8 +55,6 @@ const WineCard: React.FC<WineCardProps> = props => {
     (async function () {
       if (liked && likedWines.every(item => item.id !== id)) {
         await addToLikedFn(user.email, wineObject);
-      } else {
-        console.log('item already liked');
       }
     })();
   }, [liked]);

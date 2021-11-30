@@ -19,9 +19,8 @@ import {ItemRemoved} from '../OtherComponents/Popups/ItemRemoved';
 const CellarLandingScreen: React.FC<CellarLandingPageScreenProp> = props => {
   const [data, setData] = useState<WineObject[] | []>();
   const likedWines = useLikedWines() as [];
-  const likedItemsChanged = useLikedItemsChanged();
   const [itemRemoved, setItemRemoved] = useItemRemoved();
-  const [numItems, setNumItems] = useState<number>();
+  const numItems = likedWines.length;
 
   function renderItemFunction({item}: {item: WineObject}) {
     return <CellarWineCard WineObject={item} navigation={props} />;
@@ -36,16 +35,14 @@ const CellarLandingScreen: React.FC<CellarLandingPageScreenProp> = props => {
     let clean = true;
     if (likedWines.length > 0) {
       setData(likedWines);
-      setNumItems(likedWines.length);
     } else {
       setData([]);
-      setNumItems(0);
     }
 
     return () => {
       clean = false;
     };
-  }, [likedItemsChanged, likedWines]);
+  }, [likedWines]);
 
   useEffect(() => {
     if (itemRemoved) {
@@ -59,7 +56,7 @@ const CellarLandingScreen: React.FC<CellarLandingPageScreenProp> = props => {
 
   return (
     <View style={styles.container}>
-      <CellarPageNavbar numItems={numItems as number} />
+      <CellarPageNavbar numItems={numItems} />
       <FlatList
         contentContainerStyle={{
           alignItems: 'center',

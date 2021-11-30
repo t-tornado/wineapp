@@ -1,2 +1,4 @@
 28th Tasks.
-. On typing password, make characters display * instead of chars
+. ***On typing password, make characters display * instead of chars
+. Include a retype password in signup screen and replace all name fields with full name
+. Include change password

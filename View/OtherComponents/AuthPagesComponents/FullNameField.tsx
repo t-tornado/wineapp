@@ -3,11 +3,11 @@ import {Text, TextInput, View} from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import {SplashScreenColors} from '../../../Config/Colors';
 import {heightDp} from '../../../Config/Dimensions';
-import {useUserLastName} from '../../../Interactor/WebInteractor/AuthInteractor';
+import {useUserFullName} from '../../../Interactor/WebInteractor/AuthInteractor';
 
-const SignUpLastNameInputComponent = () => {
+const FullNameField = () => {
   const [value, setValue] = useState('');
-  const setLastName = useUserLastName().setFunction;
+  const setFullName = useUserFullName().setFunction;
 
   function handleChangedText(text: string) {
     setValue(text);
@@ -15,7 +15,7 @@ const SignUpLastNameInputComponent = () => {
 
   useEffect(() => {
     let cleanup = true;
-    cleanup && setLastName(value);
+    cleanup && setFullName(value);
 
     return () => {
       cleanup = false;
@@ -24,12 +24,12 @@ const SignUpLastNameInputComponent = () => {
 
   return (
     <View style={styles.inputContainer}>
-      <Text style={styles.inputContainerText}>Last Name</Text>
+      <Text style={styles.inputContainerText}>Full Name</Text>
       <View style={styles.textInputContainer}>
         <TextInput
           value={value}
           style={styles.textInput}
-          placeholder="Last Name"
+          placeholder="Full Name"
           placeholderTextColor="#ffffff90"
           onChangeText={handleChangedText}
           selectTextOnFocus={true}
@@ -71,4 +71,4 @@ const styles = EStyleSheet.create({
   },
 });
 
-export {SignUpLastNameInputComponent};
+export {FullNameField};

@@ -19,5 +19,7 @@ const config = {
   ? firebase.initializeApp(AppConfig, config)
   : firebase.app();
 
+const AppUser = firebase.auth(firebase.app());
+export {AppUser};
 export {firestore};
 export {firebase};

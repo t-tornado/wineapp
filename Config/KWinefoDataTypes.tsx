@@ -1,7 +1,10 @@
 import {StackScreenProps} from '@react-navigation/stack';
 
 export type AuthScreenTypes = 'Signin' | 'Signup';
-
+export type AuthLoadingText =
+  | 'Signing In'
+  | 'Signing up'
+  | 'Resetting password';
 export interface LikedWineObject {
   id: string;
   image: string;
@@ -10,8 +13,8 @@ export interface LikedWineObject {
 
 export interface KWineFoUser {
   email: string;
-  firstName: string;
-  lastName: string;
+  fullName: string;
+  username: string;
   likedItems: Array<LikedWineObject>;
 }
 
@@ -39,6 +42,7 @@ export type AuthScreenNavigatorStackParamList = {
   SplashScreen: undefined;
   Signup: undefined;
   Signin: undefined;
+  ForgotPassword: undefined;
 };
 
 export type MainAppNavigationStckParamsList = {
@@ -62,6 +66,11 @@ export type SigninScreenProps = StackScreenProps<
 export type SignupScreenProps = StackScreenProps<
   AuthScreenNavigatorStackParamList,
   'Signup'
+>;
+
+export type ForgotPasswordScreenprops = StackScreenProps<
+  AuthScreenNavigatorStackParamList,
+  'ForgotPassword'
 >;
 
 export type CellarStackParamList = {
@@ -89,3 +98,10 @@ export type ValueSetFuncReturnObject<t> = {
   value: t;
   setFunction: Function;
 };
+// OBJECT TYPES
+export type UseStateValuesAsObject<Type> = {
+  value: Type;
+  setFunction: Function;
+};
+
+// FUNCTION TYPES

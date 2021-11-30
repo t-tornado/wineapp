@@ -11,15 +11,16 @@ import {
   useSignoutLoading,
 } from '../../../Interactor/WebInteractor/AuthInteractor';
 import {SignoutLoadingScreen} from '../../OtherComponents/AuthPagesComponents/SignoutLoadingScreen';
+import {useLikedWines} from '../../../Interactor/ComponentInteractors/MainAppInteractor';
 
 const HEIGHT = heightDp('100');
 const WIDTH = widthDp('100');
 const icon_s = heightDp('4');
 
 const ProfileScreen: React.FC = () => {
+  const likedWines = useLikedWines();
   const [email, setEmail] = useState<string>('yourEmail@xxx.com');
-  const [firstName, setFirstName] = useState<string>();
-  const [lastName, setLastName] = useState<string>();
+  const [username, setUsername] = useState<string>();
   const [fullName, setFullName] = useState<string>();
   const currentUser = useCurrentUser()[0];
   const signoutLoading = useSignoutLoading();
@@ -29,13 +30,15 @@ const ProfileScreen: React.FC = () => {
     let clean = true;
     if (currentUser !== undefined) {
       clean && setEmail(currentUser.email);
-      clean && setFirstName(currentUser.firstName);
-      clean && setLastName(currentUser.lastName);
-      clean && setFullName(`${currentUser.firstName} ${currentUser.lastName} `);
+      clean && setFullName(currentUser.fullName);
+      clean && setUsername(currentUser.username);
     }
 
-    return () => (clean = false);
+    return () => {
+      clean = false;
+    };
   }, [currentUser]);
+  useEffect(() => {}, [likedWines]);
 
   function handleSignOut() {
     signOut();
@@ -59,13 +62,13 @@ const ProfileScreen: React.FC = () => {
           <View style={styles.userDetailsLabelValueContainer}>
             <Text style={styles.userDetailsLabelText}>First Name</Text>
             <Text style={styles.userDetailsValueText}>
-              {firstName ? firstName : 'First Name'}
+              {username ? username : 'Username'}
             </Text>
           </View>
           <View style={styles.userDetailsLabelValueContainer}>
-            <Text style={styles.userDetailsLabelText}>Last Name</Text>
+            <Text style={styles.userDetailsLabelText}>Liked Items</Text>
             <Text style={styles.userDetailsValueText}>
-              {lastName ? lastName : 'Last Name'}
+              {likedWines ? likedWines.length : 'Liked Wine'}
             </Text>
           </View>
           <View style={styles.userDetailsLabelValueContainer}>
@@ -87,29 +90,29 @@ const ProfileScreen: React.FC = () => {
 
 const styles = EStyleSheet.create({
   accountHeaderContainer: {
-    height: heightDp('18'),
+    height: heightDp('17'),
     width: '100%',
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'center',
-    // backgroundColor: '#000',
   },
   accountHeaderText: {
     color: '#000',
-    fontSize: '18rem',
+    fontSize: '16rem',
   },
   accountHeaderTextContainer: {
     flex: 0.9,
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'flex-start',
+    paddingLeft: '10rem',
   },
   accountIconContainer: {
-    height: '60%',
-    width: '20%',
+    height: '45%',
+    width: '15%',
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#000',
-    borderRadius: '100rem',
+    borderRadius: '80rem',
   },
   screen: {
     heihgt: HEIGHT,
@@ -117,7 +120,7 @@ const styles = EStyleSheet.create({
     backgroundColor: '#fff',
   },
   screenBar: {
-    height: heightDp('7%'),
+    height: heightDp('4%'),
     width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
@@ -142,8 +145,8 @@ const styles = EStyleSheet.create({
     width: '80%',
     justifyContent: 'space-between',
     backgroundColor: `${SplashScreenColors.backgroundColor}`,
-    borderRadius: '30rem',
-    padding: '25rem',
+    borderRadius: '15rem',
+    padding: '20rem',
   },
   userDetailsLabelText: {
     color: '#ffffff80',

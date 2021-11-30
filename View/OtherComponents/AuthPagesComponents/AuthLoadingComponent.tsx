@@ -5,13 +5,17 @@ import Spinner from 'react-native-spinkit';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import {SplashScreenColors} from '../../../Config/Colors';
 import {heightDp, widthDp} from '../../../Config/Dimensions';
-import {AuthScreenTypes} from '../../../Config/KWinefoDataTypes';
+import {
+  AuthLoadingText,
+  AuthScreenTypes,
+} from '../../../Config/KWinefoDataTypes';
 
 interface AuthLoadingComponentProps {
   loading: boolean;
   success: boolean;
   failed: boolean;
   type: AuthScreenTypes;
+  loadingText: AuthLoadingText;
   closeIndicator: Function;
   userNotFound?: boolean;
   invalidInput?: boolean;
@@ -19,12 +23,15 @@ interface AuthLoadingComponentProps {
 }
 
 const SPINNER_S = heightDp('6');
+const POPUP_H = heightDp('25');
+const POPUP_W = widthDp('80');
 
 const AuthLoadingComponent: React.FC<AuthLoadingComponentProps> = props => {
   const {
     loading,
     success,
     type,
+    loadingText,
     closeIndicator,
     userNotFound,
     invalidInput,
@@ -37,9 +44,9 @@ const AuthLoadingComponent: React.FC<AuthLoadingComponentProps> = props => {
     ? 'Wrong email or password'
     : signupFieldEmpty
     ? 'Enter all details'
+    : stateText === 'Failed'
+    ? 'Check your connection and try again'
     : '';
-  let loadingText: string | null =
-    type === 'Signin' ? 'Signing in' : type === 'Signup' ? 'Signing up' : null;
 
   function handleClose() {
     closeIndicator();
@@ -61,12 +68,11 @@ const AuthLoadingComponent: React.FC<AuthLoadingComponentProps> = props => {
       </View>
       {loading ? null : (
         <View style={[styles.popupContainer]}>
-          <View style={{flexDirection: 'row'}}>
-            <Text style={styles.stateText}>{type} </Text>
-            <Text style={styles.stateText}>{stateText}</Text>
-          </View>
+          <Text style={styles.messageHeader}>
+            {type} {stateText}
+          </Text>
           <View style={styles.messageContainer}>
-            <Text style={styles.stateText}>{message}</Text>
+            <Text style={{color: '#000'}}>{message}</Text>
           </View>
           <TouchableOpacity
             onPress={handleClose}
@@ -82,12 +88,13 @@ const AuthLoadingComponent: React.FC<AuthLoadingComponentProps> = props => {
 
 const styles = EStyleSheet.create({
   closeButton: {
-    height: '15%',
-    width: '40%',
+    height: '20%',
+    width: '50%',
+    backgroundColor: SplashScreenColors.backgroundColor,
+    borderRadius: '20rem',
+    marginTop: '20rem',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: SplashScreenColors.backgroundColor,
-    borderRadius: '15rem',
   },
   closeButtonText: {
     color: '#fff',
@@ -110,6 +117,11 @@ const styles = EStyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  messageHeader: {
+    fontSize: '15rem',
+    color: SplashScreenColors.backgroundColor,
+    textAlign: 'center',
+  },
   overlay: {
     backgroundColor: '#00000090',
     position: 'absolute',
@@ -117,24 +129,24 @@ const styles = EStyleSheet.create({
     width: '100%',
   },
   popupContainer: {
-    height: '25%',
-    width: '60%',
+    height: POPUP_H,
+    width: POPUP_W,
+    borderRadius: heightDp('2'),
+    backgroundColor: '#fff',
     justifyContent: 'space-around',
     alignItems: 'center',
-    borderRadius: '15rem',
-    backgroundColor: '#f4f4f4',
+    padding: '13rem',
+    bottom: heightDp('15'),
   },
   screen: {
     height: '100%',
     width: '100%',
-    justifyContent: 'flex-start',
     alignItems: 'center',
     position: 'absolute',
   },
-  stateText: {
+  messageText: {
     color: '#000',
-    fontSize: '20rem',
-    fontFamily: 'CL',
+    fontSize: '15rem',
   },
 });
 

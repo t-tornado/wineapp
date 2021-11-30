@@ -1,7 +1,7 @@
 import React from 'react';
 import {Image, Text, View, ScrollView, TouchableOpacity} from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
-import {heightDp, NAVBAR_HEGIHT, widthDp} from '../../Config/Dimensions';
+import {heightDp, widthDp} from '../../Config/Dimensions';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import {
   CellarWinePageScreenProps,
@@ -18,6 +18,7 @@ import {
 import {useUser} from '../../Interactor/WebInteractor/AuthInteractor';
 import {useEffect} from 'react';
 import {RemovingItemLoadingScreen} from '../OtherComponents/CellarComponents/RemovingItemLoadingScreen';
+import {FirebaseAuthTypes} from '@react-native-firebase/auth';
 
 const ICON_S = heightDp('2%');
 const WIDTH = widthDp('100%');
@@ -25,7 +26,7 @@ const WIDTH = widthDp('100%');
 const CellarWinePage: React.FC<CellarWinePageScreenProps> = props => {
   const removeFromLiked = useRemoveFromLikedItems();
   const [wineItemRemoved, setWineItemRemoved] = useItemRemoved();
-  const userEmail = useUser().value.email;
+  const user = useUser().value;
   const loadingRemove = useLoadingRemoveState();
   const wineObject = props.route.params?.WineObject as WineObject;
   const {wine, winery, rating, location, image} = wineObject;
@@ -40,7 +41,8 @@ const CellarWinePage: React.FC<CellarWinePageScreenProps> = props => {
   }
 
   function handleRemoveAction() {
-    removeFromLiked(userEmail, wineObject);
+    const {email} = user as FirebaseAuthTypes.User;
+    removeFromLiked(email, wineObject);
   }
 
   useEffect(() => {
@@ -83,7 +85,7 @@ const CellarWinePage: React.FC<CellarWinePageScreenProps> = props => {
         <View style={styles.footer}>
           <TouchableOpacity
             activeOpacity={0.5}
-            onPress={handleRemoveAction}
+            onPressOut={handleRemoveAction}
             style={styles.deleteButton}>
             <Text style={styles.deleteButtonText}>Remove from cellar</Text>
           </TouchableOpacity>

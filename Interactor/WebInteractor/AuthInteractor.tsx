@@ -1,6 +1,12 @@
 import React, {createContext, useContext, useState} from 'react';
 import auth, {FirebaseAuthTypes} from '@react-native-firebase/auth';
-import {firestore} from '../../Config/FirebaseApp';
+import {AppUser, firestore} from '../../Config/FirebaseApp';
+import {
+  BooleanTuple,
+  KWineFoUser,
+  StringTuple,
+} from '../../Config/KWinefoDataTypes';
+import {firebase} from '@react-native-firebase/firestore';
 
 type Tuple = [
   string | FirebaseAuthTypes.User | FirebaseAuthTypes.UserCredential | null,
@@ -11,17 +17,42 @@ type useStateHookValues = {
   setFunction: Tuple[1];
 };
 
-const UserEmailContext = createContext<Tuple>([null, () => null]);
-const UserPasswordContext = createContext<Tuple>([null, () => null]);
-const UsernameContext = createContext<Tuple>([null, () => null]);
+type SignupFunction = (
+  email: string,
+  password: string,
+  fullName: string,
+  username: string,
+) => void;
+
+const UserEmailContext = createContext<StringTuple>(['', () => null]);
+const UserPasswordContext = createContext<StringTuple>(['', () => null]);
+const UsernameContext = createContext<StringTuple>(['', () => null]);
 const UserContext = createContext<Tuple>([null, () => null]);
-const UserFirstNameContext = createContext<Tuple>([null, () => null]);
-const UserLastNameContext = createContext<Tuple>([null, () => null]);
+const UserFullNameContext = createContext<StringTuple>(['', () => null]);
 const SignoutFnContext = createContext<Function>(() => null);
 const SignoutLoadingContext = createContext<boolean>(false);
 const SignoutFailedContext = createContext<boolean>(false);
+const UserRepeatedPasswordContext = createContext<StringTuple>([
+  '',
+  () => null,
+]);
+// RESET PASSWORD
+const HandleRestPasswordContext = createContext<Function>(() => null);
+const ForgotPasswordResetEmailSuccessContext = createContext<BooleanTuple>([
+  false,
+  () => null,
+]);
+const ForgotPasswordResetEmailFailedContext = createContext<BooleanTuple>([
+  false,
+  () => null,
+]);
+const ForgotPasswordUserNotFoundContext = createContext<BooleanTuple>([
+  false,
+  () => null,
+]);
+const LoadingResetPasswordContext = createContext<boolean>(false);
 
-const SignupFnContext = createContext<Function>(() => null);
+const SignupFnContext = createContext<SignupFunction>(() => null);
 const SignUpStatesContext = createContext<[boolean, boolean, boolean]>([
   false,
   false,
@@ -43,11 +74,11 @@ const ResetAuthStatesContext = createContext<Function>(() => null);
 
 const AuthInteractor: React.FC = props => {
   const [user, setUser] = useState<Tuple[0]>(null);
-  const [userEmail, setUserEmail] = useState(null);
-  const [userPassword, setUserPassword] = useState(null);
-  const [username, setUsername] = useState(null);
-  const [userFirstName, setUserFirstName] = useState(null);
-  const [userLastName, setUserLastName] = useState(null);
+  const [userEmail, setUserEmail] = useState('');
+  const [userPassword, setUserPassword] = useState('');
+  const [userRepeatedPassword, setUserRepeatedPassword] = useState<string>('');
+  const [username, setUsername] = useState('');
+  const [userFullName, setUserFullName] = useState('');
   // SignUp States
   const [signupFieldEmpty, setSignupFieldEmpty] = useState(false);
   const [signupSuccess, setSignupSuccess] = useState(false);
@@ -63,15 +94,21 @@ const AuthInteractor: React.FC = props => {
   const [signoutLoading, setSignoutLoading] = useState(false);
   const [signoutFailed, setSignoutFailed] = useState(false);
   // [auth/weak-password]
+  // Forgot pasword popups
+  const [resetEmailSuccess, setResetEmailSuccess] = useState(false);
+  const [resetEmailError, setResetEmailError] = useState(false);
+  const [forgotPasswordUsernotFound, setForgotPasswordUsernotFound] =
+    useState(false);
+  const [loadingResetPassword, setLoadingResetPassword] = useState(false);
 
   function handleSignup(
     email: string,
     password: string,
-    firstName: string,
-    lastName: string,
+    fullName: string,
+    username: string,
   ) {
     if (
-      [email, password, firstName, lastName].some(
+      [email, password, fullName, username].some(
         it => it === undefined || it === '',
       )
     ) {
@@ -92,8 +129,8 @@ const AuthInteractor: React.FC = props => {
             .doc(email)
             .set({
               email,
-              firstName,
-              lastName,
+              fullName,
+              username,
             })
             .catch(e => {
               setSignupLoading(false);
@@ -102,7 +139,7 @@ const AuthInteractor: React.FC = props => {
               setSignupFieldEmpty(false);
             });
         })
-        .catch(error => {
+        .catch(() => {
           setSignupFailed(true);
           setSignupLoading(false);
           setSignupSuccess(false);
@@ -173,6 +210,59 @@ const AuthInteractor: React.FC = props => {
       });
   }
 
+  async function handleResetPassword(userEmail: string) {
+    setResetEmailSuccess(false);
+    setResetEmailError(false);
+    setUserNotFound(false);
+    setLoadingResetPassword(true);
+    try {
+      const users = (
+        await firestore().collection('users').get({source: 'server'})
+      ).docs;
+      let userfound: boolean = false;
+      users.forEach(async user => {
+        if (user.exists) {
+          const userData = user.data() as KWineFoUser;
+          const {email} = userData;
+          if (email === userEmail) {
+            userfound = true;
+            const emailSent = await AppUser.sendPasswordResetEmail(userEmail);
+            console.log('Response from email sent   ', emailSent);
+            // {
+            //   .then(() => {
+            //     setResetEmailSuccess(true);
+            //     setResetEmailError(false);
+            //     setUserNotFound(false);
+            //     setLoadingResetPassword(false);
+            //   })
+            //   .catch(e => {
+            //     userfound = false;
+            //     setResetEmailSuccess(false);
+            //     setResetEmailError(true);
+            //     setForgotPasswordUsernotFound(false);
+            //     setLoadingResetPassword(false);
+            //   });
+            // }
+          }
+        }
+      });
+      // if uer does not exist, show popup for user to create new account.
+      if (!userfound) {
+        setForgotPasswordUsernotFound(true);
+        setLoadingResetPassword(false);
+        setResetEmailSuccess(false);
+        setResetEmailError(false);
+      }
+    } catch (error) {
+      if (error.message.startsWith('[firestore/unavailable] ')) {
+        setForgotPasswordUsernotFound(false);
+        setLoadingResetPassword(false);
+        setResetEmailSuccess(false);
+        setResetEmailError(true);
+      }
+    }
+  }
+
   function handleAuthStateChanged() {
     const unsubscribeFn = auth().onAuthStateChanged(user => {
       if (user) {
@@ -194,82 +284,89 @@ const AuthInteractor: React.FC = props => {
   }
   return (
     <UserContext.Provider value={[user, setUser]}>
-      <UserEmailContext.Provider value={[userEmail, setUserEmail]}>
-        <UserFirstNameContext.Provider
-          value={[userFirstName, setUserFirstName]}>
-          <UserLastNameContext.Provider value={[userLastName, setUserLastName]}>
-            <UsernameContext.Provider value={[username, setUsername]}>
-              <UserPasswordContext.Provider
-                value={[userPassword, setUserPassword]}>
-                <SignupFnContext.Provider value={handleSignup}>
-                  <SignUpStatesContext.Provider
-                    value={[signupLoading, signupSuccess, signupFailed]}>
-                    <SignupFieldEmptyErrorContext.Provider
-                      value={signupFieldEmpty}>
-                      <AuthStateChangedContext.Provider
-                        value={handleAuthStateChanged}>
-                        <SigninFnContext.Provider value={handleSignin}>
-                          <SigninUserNotFoundStateContext.Provider
-                            value={userNotFound}>
-                            <SigninInvalidInputErrorContext.Provider
-                              value={signinInvalidInputError}>
-                              <SigninStatesContext.Provider
-                                value={[
-                                  signinLoading,
-                                  signinSuccess,
-                                  signinFailed,
-                                ]}>
-                                <ResetAuthStatesContext.Provider
-                                  value={resetAuthStates}>
-                                  <SignoutFnContext.Provider
-                                    value={handleSignout}>
-                                    <SignoutLoadingContext.Provider
-                                      value={signoutLoading}>
-                                      <SignoutFailedContext.Provider
-                                        value={signoutFailed}>
-                                        {props.children}
-                                      </SignoutFailedContext.Provider>
-                                    </SignoutLoadingContext.Provider>
-                                  </SignoutFnContext.Provider>
-                                </ResetAuthStatesContext.Provider>
-                              </SigninStatesContext.Provider>
-                            </SigninInvalidInputErrorContext.Provider>
-                          </SigninUserNotFoundStateContext.Provider>
-                        </SigninFnContext.Provider>
-                      </AuthStateChangedContext.Provider>
-                    </SignupFieldEmptyErrorContext.Provider>
-                  </SignUpStatesContext.Provider>
-                </SignupFnContext.Provider>
-              </UserPasswordContext.Provider>
-            </UsernameContext.Provider>
-          </UserLastNameContext.Provider>
-        </UserFirstNameContext.Provider>
-      </UserEmailContext.Provider>
+      <ForgotPasswordResetEmailFailedContext.Provider
+        value={[resetEmailError, setResetEmailError]}>
+        <LoadingResetPasswordContext.Provider value={loadingResetPassword}>
+          <ForgotPasswordResetEmailSuccessContext.Provider
+            value={[resetEmailSuccess, setResetEmailSuccess]}>
+            <ForgotPasswordUserNotFoundContext.Provider
+              value={[
+                forgotPasswordUsernotFound,
+                setForgotPasswordUsernotFound,
+              ]}>
+              <UserEmailContext.Provider value={[userEmail, setUserEmail]}>
+                <UserFullNameContext.Provider
+                  value={[userFullName, setUserFullName]}>
+                  <UserRepeatedPasswordContext.Provider
+                    value={[userRepeatedPassword, setUserRepeatedPassword]}>
+                    <UsernameContext.Provider value={[username, setUsername]}>
+                      <UserPasswordContext.Provider
+                        value={[userPassword, setUserPassword]}>
+                        <SignupFnContext.Provider value={handleSignup}>
+                          <SignUpStatesContext.Provider
+                            value={[
+                              signupLoading,
+                              signupSuccess,
+                              signupFailed,
+                            ]}>
+                            <SignupFieldEmptyErrorContext.Provider
+                              value={signupFieldEmpty}>
+                              <AuthStateChangedContext.Provider
+                                value={handleAuthStateChanged}>
+                                <SigninFnContext.Provider value={handleSignin}>
+                                  <SigninUserNotFoundStateContext.Provider
+                                    value={userNotFound}>
+                                    <SigninInvalidInputErrorContext.Provider
+                                      value={signinInvalidInputError}>
+                                      <SigninStatesContext.Provider
+                                        value={[
+                                          signinLoading,
+                                          signinSuccess,
+                                          signinFailed,
+                                        ]}>
+                                        <ResetAuthStatesContext.Provider
+                                          value={resetAuthStates}>
+                                          <SignoutFnContext.Provider
+                                            value={handleSignout}>
+                                            <SignoutLoadingContext.Provider
+                                              value={signoutLoading}>
+                                              <SignoutFailedContext.Provider
+                                                value={signoutFailed}>
+                                                <HandleRestPasswordContext.Provider
+                                                  value={handleResetPassword}>
+                                                  {props.children}
+                                                </HandleRestPasswordContext.Provider>
+                                              </SignoutFailedContext.Provider>
+                                            </SignoutLoadingContext.Provider>
+                                          </SignoutFnContext.Provider>
+                                        </ResetAuthStatesContext.Provider>
+                                      </SigninStatesContext.Provider>
+                                    </SigninInvalidInputErrorContext.Provider>
+                                  </SigninUserNotFoundStateContext.Provider>
+                                </SigninFnContext.Provider>
+                              </AuthStateChangedContext.Provider>
+                            </SignupFieldEmptyErrorContext.Provider>
+                          </SignUpStatesContext.Provider>
+                        </SignupFnContext.Provider>
+                      </UserPasswordContext.Provider>
+                    </UsernameContext.Provider>
+                  </UserRepeatedPasswordContext.Provider>
+                </UserFullNameContext.Provider>
+              </UserEmailContext.Provider>
+            </ForgotPasswordUserNotFoundContext.Provider>
+          </ForgotPasswordResetEmailSuccessContext.Provider>
+        </LoadingResetPasswordContext.Provider>
+      </ForgotPasswordResetEmailFailedContext.Provider>
     </UserContext.Provider>
   );
 };
 
-// const createRawHook = contextVar => {
-//   return () => {
-//     const contextVal = useContext(contextVar);
-//     return contextVal;
-//   };
-// };
 function createRawHook<T>(contextVal: React.Context<T>): () => T {
   return () => {
-    const value = useContext(contextVal);
+    const value = useContext(contextVal) as T;
     return value;
   };
 }
-// const CreateUserHook = (contextVar: React.Context<[]>) => {
-//   return () => {
-//     const contextVal = useContext(contextVar);
-//     return {
-//       value: contextVar !== null ? contextVal[0] : null,
-//       setFunction: contextVar !== null ? contextVal[1] : null,
-//     };
-//   };
-// };
 
 function CreateUserHook(
   contextValue: React.Context<Tuple>,
@@ -296,17 +393,38 @@ const CreateAuthStatesHook = (
   };
 };
 
+function CreateValueNSetValueObjHook<T>(
+  contextValue: React.Context<[T, Function]>,
+) {
+  return () => {
+    const value = useContext(contextValue);
+    return {
+      value: value[0],
+      setFunction: value[1],
+    };
+  };
+}
+
+export function useUserRepeatedPassword() {
+  const value = useContext(UserRepeatedPasswordContext);
+  return {
+    value: value[0],
+    setFunction: value[1],
+  };
+}
+
 // user hooks
 export const useUser = CreateUserHook(UserContext);
-export const useUserEmail = CreateUserHook(UserEmailContext);
-export const useUserPassword = CreateUserHook(UserPasswordContext);
-export const useUsername = CreateUserHook(UsernameContext);
-export const useUserFirstName = CreateUserHook(UserFirstNameContext);
-export const useUserLastName = CreateUserHook(UserLastNameContext);
+export const useUserEmail =
+  CreateValueNSetValueObjHook<string>(UserEmailContext);
+// export const useUserEmail = CreateUserHook(UserEmailContext);
+export const useUserPassword = CreateValueNSetValueObjHook(UserPasswordContext);
+export const useUsername = CreateValueNSetValueObjHook(UsernameContext);
+export const useUserFullName = CreateValueNSetValueObjHook(UserFullNameContext);
 
 // Auth action hooks
 
-export const useSignup = createRawHook(SignupFnContext);
+export const useSignup = createRawHook<SignupFunction>(SignupFnContext);
 export const useSignupStates = CreateAuthStatesHook(SignUpStatesContext);
 export const useSignupFieldEmptyError = createRawHook(
   SignupFieldEmptyErrorContext,
@@ -328,5 +446,22 @@ export const useSignoutLoading = createRawHook(SignoutLoadingContext);
 
 export const useResetAuthStates = createRawHook(ResetAuthStatesContext);
 export const useAuthStateChanged = createRawHook(AuthStateChangedContext);
+
+// Reset Password
+export const useResetPassword = createRawHook(HandleRestPasswordContext);
+
+// Reset password Popup
+export const useResetPasswordEmailSuccess = CreateValueNSetValueObjHook(
+  ForgotPasswordResetEmailSuccessContext,
+);
+export const useResetPasswordEmailFailed = CreateValueNSetValueObjHook(
+  ForgotPasswordResetEmailFailedContext,
+);
+export const useResetPasswordUsernotFound = CreateValueNSetValueObjHook(
+  ForgotPasswordUserNotFoundContext,
+);
+export const useLodingResetPassword = createRawHook(
+  LoadingResetPasswordContext,
+);
 
 export {AuthInteractor};

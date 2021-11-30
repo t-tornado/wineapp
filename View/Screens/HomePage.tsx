@@ -96,11 +96,6 @@ const Homepage: React.FC = props => {
     };
   }, [keyword, fetchResults]);
 
-  console.log(
-    'Wine added to fav popup state  ',
-    showLikeSuccessPopupState.value,
-  );
-
   return (
     <View style={styles.container}>
       <View style={styles.body}>
@@ -112,7 +107,7 @@ const Homepage: React.FC = props => {
               <HeaderMenu />
               <IntroductoryHeaderComponent
                 userFirstname={
-                  currentUser !== undefined ? currentUser.firstName : ''
+                  currentUser !== undefined ? currentUser.username : ''
                 }
               />
             </>

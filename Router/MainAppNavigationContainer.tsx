@@ -20,6 +20,7 @@ import {
   AuthScreenNavigatorStackParamList,
   MainAppNavigationStckParamsList,
 } from '../Config/KWinefoDataTypes';
+import {ForgotPasswordScreen} from '../View/Screens/AuthenticationScreens/ForgotPasswordScreen';
 
 const AppAuthenticationStack =
   createStackNavigator<AuthScreenNavigatorStackParamList>();
@@ -53,6 +54,11 @@ const MainAppNavigationContainer = () => {
             options={defaultStackScreenConfig}
             name="Signin"
             component={SignInScreen}
+          />
+          <AppAuthenticationStack.Screen
+            options={defaultStackScreenConfig}
+            name="ForgotPassword"
+            component={ForgotPasswordScreen}
           />
         </AppAuthenticationStack.Navigator>
       ) : (

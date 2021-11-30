@@ -12,3 +12,14 @@ export function HidePasswordChars(password: string): string {
   }
   return hidenChars;
 }
+
+export function PasswordIsValid(password: string) {
+  return password.length >= 6;
+}
+
+export function VeriifyPasswordsAreValidAndMatch(
+  password: string,
+  repeatedPassword: string,
+) {
+  return PasswordIsValid(password) && PasswordIsValid(repeatedPassword);
+}

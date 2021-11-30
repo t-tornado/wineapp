@@ -20,7 +20,7 @@ const AuthButton: React.FC<AuthButtonProps> = props => {
 
   return (
     <TouchableOpacity
-      onPress={callPressFunction}
+      onPressOut={callPressFunction}
       activeOpacity={0.9}
       style={styles.container}>
       <Text style={styles.text}>{name}</Text>
