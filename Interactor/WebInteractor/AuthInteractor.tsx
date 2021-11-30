@@ -226,23 +226,8 @@ const AuthInteractor: React.FC = props => {
           const {email} = userData;
           if (email === userEmail) {
             userfound = true;
-            const emailSent = await AppUser.sendPasswordResetEmail(userEmail);
-            console.log('Response from email sent   ', emailSent);
-            // {
-            //   .then(() => {
-            //     setResetEmailSuccess(true);
-            //     setResetEmailError(false);
-            //     setUserNotFound(false);
-            //     setLoadingResetPassword(false);
-            //   })
-            //   .catch(e => {
-            //     userfound = false;
-            //     setResetEmailSuccess(false);
-            //     setResetEmailError(true);
-            //     setForgotPasswordUsernotFound(false);
-            //     setLoadingResetPassword(false);
-            //   });
-            // }
+            await AppUser.sendPasswordResetEmail('anthonyo@gmail.com');
+            console.log('Email sent');
           }
         }
       });
@@ -259,6 +244,8 @@ const AuthInteractor: React.FC = props => {
         setLoadingResetPassword(false);
         setResetEmailSuccess(false);
         setResetEmailError(true);
+      } else {
+        console.log(error.message);
       }
     }
   }

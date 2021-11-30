@@ -2,6 +2,7 @@ import React, {createContext, useContext, useEffect, useState} from 'react';
 import {firestore} from '../../Config/FirebaseApp';
 import {
   BooleanTuple,
+  KWineFoUser,
   StringTuple,
   ValueSetFuncReturnObject,
   WineObject,
@@ -45,7 +46,7 @@ const MainAppInteractor: React.FC = props => {
     return new Promise(async (resolve, reject) => {
       try {
         const likedItem = firestore.FieldValue.arrayUnion(wine);
-        const docRef = firestore().collection('users').doc(email);
+        const docRef = await firestore().collection('users').doc(email);
         await docRef.update({
           likedItems: likedItem,
         });
@@ -86,11 +87,14 @@ const MainAppInteractor: React.FC = props => {
     }
   }
 
-  function handleRemoveFromLikedItems(userEmail: string, wine: WineObject) {
+  async function handleRemoveFromLikedItems(
+    userEmail: string,
+    wine: WineObject,
+  ) {
     setLoadingRemoveState(true);
     setItemRemoved(false);
     if (likedItems.length > 0) {
-      const docRef = firestore().collection('users').doc(userEmail);
+      const docRef = await firestore().collection('users').doc(userEmail);
       const updateLikedItems = firestore.FieldValue.arrayRemove(wine);
       docRef
         .update({
@@ -110,20 +114,35 @@ const MainAppInteractor: React.FC = props => {
   }
 
   function getUserLikedItems(userEmail: string) {
-    setLikedItems([]); // this resets the liked items for every user
-    firestore()
-      .collection('users')
-      .doc(userEmail)
-      .get()
-      .then(res => {
-        if (res.exists) {
-          const user = res.data();
-          if (user && user.likedItems) {
-            setLikedItems(user.likedItems);
-          }
+    return new Promise(async (resolve, reject) => {
+      try {
+        const userDocRef = await firestore()
+          .collection('users')
+          .doc(userEmail)
+          .get();
+        const userData = userDocRef.data() as KWineFoUser;
+        const {likedItems} = userData;
+        if (likedItems) {
+          setLikedItems(likedItems);
+          resolve('success');
         }
-      })
-      .catch(e => console.log('Error: Could not get user liked items  ', e));
+      } catch (error) {
+        reject('failed');
+      }
+    });
+    // firestore()
+    //   .collection('users')
+    //   .doc(userEmail)
+    //   .get()
+    //   .then(res => {
+    //     if (res.exists) {
+    //       const user = res.data();
+    //       if (user && user.likedItems) {
+    //         setLikedItems(user.likedItems);
+    //       }
+    //     }
+    //   })
+    //   .catch(() => null);
   }
 
   useEffect(() => {

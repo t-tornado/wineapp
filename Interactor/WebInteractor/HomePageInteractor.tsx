@@ -27,28 +27,30 @@ const HomepageInteractor: React.FC = props => {
     setErrorFetchingData(false);
     setFetchingData(true);
     setWineData([]);
-    fetch(API_URL)
-      .then(res => res.json())
-      .then(data => {
-        setWineData(data);
+    return new Promise(async (resolve, reject) => {
+      try {
+        const resp = await (await fetch(API_URL)).json();
+        resolve(resp);
         setFetchingData(false);
         setErrorFetchingData(false);
-      })
-      .catch(() => {
-        setErrorFetchingData(true);
+      } catch (error) {
+        reject(error);
         setFetchingData(false);
-      });
+        setErrorFetchingData(true);
+      }
+    });
   }
 
   function getCurrentUser(email: string) {
-    firestore()
-      .collection('users')
-      .doc(email)
-      .get()
-      .then(data => {
-        data.exists && setCurrentUser(data.data() as KWineFoUser);
-      })
-      .catch(null);
+    return new Promise(async (res, rej) => {
+      try {
+        const user = await firestore().collection('users').doc(email).get();
+        res(user.data());
+      } catch (error) {
+        // could not get current user action
+        null;
+      }
+    });
   }
 
   return (

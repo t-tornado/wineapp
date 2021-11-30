@@ -69,7 +69,6 @@ const WineCard: React.FC<WineCardProps> = props => {
     }
   }, [likedWines]);
 
-  // console.log(likeItem);
   return (
     <TouchableOpacity
       onPress={callNavigation}

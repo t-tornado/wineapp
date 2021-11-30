@@ -15,7 +15,7 @@ export interface KWineFoUser {
   email: string;
   fullName: string;
   username: string;
-  likedItems: Array<LikedWineObject>;
+  likedItems: Array<WineObject>;
 }
 
 export type ratings = {

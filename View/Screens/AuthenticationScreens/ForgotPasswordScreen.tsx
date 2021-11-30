@@ -61,8 +61,6 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenprops> = props => {
     resetPasswordUsernotFound.setFunction(false);
   }
 
-  console.log('resetting password   ', resettingPassword);
-
   useEffect(() => {
     let clean = true;
     clean && resetPasswordEmailFailed.setFunction(false);

@@ -9,7 +9,6 @@ import {heightDp} from '../../Config/Dimensions';
 import {
   useItemRemoved,
   useLikedWines,
-  useLikedItemsChanged,
 } from '../../Interactor/ComponentInteractors/MainAppInteractor';
 import {CellarPageEmpty} from '../OtherComponents/CellarComponents/CellarPageEmpty';
 import {CellarWineCard} from '../OtherComponents/CellarComponents/CellarWineCard';

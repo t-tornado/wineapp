@@ -11,7 +11,6 @@ import {
   useLikedWines,
   useLikeSuccessPopup,
   useLikeWineFailedState,
-  useLoadUserLikedItems,
   useSearchKeyword,
 } from '../../Interactor/ComponentInteractors/MainAppInteractor';
 import {useUser} from '../../Interactor/WebInteractor/AuthInteractor';
@@ -35,7 +34,7 @@ import {LikeFailedPopup} from '../OtherComponents/Popups/LikeFailedPopup';
 const Homepage: React.FC = props => {
   const user = useUser().value as FirebaseAuthTypes.User;
   const fetchCurrentUser: Function = useFetchCurrentUser();
-  const currentUser = useCurrentUser()[0];
+  const [currentUser, setCurrentUser] = useCurrentUser();
   const fetchData: Function = useFetchDataFunction();
   const fetchingData: boolean = useFetchingDataState();
   const errorFetching: boolean = useErrorFetchingData();
@@ -47,10 +46,10 @@ const Homepage: React.FC = props => {
   const fetchLikedWines = useFetchLikedItems();
   const showLikeSuccessPopupState = useLikeSuccessPopup();
   const likeFailed = useLikeWineFailedState();
-  const loadUserLikedItems = useLoadUserLikedItems();
+  const [refresh, setRefresh] = useState(false);
 
   function handleRefresh() {
-    fetchData();
+    setRefresh(p => !p);
   }
 
   function renderItemFunction({item}: {item: WineObject}) {
@@ -66,10 +65,26 @@ const Homepage: React.FC = props => {
   }
 
   useEffect(() => {
-    fetchLikedWines(user.email);
-    fetchData();
-    fetchCurrentUser(user.email);
-    loadUserLikedItems();
+    let rendered = true;
+    (async function () {
+      try {
+        const _data = (await fetchData()) as [];
+        rendered && setData(_data);
+      } catch (error) {
+        // error state has been set in the interactor
+      }
+    })();
+    return () => {
+      rendered = false;
+    };
+  }, [refresh]);
+
+  useEffect(() => {
+    (async function () {
+      const __user = await fetchCurrentUser(user.email);
+      setCurrentUser(__user);
+      await fetchLikedWines(user.email);
+    })();
   }, [user]);
 
   useEffect(() => {

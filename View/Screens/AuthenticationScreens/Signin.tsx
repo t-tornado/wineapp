@@ -40,7 +40,6 @@ const SignInScreen: React.FC<SigninScreenProps> = props => {
 
   function onPressSignin() {
     signIn(userEmail, userPassword);
-    // console.log(userPassword);
   }
 
   function handleCloseLoadingIndicator() {
