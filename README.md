@@ -9,4 +9,4 @@ It has the following features:
   <li>Users can signin to view their profile</li>
   </ul>
 
-<a href="https://www.html.com">Get APK</a>
+<a href="https://play.google.com/store/apps/details?id=com.wineproject">View on Playstore</a>
